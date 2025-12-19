@@ -1,0 +1,40 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+*/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Kotlin
+*.class
+*.jar
+*.war
+*.ear
+
+# Android
+*.apk
+*.aab
+*.dex
+*.ap_
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+*.swp
+*~
+
+# IDE
+*.ipr
+*.iws
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
