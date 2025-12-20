@@ -68,30 +68,6 @@ fun AddJournalEntryScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            DropdownFieldNullable(
-                label = "Тип события",
-                items = JournalEntryType.values().toList(),
-                selectedItem = type,
-                onItemSelected = { it?.let { t -> type = t } },
-                itemLabel = { it.displayName },
-                nullOptionLabel = "Не выбрано" // Although type is not nullable here, using DropdownFieldNullable for consistency or custom DropdownField
-            )
-            // Or better, stick to DropdownField since type is mandatory
-            /* 
-            DropdownField(
-                label = "Тип события",
-                items = JournalEntryType.values().toList(),
-                selectedItem = type,
-                onItemSelected = { type = it },
-                itemLabel = { it.displayName }
-            ) 
-            */
-            // Let's use DropdownField from previous context if available or reuse DropdownFieldNullable with logic
-            // Assuming DropdownField exists as I used it in Tasks. checking context... yes it does.
-            // But wait, in AddEditTaskScreen I used DropdownField.
-            // Let's use DropdownField for Type.
-            
-            /* Retrying DropdownField for Type */
              com.agrodiary.ui.components.DropdownField(
                 label = "Тип события",
                 items = JournalEntryType.values().toList(),
