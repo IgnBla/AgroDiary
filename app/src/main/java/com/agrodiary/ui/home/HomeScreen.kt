@@ -21,17 +21,22 @@ import androidx.compose.material.icons.filled.Grass
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,8 +48,10 @@ fun HomeScreen(
     onNavigateToFeed: () -> Unit,
     onNavigateToProducts: () -> Unit,
     onNavigateToStaff: () -> Unit,
-    onNavigateToJournal: () -> Unit
+    onNavigateToJournal: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val dateFormatter = SimpleDateFormat("EEEE, d MMMM", Locale("ru"))
     val today = dateFormatter.format(Date())
 
@@ -99,7 +106,7 @@ fun HomeScreen(
             }
         }
 
-        // Statistics section placeholder
+        // Statistics section with real data
         item {
             Text(
                 text = "Статистика",
@@ -107,61 +114,142 @@ fun HomeScreen(
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    title = "Животных",
-                    value = "0",
-                    modifier = Modifier.weight(1f)
+
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
-                StatCard(
-                    title = "Задач",
-                    value = "0",
-                    modifier = Modifier.weight(1f)
+            } else {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        StatCard(
+                            title = "Животных",
+                            value = uiState.statistics.totalAnimals.toString(),
+                            icon = Icons.Default.Pets,
+                            modifier = Modifier.weight(1f)
+                        )
+                        StatCard(
+                            title = "Активных задач",
+                            value = uiState.statistics.activeTasks.toString(),
+                            icon = Icons.Default.Assignment,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        StatCard(
+                            title = "Выполнено",
+                            value = uiState.statistics.completedTasks.toString(),
+                            icon = Icons.Default.Assignment,
+                            modifier = Modifier.weight(1f)
+                        )
+                        StatCard(
+                            title = "Предупреждений",
+                            value = uiState.statistics.lowStockCount.toString(),
+                            icon = Icons.Default.Warning,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+        }
+
+        // Urgent tasks section
+        if (uiState.urgentTasks.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Срочные задачи",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            items(uiState.urgentTasks) { task ->
+                QuickTaskCard(
+                    task = task,
+                    onClick = onNavigateToTasks
                 )
             }
         }
 
-        // Recent activity placeholder
+        // Low stock warnings section
+        if (uiState.lowStockWarnings.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Предупреждения о запасах",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            items(uiState.lowStockWarnings) { feedStock ->
+                WarningCard(
+                    feedStock = feedStock,
+                    onClick = onNavigateToFeed
+                )
+            }
+        }
+
+        // Recent journal entries section
         item {
             Text(
-                text = "Последние записи",
+                text = "Последние записи журнала",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+        }
+
+        if (uiState.recentJournalEntries.isEmpty()) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Agriculture,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Записей пока нет",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "Добавьте первую запись в журнал",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Agriculture,
+                            contentDescription = null,
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Записей пока нет",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = "Добавьте первую запись в журнал",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        )
+                    }
                 }
+            }
+        } else {
+            items(uiState.recentJournalEntries) { entry ->
+                JournalEntryCard(
+                    entry = entry,
+                    onClick = onNavigateToJournal
+                )
             }
         }
     }
@@ -206,6 +294,7 @@ private fun QuickAccessCard(
 private fun StatCard(
     title: String,
     value: String,
+    icon: ImageVector,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -219,8 +308,15 @@ private fun StatCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
             Text(
                 text = value,
                 style = MaterialTheme.typography.headlineMedium,
