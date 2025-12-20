@@ -13,6 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.agrodiary.ui.home.HomeScreen
+import com.agrodiary.ui.animals.AnimalsListScreen
+import com.agrodiary.ui.animals.AnimalDetailScreen
+import com.agrodiary.ui.animals.AddEditAnimalScreen
 
 @Composable
 fun NavGraph(
@@ -36,25 +39,39 @@ fun NavGraph(
             )
         }
 
-        composable(Screen.Animals.route) {
-            PlaceholderScreen(title = "Животные")
-        }
-
-        composable(Screen.Journal.route) {
-            PlaceholderScreen(title = "Журнал")
-        }
-
         // Animals module
+        composable(Screen.Animals.route) {
+            AnimalsListScreen(
+                onAnimalClick = { animalId ->
+                    navController.navigate(Screen.AnimalDetail.createRoute(animalId))
+                },
+                onAddClick = {
+                    navController.navigate(Screen.AddAnimal.route)
+                }
+            )
+        }
+
         composable(
             route = Screen.AnimalDetail.route,
             arguments = listOf(navArgument("animalId") { type = NavType.LongType })
         ) { backStackEntry ->
             val animalId = backStackEntry.arguments?.getLong("animalId") ?: return@composable
-            PlaceholderScreen(title = "Животное #$animalId")
+            AnimalDetailScreen(
+                animalId = animalId,
+                onNavigateBack = { navController.navigateUp() },
+                onEditClick = { id ->
+                    navController.navigate(Screen.EditAnimal.createRoute(id))
+                },
+                onDeleteSuccess = { navController.navigateUp() }
+            )
         }
 
         composable(Screen.AddAnimal.route) {
-            PlaceholderScreen(title = "Добавить животное")
+            AddEditAnimalScreen(
+                animalId = null,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
         }
 
         composable(
@@ -62,7 +79,15 @@ fun NavGraph(
             arguments = listOf(navArgument("animalId") { type = NavType.LongType })
         ) { backStackEntry ->
             val animalId = backStackEntry.arguments?.getLong("animalId") ?: return@composable
-            PlaceholderScreen(title = "Редактировать животное #$animalId")
+            AddEditAnimalScreen(
+                animalId = animalId,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
+        }
+
+        composable(Screen.Journal.route) {
+            PlaceholderScreen(title = "Журнал")
         }
 
         // Staff module
