@@ -22,7 +22,9 @@ import com.agrodiary.ui.staff.AddEditStaffScreen
 import com.agrodiary.ui.tasks.TasksListScreen
 import com.agrodiary.ui.tasks.TaskDetailScreen
 import com.agrodiary.ui.tasks.AddEditTaskScreen
-
+import com.agrodiary.ui.feed.FeedStockListScreen
+import com.agrodiary.ui.feed.FeedDetailScreen
+import com.agrodiary.ui.feed.AddEditFeedScreen
 import com.agrodiary.ui.journal.JournalListScreen
 import com.agrodiary.ui.journal.AddJournalEntryScreen
 
@@ -208,7 +210,14 @@ fun NavGraph(
 
         // Feed module
         composable(Screen.FeedStock.route) {
-            PlaceholderScreen(title = "Запас кормов")
+            FeedStockListScreen(
+                onFeedClick = { feedId ->
+                    navController.navigate(Screen.FeedDetail.createRoute(feedId))
+                },
+                onAddClick = {
+                    navController.navigate(Screen.AddFeed.route)
+                }
+            )
         }
 
         composable(
@@ -216,11 +225,33 @@ fun NavGraph(
             arguments = listOf(navArgument("feedId") { type = NavType.LongType })
         ) { backStackEntry ->
             val feedId = backStackEntry.arguments?.getLong("feedId") ?: return@composable
-            PlaceholderScreen(title = "Корм #$feedId")
+            FeedDetailScreen(
+                feedId = feedId,
+                onNavigateBack = { navController.navigateUp() },
+                onEditClick = { id ->
+                    navController.navigate(Screen.EditFeed.createRoute(id))
+                }
+            )
         }
 
         composable(Screen.AddFeed.route) {
-            PlaceholderScreen(title = "Добавить корм")
+            AddEditFeedScreen(
+                feedId = null,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
+        }
+        
+        composable(
+            route = Screen.EditFeed.route,
+            arguments = listOf(navArgument("feedId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val feedId = backStackEntry.arguments?.getLong("feedId") ?: return@composable
+            AddEditFeedScreen(
+                feedId = feedId,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
         }
 
         // Products module

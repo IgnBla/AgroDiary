@@ -18,6 +18,9 @@ class FeedStockRepository @Inject constructor(
 
     fun getLowStockFeeds(): Flow<List<FeedStockEntity>> = feedStockDao.getLowStockFeeds()
 
+    // Alias for getLowStockFeeds to match ViewModel usage if needed, or update ViewModel
+    fun getLowStockFeed(): Flow<List<FeedStockEntity>> = feedStockDao.getLowStockFeeds()
+
     suspend fun getFeedStockById(id: Long): FeedStockEntity? = feedStockDao.getFeedStockById(id)
 
     fun getFeedStockByIdFlow(id: Long): Flow<FeedStockEntity?> =
