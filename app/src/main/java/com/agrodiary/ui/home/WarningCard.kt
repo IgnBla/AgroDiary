@@ -180,7 +180,7 @@ private fun WarningCardLowPreview() {
             feedStock = FeedStockEntity(
                 id = 2,
                 name = "Комбикорм для кур",
-                category = FeedCategory.MIXED_FEED,
+                category = FeedCategory.COMPOUND_FEED,
                 currentQuantity = 80.0,
                 unit = MeasureUnit.KILOGRAM,
                 minQuantity = 150.0,

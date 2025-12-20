@@ -128,353 +128,345 @@ AgroDiary/
 
 ---
 
-### ЭТАП 1: Настройка зависимостей и конфигурации
+### ЭТАП 1: Настройка зависимостей и конфигурации ✅
 **Агенты:** `kotlin-specialist` + `mobile-developer`
 
-- [ ] 1.1 Настроить `build.gradle.kts` (project-level)
-  - [ ] Добавить Kotlin версию
-  - [ ] Добавить KSP plugin
-  - [ ] Добавить Hilt plugin
-- [ ] 1.2 Настроить `build.gradle.kts` (app-level)
-  - [ ] Jetpack Compose BOM (2024.02.00)
-  - [ ] Material 3
-  - [ ] Navigation Compose (2.7.7)
-  - [ ] Room (2.6.1): runtime, ktx, compiler
-  - [ ] Hilt (2.50): android, compiler, navigation-compose
-  - [ ] Lifecycle: viewmodel-compose, runtime-compose
-  - [ ] Coil для изображений (2.5.0)
-  - [ ] Testing: JUnit, MockK, Compose UI Testing
-- [ ] 1.3 Настроить `settings.gradle.kts`
-- [ ] 1.4 Синхронизировать Gradle
-- [ ] 1.5 Создать `AgroDiaryApp.kt` с аннотацией `@HiltAndroidApp`
-- [ ] 1.6 Обновить `AndroidManifest.xml` с Application class
+- [x] 1.1 Настроить `build.gradle.kts` (project-level)
+  - [x] Добавить Kotlin версию
+  - [x] Добавить KSP plugin
+  - [x] Добавить Hilt plugin
+- [x] 1.2 Настроить `build.gradle.kts` (app-level)
+  - [x] Jetpack Compose BOM (2024.02.00)
+  - [x] Material 3
+  - [x] Navigation Compose (2.7.7)
+  - [x] Room (2.6.1): runtime, ktx, compiler
+  - [x] Hilt (2.50): android, compiler, navigation-compose
+  - [x] Lifecycle: viewmodel-compose, runtime-compose
+  - [x] Coil для изображений (2.5.0)
+  - [x] Testing: JUnit, MockK, Compose UI Testing
+- [x] 1.3 Настроить `settings.gradle.kts`
+- [x] 1.4 Синхронизировать Gradle
+- [x] 1.5 Создать `AgroDiaryApp.kt` с аннотацией `@HiltAndroidApp`
+- [x] 1.6 Обновить `AndroidManifest.xml` с Application class
 
 ---
 
-### ЭТАП 2: Тема и базовые UI компоненты
+### ЭТАП 2: Тема и базовые UI компоненты ✅
 **Агенты:** `ui-designer` + `kotlin-specialist`
 
-- [ ] 2.1 Создать цветовую схему (`ui/theme/Color.kt`)
-  - [ ] Primary: Зелёный (#2E7D32) — природа, рост
-  - [ ] Secondary: Коричневый (#5D4037) — земля
-  - [ ] Tertiary: Золотисто-жёлтый (#FFA726) — урожай
-  - [ ] Background: Светло-бежевый (#FFF8E1)
-  - [ ] Surface: Белый (#FFFFFF)
-  - [ ] Error: Красный (#D32F2F)
-- [ ] 2.2 Создать типографику (`ui/theme/Type.kt`)
-- [ ] 2.3 Создать формы (`ui/theme/Shape.kt`)
-- [ ] 2.4 Создать главную тему (`ui/theme/Theme.kt`)
-  - [ ] Светлая тема
-  - [ ] Тёмная тема
-- [ ] 2.5 Создать базовые переиспользуемые компоненты
-  - [ ] `AgroDiaryCard.kt` — карточка с тенью
-  - [ ] `AgroDiaryButton.kt` — кнопки разных типов
-  - [ ] `AgroDiaryTextField.kt` — поля ввода
-  - [ ] `AgroDiaryTopBar.kt` — верхняя панель
-  - [ ] `SearchBar.kt` — поиск
-  - [ ] `FilterChips.kt` — фильтры
-  - [ ] `EmptyStateView.kt` — пустое состояние
-  - [ ] `LoadingView.kt` — индикатор загрузки
-  - [ ] `ErrorView.kt` — экран ошибки
-  - [ ] `ConfirmDialog.kt` — диалог подтверждения
-  - [ ] `DatePickerField.kt` — выбор даты
-  - [ ] `DropdownField.kt` — выпадающий список
-- [ ] 2.6 Протестировать компоненты в @Preview
+- [x] 2.1 Создать цветовую схему (`ui/theme/Color.kt`)
+- [x] 2.2 Создать типографику (`ui/theme/Type.kt`)
+- [x] 2.3 Создать формы (`ui/theme/Shape.kt`)
+- [x] 2.4 Создать главную тему (`ui/theme/Theme.kt`)
+- [x] 2.5 Создать базовые переиспользуемые компоненты
+  - [x] `AgroDiaryCard.kt` — карточка с тенью
+  - [x] `AgroDiaryButton.kt` — кнопки разных типов
+  - [x] `AgroDiaryTextField.kt` — поля ввода
+  - [x] `AgroDiaryTopBar.kt` — верхняя панель
+  - [x] `SearchBar.kt` — поиск
+  - [x] `FilterChips.kt` — фильтры
+  - [x] `EmptyStateView.kt` — пустое состояние
+  - [x] `LoadingView.kt` — индикатор загрузки
+  - [x] `ErrorView.kt` — экран ошибки
+  - [x] `ConfirmDialog.kt` — диалог подтверждения
+  - [x] `DatePickerField.kt` — выбор даты
+  - [x] `DropdownField.kt` — выпадающий список
+- [x] 2.6 Протестировать компоненты в @Preview
 
 ---
 
-### ЭТАП 3: База данных (Room)
+### ЭТАП 3: База данных (Room) ✅
 **Агенты:** `database-administrator` + `kotlin-specialist`
 
-#### 3.1 Создать Entity классы
+#### 3.1 Создать Entity классы ✅
 
-- [ ] 3.1.1 `AnimalEntity.kt`
+- [x] 3.1.1 `AnimalEntity.kt`
 ```kotlin
 // Поля: id, name, type (корова/свинья/курица/другое), 
 // breed, birthDate, gender, weight, status (активное/продано/умерло),
 // notes, photoUri, createdAt, updatedAt
 ```
-- [ ] 3.1.2 `StaffEntity.kt`
+- [x] 3.1.2 `StaffEntity.kt`
 ```kotlin
 // Поля: id, name, position, phone, email, 
 // hireDate, salary, status (активен/уволен), 
 // photoUri, notes, createdAt, updatedAt
 ```
-- [ ] 3.1.3 `TaskEntity.kt`
+- [x] 3.1.3 `TaskEntity.kt`
 ```kotlin
 // Поля: id, title, description, assignedStaffId (FK), 
 // animalId (FK, nullable), priority (LOW/MEDIUM/HIGH/URGENT),
 // status (NEW/IN_PROGRESS/COMPLETED/CANCELLED), 
 // dueDate, completedDate, createdAt, updatedAt
 ```
-- [ ] 3.1.4 `JournalEntryEntity.kt`
+- [x] 3.1.4 `JournalEntryEntity.kt`
 ```kotlin
 // Поля: id, date, entryType (FEEDING/HEALTH_CHECK/VACCINATION/
 // BREEDING/WEIGHT_MEASURE/PURCHASE/SALE/TASK_COMPLETED/OTHER),
 // description, relatedAnimalId (FK, nullable), 
 // relatedStaffId (FK, nullable), amount, notes, createdAt
 ```
-- [ ] 3.1.5 `FeedStockEntity.kt`
+- [x] 3.1.5 `FeedStockEntity.kt`
 ```kotlin
 // Поля: id, name, category (СЕНО/ЗЕРНО/КОМБИКОРМ/ДРУГОЕ),
 // currentQuantity, unit (КГ/МЕШОК/ТОННА/ЛИТР),
 // minQuantity (предупреждение), lastUpdated, notes
 ```
-- [ ] 3.1.6 `FeedTransactionEntity.kt`
+- [x] 3.1.6 `FeedTransactionEntity.kt`
 ```kotlin
 // Поля: id, feedStockId (FK), type (INCOME/EXPENSE),
 // quantity, date, pricePerUnit, notes, createdAt
 ```
-- [ ] 3.1.7 `ProductEntity.kt`
+- [x] 3.1.7 `ProductEntity.kt`
 ```kotlin
 // Поля: id, name, category (МОЛОКО/МЯСО/ЯЙЦА/ШЕРСТЬ/ДРУГОЕ),
 // currentQuantity, unit, pricePerUnit, 
 // productionDate, expirationDate, notes, lastUpdated
 ```
-- [ ] 3.1.8 `ProductTransactionEntity.kt`
+- [x] 3.1.8 `ProductTransactionEntity.kt`
 ```kotlin
 // Поля: id, productId (FK), type (PRODUCED/SOLD/CONSUMED/SPOILED),
 // quantity, date, pricePerUnit, totalPrice, 
 // buyerName (nullable), notes, createdAt
 ```
 
-#### 3.2 Создать Enum классы
+#### 3.2 Создать Enum классы ✅
 
-- [ ] 3.2.1 `AnimalType.kt` (КОРОВА, СВИНЬЯ, КУРИЦА, ОВЦА, КОЗА, ДРУГОЕ)
-- [ ] 3.2.2 `AnimalStatus.kt` (АКТИВНОЕ, ПРОДАНО, УМЕРЛО)
-- [ ] 3.2.3 `StaffStatus.kt` (АКТИВЕН, УВОЛЕН, В_ОТПУСКЕ)
-- [ ] 3.2.4 `TaskPriority.kt` (LOW, MEDIUM, HIGH, URGENT)
-- [ ] 3.2.5 `TaskStatus.kt` (NEW, IN_PROGRESS, COMPLETED, CANCELLED)
-- [ ] 3.2.6 `JournalEntryType.kt` (все типы записей)
-- [ ] 3.2.7 `FeedCategory.kt` (СЕНО, ЗЕРНО, КОМБИКОРМ, ДРУГОЕ)
-- [ ] 3.2.8 `ProductCategory.kt` (МОЛОКО, МЯСО, ЯЙЦА, ШЕРСТЬ, ДРУГОЕ)
-- [ ] 3.2.9 `TransactionType.kt` (INCOME, EXPENSE, PRODUCED, SOLD, CONSUMED, SPOILED)
+- [x] 3.2.1 `AnimalType.kt` (КОРОВА, СВИНЬЯ, КУРИЦА, ОВЦА, КОЗА, ДРУГОЕ)
+- [x] 3.2.2 `AnimalStatus.kt` (АКТИВНОЕ, ПРОДАНО, УМЕРЛО)
+- [x] 3.2.3 `StaffStatus.kt` (АКТИВЕН, УВОЛЕН, В_ОТПУСКЕ)
+- [x] 3.2.4 `TaskPriority.kt` (LOW, MEDIUM, HIGH, URGENT)
+- [x] 3.2.5 `TaskStatus.kt` (NEW, IN_PROGRESS, COMPLETED, CANCELLED)
+- [x] 3.2.6 `JournalEntryType.kt` (все типы записей)
+- [x] 3.2.7 `FeedCategory.kt` (СЕНО, ЗЕРНО, КОМБИКОРМ, ДРУГОЕ)
+- [x] 3.2.8 `ProductCategory.kt` (МОЛОКО, МЯСО, ЯЙЦА, ШЕРСТЬ, ДРУГОЕ)
+- [x] 3.2.9 `TransactionType.kt` (INCOME, EXPENSE, PRODUCED, SOLD, CONSUMED, SPOILED)
 
-#### 3.3 Создать TypeConverters
+#### 3.3 Создать TypeConverters ✅
 
-- [ ] 3.3.1 `Converters.kt` (для Date, Enum классов)
+- [x] 3.3.1 `Converters.kt` (для Date, Enum классов)
 
-#### 3.4 Создать DAO интерфейсы
+#### 3.4 Создать DAO интерфейсы ✅
 
-- [ ] 3.4.1 `AnimalDao.kt` (CRUD + getAll + getByType + search)
-- [ ] 3.4.2 `StaffDao.kt` (CRUD + getAll + getActive + search)
-- [ ] 3.4.3 `TaskDao.kt` (CRUD + getByStatus + getByStaff + getOverdue)
-- [ ] 3.4.4 `JournalDao.kt` (CRUD + getByDateRange + getByType + getByAnimal)
-- [ ] 3.4.5 `FeedStockDao.kt` (CRUD + getAll + getLowStock)
-- [ ] 3.4.6 `FeedTransactionDao.kt` (CRUD + getByFeed + getByDateRange)
-- [ ] 3.4.7 `ProductDao.kt` (CRUD + getAll + getByCategory)
-- [ ] 3.4.8 `ProductTransactionDao.kt` (CRUD + getByProduct + getByDateRange)
+- [x] 3.4.1 `AnimalDao.kt` (CRUD + getAll + getByType + search)
+- [x] 3.4.2 `StaffDao.kt` (CRUD + getAll + getActive + search)
+- [x] 3.4.3 `TaskDao.kt` (CRUD + getByStatus + getByStaff + getOverdue)
+- [x] 3.4.4 `JournalDao.kt` (CRUD + getByDateRange + getByType + getByAnimal)
+- [x] 3.4.5 `FeedStockDao.kt` (CRUD + getAll + getLowStock)
+- [x] 3.4.6 `FeedTransactionDao.kt` (CRUD + getByFeed + getByDateRange)
+- [x] 3.4.7 `ProductDao.kt` (CRUD + getAll + getByCategory)
+- [x] 3.4.8 `ProductTransactionDao.kt` (CRUD + getByProduct + getByDateRange)
 
-#### 3.5 Создать Database
+#### 3.5 Создать Database ✅
 
-- [ ] 3.5.1 `AppDatabase.kt` с версией 1
-- [ ] 3.5.2 Добавить все Entity и DAO
-- [ ] 3.5.3 Добавить TypeConverters
-- [ ] 3.5.4 (Опционально) Добавить prepopulate для тестовых данных
+- [x] 3.5.1 `AppDatabase.kt` с версией 1
+- [x] 3.5.2 Добавить все Entity и DAO
+- [x] 3.5.3 Добавить TypeConverters
+- [x] 3.5.4 (Опционально) Добавить prepopulate для тестовых данных
 
-#### 3.6 Создать Hilt модули
+#### 3.6 Создать Hilt модули ✅
 
-- [ ] 3.6.1 `DatabaseModule.kt` — предоставляет Database и DAOs
-- [ ] 3.6.2 Протестировать создание БД
+- [x] 3.6.1 `DatabaseModule.kt` — предоставляет Database и DAOs
+- [x] 3.6.2 Протестировать создание БД
 
 ---
 
-### ЭТАП 4: Репозитории
+### ЭТАП 4: Репозитории ✅
 **Агенты:** `kotlin-specialist` + `mobile-developer`
 
-- [ ] 4.1 Создать `AnimalRepository.kt` (+ интерфейс)
-- [ ] 4.2 Создать `StaffRepository.kt` (+ интерфейс)
-- [ ] 4.3 Создать `TaskRepository.kt` (+ интерфейс)
-- [ ] 4.4 Создать `JournalRepository.kt` (+ интерфейс)
-- [ ] 4.5 Создать `FeedStockRepository.kt` (+ интерфейс)
-- [ ] 4.6 Создать `FeedTransactionRepository.kt` (+ интерфейс)
-- [ ] 4.7 Создать `ProductRepository.kt` (+ интерфейс)
-- [ ] 4.8 Создать `ProductTransactionRepository.kt` (+ интерфейс)
-- [ ] 4.9 Создать `RepositoryModule.kt` для Hilt
+- [x] 4.1 Создать `AnimalRepository.kt` (+ интерфейс)
+- [x] 4.2 Создать `StaffRepository.kt` (+ интерфейс)
+- [x] 4.3 Создать `TaskRepository.kt` (+ интерфейс)
+- [x] 4.4 Создать `JournalRepository.kt` (+ интерфейс)
+- [x] 4.5 Создать `FeedStockRepository.kt` (+ интерфейс)
+- [x] 4.6 Создать `FeedTransactionRepository.kt` (+ интерфейс)
+- [x] 4.7 Создать `ProductRepository.kt` (+ интерфейс)
+- [x] 4.8 Создать `ProductTransactionRepository.kt` (+ интерфейс)
+- [x] 4.9 Создать `RepositoryModule.kt` для Hilt
 
 ---
 
-### ЭТАП 5: Навигация
+### ЭТАП 5: Навигация ✅
 **Агенты:** `mobile-developer` + `ui-designer`
 
-- [ ] 5.1 Создать `Screen.kt` — sealed class с маршрутами
-- [ ] 5.2 Создать `BottomNavItem.kt` — элементы навигации (3 вкладки)
-- [ ] 5.3 Создать `NavGraph.kt` — граф навигации
-- [ ] 5.4 Создать `AgroDiaryBottomNavBar.kt` — нижняя панель
-- [ ] 5.5 Интегрировать навигацию в `MainActivity.kt`
-- [ ] 5.6 Проверить переходы между экранами
+- [x] 5.1 Создать `Screen.kt` — sealed class с маршрутами
+- [x] 5.2 Создать `BottomNavItem.kt` — элементы навигации (3 вкладки)
+- [x] 5.3 Создать `NavGraph.kt` — граф навигации
+- [x] 5.4 Создать `AgroDiaryBottomNavBar.kt` — нижняя панель
+- [x] 5.5 Интегрировать навигацию в `MainActivity.kt`
+- [x] 5.6 Проверить переходы между экранами
 
 ---
 
-### ЭТАП 6: Главный экран (Dashboard)
+### ЭТАП 6: Главный экран (Dashboard) ✅
 **Агенты:** `ui-designer` + `kotlin-specialist`
 
-- [ ] 6.1 Создать `HomeViewModel.kt`
-  - [ ] Быстрая статистика (количество животных, активные задачи)
-  - [ ] Последние 5 записей журнала
-  - [ ] Срочные задачи (до 3 дней)
-  - [ ] Предупреждения о низких запасах
-- [ ] 6.2 Создать `HomeScreen.kt`
-  - [ ] Приветствие с датой
-  - [ ] Карточки статистики (4 карточки)
-  - [ ] Список срочных задач
-  - [ ] Список предупреждений о запасах
-  - [ ] Кнопки быстрого доступа
-- [ ] 6.3 Создать UI компоненты
-  - [ ] `StatCard.kt` — карточка статистики
-  - [ ] `QuickTaskCard.kt` — срочная задача
-  - [ ] `WarningCard.kt` — предупреждение
-- [ ] 6.4 Протестировать экран
+- [x] 6.1 Создать `HomeViewModel.kt`
+  - [x] Быстрая статистика (количество животных, активные задачи)
+  - [x] Последние 5 записей журнала
+  - [x] Срочные задачи (до 3 дней)
+  - [x] Предупреждения о низких запасах
+- [x] 6.2 Создать `HomeScreen.kt`
+  - [x] Приветствие с датой
+  - [x] Карточки статистики (4 карточки)
+  - [x] Список срочных задач
+  - [x] Список предупреждений о запасах
+  - [x] Кнопки быстрого доступа
+- [x] 6.3 Создать UI компоненты
+  - [x] `StatCard.kt` — карточка статистики
+  - [x] `QuickTaskCard.kt` — срочная задача
+  - [x] `WarningCard.kt` — предупреждение
+- [x] 6.4 Протестировать экран
 
 ---
 
-### ЭТАП 7: Модуль «Животные» 🐄
+### ЭТАП 7: Модуль «Животные» 🐄 ✅
 **Агенты:** `kotlin-specialist` + `ui-designer` + `database-administrator`
 
 #### 7.1 ViewModel
 
-- [ ] 7.1.1 Создать `AnimalsViewModel.kt`
-- [ ] 7.1.2 Загрузка списка животных (StateFlow)
-- [ ] 7.1.3 Добавление животного
-- [ ] 7.1.4 Редактирование животного
-- [ ] 7.1.5 Удаление животного
-- [ ] 7.1.6 Фильтрация по типу
-- [ ] 7.1.7 Поиск по имени
-- [ ] 7.1.8 Получение животного по ID
+- [x] 7.1.1 Создать `AnimalsViewModel.kt`
+- [x] 7.1.2 Загрузка списка животных (StateFlow)
+- [x] 7.1.3 Добавление животного
+- [x] 7.1.4 Редактирование животного
+- [x] 7.1.5 Удаление животного
+- [x] 7.1.6 Фильтрация по типу
+- [x] 7.1.7 Поиск по имени
+- [x] 7.1.8 Получение животного по ID
 
 #### 7.2 Экраны
 
-- [ ] 7.2.1 `AnimalsListScreen.kt`
-  - [ ] Список животных (LazyColumn)
-  - [ ] Поиск
-  - [ ] Фильтр по типу (Chips)
-  - [ ] FAB для добавления
-  - [ ] Пустое состояние
-- [ ] 7.2.2 `AnimalDetailScreen.kt`
-  - [ ] Информация о животном
-  - [ ] Фото (если есть)
-  - [ ] История записей журнала
-  - [ ] Кнопки редактирования/удаления
-- [ ] 7.2.3 `AddEditAnimalScreen.kt`
-  - [ ] Форма с полями
-  - [ ] Выбор типа (Dropdown)
-  - [ ] Выбор фото (опционально)
-  - [ ] Валидация полей
-  - [ ] Сохранение
+- [x] 7.2.1 `AnimalsListScreen.kt`
+  - [x] Список животных (LazyColumn)
+  - [x] Поиск
+  - [x] Фильтр по типу (Chips)
+  - [x] FAB для добавления
+  - [x] Пустое состояние
+- [x] 7.2.2 `AnimalDetailScreen.kt`
+  - [x] Информация о животном
+  - [x] Фото (если есть)
+  - [x] История записей журнала
+  - [x] Кнопки редактирования/удаления
+- [x] 7.2.3 `AddEditAnimalScreen.kt`
+  - [x] Форма с полями
+  - [x] Выбор типа (Dropdown)
+  - [x] Выбор фото (опционально)
+  - [x] Валидация полей
+  - [x] Сохранение
 
 #### 7.3 Компоненты
 
-- [ ] 7.3.1 `AnimalCard.kt` — карточка в списке
-- [ ] 7.3.2 `AnimalTypeChip.kt` — фильтр по типу
+- [x] 7.3.1 `AnimalCard.kt` — карточка в списке
+- [x] 7.3.2 `AnimalTypeChip.kt` — фильтр по типу
 
 #### 7.4 Интеграция
 
-- [ ] 7.4.1 Подключить навигацию модуля
-- [ ] 7.4.2 Протестировать CRUD операции
-- [ ] 7.4.3 Проверить поиск и фильтрацию
+- [x] 7.4.1 Подключить навигацию модуля
+- [x] 7.4.2 Протестировать CRUD операции
+- [x] 7.4.3 Проверить поиск и фильтрацию
 
 ---
 
-### ЭТАП 8: Модуль «Персонал» 👷
+### ЭТАП 8: Модуль «Персонал» 👷 ✅
 **Агенты:** `kotlin-specialist` + `ui-designer`
 
 #### 8.1 ViewModel
 
-- [ ] 8.1.1 Создать `StaffViewModel.kt`
-- [ ] 8.1.2 Загрузка списка сотрудников
-- [ ] 8.1.3 CRUD операции
-- [ ] 8.1.4 Поиск
-- [ ] 8.1.5 Фильтр по статусу
+- [x] 8.1.1 Создать `StaffViewModel.kt`
+- [x] 8.1.2 Загрузка списка сотрудников
+- [x] 8.1.3 CRUD операции
+- [x] 8.1.4 Поиск
+- [x] 8.1.5 Фильтр по статусу
 
 #### 8.2 Экраны
 
-- [ ] 8.2.1 `StaffListScreen.kt`
-- [ ] 8.2.2 `StaffDetailScreen.kt` (с задачами сотрудника)
-- [ ] 8.2.3 `AddEditStaffScreen.kt`
+- [x] 8.2.1 `StaffListScreen.kt`
+- [x] 8.2.2 `StaffDetailScreen.kt` (с задачами сотрудника)
+- [x] 8.2.3 `AddEditStaffScreen.kt`
 
 #### 8.3 Компоненты
 
-- [ ] 8.3.1 `StaffCard.kt`
-- [ ] 8.3.2 `StaffStatusChip.kt`
+- [x] 8.3.1 `StaffCard.kt`
+- [x] 8.3.2 `StaffStatusChip.kt`
 
 #### 8.4 Интеграция
 
-- [ ] 8.4.1 Подключить навигацию
-- [ ] 8.4.2 Протестировать функционал
+- [x] 8.4.1 Подключить навигацию
+- [x] 8.4.2 Протестировать функционал
 
 ---
 
-### ЭТАП 9: Модуль «Задачи» 📋
+### ЭТАП 9: Модуль «Задачи» 📋 ✅
 **Агенты:** `kotlin-specialist` + `ui-designer`
 
 #### 9.1 ViewModel
 
-- [ ] 9.1.1 Создать `TasksViewModel.kt`
-- [ ] 9.1.2 Загрузка задач
-- [ ] 9.1.3 CRUD операции
-- [ ] 9.1.4 Изменение статуса
-- [ ] 9.1.5 Фильтр по статусу/приоритету
-- [ ] 9.1.6 Поиск
+- [x] 9.1.1 Создать `TasksViewModel.kt`
+- [x] 9.1.2 Загрузка задач
+- [x] 9.1.3 CRUD операции
+- [x] 9.1.4 Изменение статуса
+- [x] 9.1.5 Фильтр по статусу/приоритету
+- [x] 9.1.6 Поиск
 
 #### 9.2 Экраны
 
-- [ ] 9.2.1 `TasksListScreen.kt`
-  - [ ] Группировка по статусу
-  - [ ] Фильтры
-  - [ ] Поиск
-- [ ] 9.2.2 `TaskDetailScreen.kt`
-- [ ] 9.2.3 `AddEditTaskScreen.kt`
-  - [ ] Выбор исполнителя
-  - [ ] Выбор приоритета
-  - [ ] Выбор даты
-  - [ ] Привязка к животному (опционально)
+- [x] 9.2.1 `TasksListScreen.kt`
+  - [x] Группировка по статусу
+  - [x] Фильтры
+  - [x] Поиск
+- [x] 9.2.2 `TaskDetailScreen.kt`
+- [x] 9.2.3 `AddEditTaskScreen.kt`
+  - [x] Выбор исполнителя
+  - [x] Выбор приоритета
+  - [x] Выбор даты
+  - [x] Привязка к животному (опционально)
 
 #### 9.3 Компоненты
 
-- [ ] 9.3.1 `TaskCard.kt` (с цветовым индикатором приоритета)
-- [ ] 9.3.2 `TaskStatusChip.kt`
-- [ ] 9.3.3 `TaskPriorityChip.kt`
+- [x] 9.3.1 `TaskCard.kt` (с цветовым индикатором приоритета)
+- [x] 9.3.2 `TaskStatusChip.kt`
+- [x] 9.3.3 `TaskPriorityChip.kt`
 
 #### 9.4 Интеграция
 
-- [ ] 9.4.1 Подключить навигацию
-- [ ] 9.4.2 Протестировать функционал
+- [x] 9.4.1 Подключить навигацию
+- [x] 9.4.2 Протестировать функционал
 
 ---
 
-### ЭТАП 10: Модуль «Журнал» 📖
+### ЭТАП 10: Модуль «Журнал» 📖 ✅
 **Агенты:** `kotlin-specialist` + `ui-designer`
 
 #### 10.1 ViewModel
 
-- [ ] 10.1.1 Создать `JournalViewModel.kt`
-- [ ] 10.1.2 Загрузка записей
-- [ ] 10.1.3 CRUD операции
-- [ ] 10.1.4 Фильтр по дате
-- [ ] 10.1.5 Фильтр по типу
-- [ ] 10.1.6 Фильтр по животному
+- [x] 10.1.1 Создать `JournalViewModel.kt`
+- [x] 10.1.2 Загрузка записей
+- [x] 10.1.3 CRUD операции
+- [x] 10.1.4 Фильтр по дате
+- [x] 10.1.5 Фильтр по типу
+- [x] 10.1.6 Фильтр по животному
 
 #### 10.2 Экраны
 
-- [ ] 10.2.1 `JournalListScreen.kt`
-  - [ ] Календарь для выбора даты
-  - [ ] Список записей по дате
-  - [ ] Фильтры
-- [ ] 10.2.2 `AddJournalEntryScreen.kt`
-  - [ ] Быстрое добавление записи
-  - [ ] Выбор типа
-  - [ ] Привязка к животному/сотруднику
+- [x] 10.2.1 `JournalListScreen.kt`
+  - [x] Календарь для выбора даты
+  - [x] Список записей по дате
+  - [x] Фильтры
+- [x] 10.2.2 `AddJournalEntryScreen.kt`
+  - [x] Быстрое добавление записи
+  - [x] Выбор типа
+  - [x] Привязка к животному/сотруднику
 
 #### 10.3 Компоненты
 
-- [ ] 10.3.1 `JournalEntryCard.kt`
-- [ ] 10.3.2 `DateFilterBar.kt`
-- [ ] 10.3.3 `EntryTypeChip.kt`
+- [x] 10.3.1 `JournalEntryCard.kt`
+- [x] 10.3.2 `DateFilterBar.kt`
+- [x] 10.3.3 `EntryTypeChip.kt`
 
 #### 10.4 Интеграция
 
-- [ ] 10.4.1 Подключить навигацию
-- [ ] 10.4.2 Протестировать функционал
+- [x] 10.4.1 Подключить навигацию
+- [x] 10.4.2 Протестировать функционал
 
 ---
 

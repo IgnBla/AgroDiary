@@ -19,6 +19,12 @@ import com.agrodiary.ui.animals.AddEditAnimalScreen
 import com.agrodiary.ui.staff.StaffListScreen
 import com.agrodiary.ui.staff.StaffDetailScreen
 import com.agrodiary.ui.staff.AddEditStaffScreen
+import com.agrodiary.ui.tasks.TasksListScreen
+import com.agrodiary.ui.tasks.TaskDetailScreen
+import com.agrodiary.ui.tasks.AddEditTaskScreen
+
+import com.agrodiary.ui.journal.JournalListScreen
+import com.agrodiary.ui.journal.AddJournalEntryScreen
 
 @Composable
 fun NavGraph(
@@ -90,7 +96,21 @@ fun NavGraph(
         }
 
         composable(Screen.Journal.route) {
-            PlaceholderScreen(title = "Журнал")
+            JournalListScreen(
+                onEntryClick = { entryId ->
+                    navController.navigate(Screen.JournalDetail.createRoute(entryId))
+                },
+                onAddClick = {
+                    navController.navigate(Screen.AddJournalEntry.route)
+                }
+            )
+        }
+        
+        composable(Screen.AddJournalEntry.route) {
+            AddJournalEntryScreen(
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
         }
 
         // Staff module
@@ -142,7 +162,14 @@ fun NavGraph(
 
         // Tasks module
         composable(Screen.Tasks.route) {
-            PlaceholderScreen(title = "Задачи")
+            TasksListScreen(
+                onTaskClick = { taskId ->
+                    navController.navigate(Screen.TaskDetail.createRoute(taskId))
+                },
+                onAddClick = {
+                    navController.navigate(Screen.AddTask.route)
+                }
+            )
         }
 
         composable(
@@ -150,11 +177,33 @@ fun NavGraph(
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
         ) { backStackEntry ->
             val taskId = backStackEntry.arguments?.getLong("taskId") ?: return@composable
-            PlaceholderScreen(title = "Задача #$taskId")
+            TaskDetailScreen(
+                taskId = taskId,
+                onNavigateBack = { navController.navigateUp() },
+                onEditClick = { id ->
+                    navController.navigate(Screen.EditTask.createRoute(id))
+                }
+            )
         }
 
         composable(Screen.AddTask.route) {
-            PlaceholderScreen(title = "Добавить задачу")
+            AddEditTaskScreen(
+                taskId = null,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
+        }
+        
+        composable(
+            route = Screen.EditTask.route,
+            arguments = listOf(navArgument("taskId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val taskId = backStackEntry.arguments?.getLong("taskId") ?: return@composable
+            AddEditTaskScreen(
+                taskId = taskId,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
         }
 
         // Feed module

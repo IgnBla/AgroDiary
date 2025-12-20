@@ -22,14 +22,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AgroDiaryTheme {
-                AgroDiaryApp()
+                AgroDiaryAppContent()
             }
         }
     }
 }
 
 @Composable
-fun AgroDiaryApp() {
+fun AgroDiaryAppContent() {
     val navController = rememberNavController()
 
     Scaffold(

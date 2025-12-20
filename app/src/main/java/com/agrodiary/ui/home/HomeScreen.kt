@@ -1,6 +1,7 @@
 package com.agrodiary.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -116,12 +117,11 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(24.dp)
+                    )
+                }
             } else {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
