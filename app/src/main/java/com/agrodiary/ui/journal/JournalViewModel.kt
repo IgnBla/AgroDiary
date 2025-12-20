@@ -114,6 +114,14 @@ class JournalViewModel @Inject constructor(
     suspend fun getEntryById(id: Long): JournalEntryEntity? {
         return repository.getEntryById(id)
     }
+
+    suspend fun getAnimalById(id: Long): AnimalEntity? {
+        return animalRepository.getAnimalById(id)
+    }
+
+    suspend fun getStaffById(id: Long): StaffEntity? {
+        return staffRepository.getStaffById(id)
+    }
 }
 
 data class JournalUiState(
