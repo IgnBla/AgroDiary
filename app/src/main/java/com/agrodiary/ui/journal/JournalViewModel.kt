@@ -96,6 +96,10 @@ class JournalViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun getEntryById(id: Long): JournalEntryEntity? {
+        return repository.getEntryById(id)
+    }
 }
 
 data class JournalUiState(

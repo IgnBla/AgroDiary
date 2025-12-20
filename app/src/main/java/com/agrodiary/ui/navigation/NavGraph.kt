@@ -33,6 +33,8 @@ import com.agrodiary.ui.products.AddEditProductScreen
 import com.agrodiary.ui.reports.ReportsScreen
 import com.agrodiary.ui.settings.SettingsScreen
 
+import com.agrodiary.ui.journal.JournalDetailScreen
+
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -111,6 +113,17 @@ fun NavGraph(
                 onAddClick = {
                     navController.navigate(Screen.AddJournalEntry.route)
                 }
+            )
+        }
+        
+        composable(
+            route = Screen.JournalDetail.route,
+            arguments = listOf(navArgument("entryId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val entryId = backStackEntry.arguments?.getLong("entryId") ?: return@composable
+            JournalDetailScreen(
+                entryId = entryId,
+                onNavigateBack = { navController.navigateUp() }
             )
         }
         
