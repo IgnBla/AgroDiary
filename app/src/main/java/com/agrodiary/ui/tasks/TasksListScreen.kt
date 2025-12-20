@@ -30,6 +30,7 @@ import com.agrodiary.ui.tasks.components.TaskCard
 fun TasksListScreen(
     onTaskClick: (Long) -> Unit,
     onAddClick: () -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: TasksViewModel = hiltViewModel()
 ) {
     val tasks by viewModel.tasks.collectAsStateWithLifecycle()
@@ -40,7 +41,7 @@ fun TasksListScreen(
         topBar = {
             AgroDiaryTopBar(
                 title = "Задачи",
-                onBackClick = null
+                onBackClick = onNavigateBack
             )
         },
         floatingActionButton = {

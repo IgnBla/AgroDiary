@@ -57,6 +57,7 @@ import com.agrodiary.ui.theme.AgroDiaryTheme
 fun StaffListScreen(
     onStaffClick: (Long) -> Unit,
     onAddClick: () -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: StaffViewModel = hiltViewModel()
 ) {
@@ -86,7 +87,7 @@ fun StaffListScreen(
         topBar = {
             AgroDiaryTopBar(
                 title = "Персонал",
-                onBackClick = null
+                onBackClick = onNavigateBack
             )
         },
         floatingActionButton = {

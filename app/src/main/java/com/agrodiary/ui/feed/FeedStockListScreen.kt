@@ -29,6 +29,7 @@ import com.agrodiary.ui.feed.components.FeedStockCard
 fun FeedStockListScreen(
     onFeedClick: (Long) -> Unit,
     onAddClick: () -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: FeedStockViewModel = hiltViewModel()
 ) {
     val feedStocks by viewModel.feedStocks.collectAsStateWithLifecycle()
@@ -38,7 +39,7 @@ fun FeedStockListScreen(
         topBar = {
             AgroDiaryTopBar(
                 title = "Запас кормов",
-                onBackClick = null
+                onBackClick = onNavigateBack
             )
         },
         floatingActionButton = {

@@ -29,6 +29,7 @@ import com.agrodiary.ui.products.components.ProductCard
 fun ProductsListScreen(
     onProductClick: (Long) -> Unit,
     onAddClick: () -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: ProductViewModel = hiltViewModel()
 ) {
     val products by viewModel.products.collectAsStateWithLifecycle()
@@ -38,7 +39,7 @@ fun ProductsListScreen(
         topBar = {
             AgroDiaryTopBar(
                 title = "Товары",
-                onBackClick = null
+                onBackClick = onNavigateBack
             )
         },
         floatingActionButton = {

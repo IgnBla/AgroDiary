@@ -129,7 +129,8 @@ fun NavGraph(
                 },
                 onAddClick = {
                     navController.navigate(Screen.AddStaff.route)
-                }
+                },
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 
@@ -176,7 +177,8 @@ fun NavGraph(
                 },
                 onAddClick = {
                     navController.navigate(Screen.AddTask.route)
-                }
+                },
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 
@@ -222,7 +224,8 @@ fun NavGraph(
                 },
                 onAddClick = {
                     navController.navigate(Screen.AddFeed.route)
-                }
+                },
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 
@@ -268,7 +271,8 @@ fun NavGraph(
                 },
                 onAddClick = {
                     navController.navigate(Screen.AddProduct.route)
-                }
+                },
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 
