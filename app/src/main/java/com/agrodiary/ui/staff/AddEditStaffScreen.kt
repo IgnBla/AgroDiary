@@ -46,6 +46,8 @@ import com.agrodiary.ui.components.DropdownField
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import kotlinx.coroutines.launch
 
+import com.agrodiary.common.ValidationUtils
+
 /**
  * Экран добавления/редактирования сотрудника.
  *
@@ -85,6 +87,10 @@ fun AddEditStaffScreen(
     // Ошибки валидации
     var nameError by remember { mutableStateOf(false) }
     var positionError by remember { mutableStateOf(false) }
+    var emailError by remember { mutableStateOf(false) }
+    var phoneError by remember { mutableStateOf(false) }
+    var salaryError by remember { mutableStateOf(false) }
+    var hireDateError by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -167,12 +173,12 @@ fun AddEditStaffScreen(
                     value = name,
                     onValueChange = {
                         name = it
-                        nameError = it.isBlank()
+                        nameError = !ValidationUtils.isValidName(it)
                     },
                     label = "Имя *",
                     placeholder = "Введите имя сотрудника",
                     isError = nameError,
-                    errorMessage = if (nameError) "Имя обязательно" else null,
+                    errorMessage = if (nameError) "Имя должно быть не менее 2 символов" else null,
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 )
@@ -213,9 +219,14 @@ fun AddEditStaffScreen(
                 // Телефон
                 AgroDiaryTextField(
                     value = phone,
-                    onValueChange = { phone = it },
+                    onValueChange = {
+                        phone = it
+                        phoneError = it.isNotEmpty() && !ValidationUtils.isValidPhone(it)
+                    },
                     label = "Телефон",
                     placeholder = "+7 (999) 123-45-67",
+                    isError = phoneError,
+                    errorMessage = if (phoneError) "Некорректный формат телефона" else null,
                     keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Next
                 )
@@ -223,9 +234,14 @@ fun AddEditStaffScreen(
                 // Email
                 AgroDiaryTextField(
                     value = email,
-                    onValueChange = { email = it },
+                    onValueChange = {
+                        email = it
+                        emailError = it.isNotEmpty() && !ValidationUtils.isValidEmail(it)
+                    },
                     label = "Email",
                     placeholder = "example@example.com",
+                    isError = emailError,
+                    errorMessage = if (emailError) "Некорректный формат email" else null,
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 )
@@ -242,8 +258,13 @@ fun AddEditStaffScreen(
                 // Дата приёма на работу
                 DatePickerField(
                     selectedDate = if (hireDate > 0) hireDate else null,
-                    onDateSelected = { hireDate = it ?: 0L },
-                    label = "Дата приёма на работу"
+                    onDateSelected = {
+                        hireDate = it ?: 0L
+                        hireDateError = it != null && it > System.currentTimeMillis()
+                    },
+                    label = "Дата приёма на работу",
+                    isError = hireDateError,
+                    errorMessage = if (hireDateError) "Дата не может быть в будущем" else null
                 )
 
                 // Зарплата
@@ -251,10 +272,18 @@ fun AddEditStaffScreen(
                     value = salaryText,
                     onValueChange = {
                         salaryText = it
-                        salary = it.toDoubleOrNull() ?: 0.0
+                        val s = it.toDoubleOrNull()
+                        if (s != null) {
+                            salary = s
+                            salaryError = !ValidationUtils.isValidPrice(s)
+                        } else {
+                            salaryError = it.isNotEmpty()
+                        }
                     },
                     label = "Зарплата (руб.)",
                     placeholder = "Введите зарплату",
+                    isError = salaryError,
+                    errorMessage = if (salaryError) "Введите корректную сумму" else null,
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
                 )
@@ -297,10 +326,17 @@ fun AddEditStaffScreen(
                         text = if (isEditMode) "Сохранить" else "Добавить",
                         onClick = {
                             // Валидация
-                            nameError = name.isBlank()
+                            nameError = !ValidationUtils.isValidName(name)
                             positionError = position.isBlank()
+                            emailError = email.isNotEmpty() && !ValidationUtils.isValidEmail(email)
+                            phoneError = phone.isNotEmpty() && !ValidationUtils.isValidPhone(phone)
+                            
+                            val s = salaryText.toDoubleOrNull()
+                            salaryError = salaryText.isNotEmpty() && (s == null || !ValidationUtils.isValidPrice(s))
+                            
+                            hireDateError = hireDate > System.currentTimeMillis()
 
-                            if (!nameError && !positionError) {
+                            if (!nameError && !positionError && !emailError && !phoneError && !salaryError && !hireDateError) {
                                 val staff = StaffEntity(
                                     id = staffId ?: 0,
                                     name = name.trim(),
@@ -326,6 +362,223 @@ fun AddEditStaffScreen(
                         enabled = !uiState.isLoading
                     )
                 }
+            }
+        }
+    }
+}
+
+// PREVIEWS
+
+@Preview(showBackground = true)
+@Composable
+private fun AddEditStaffScreenAddPreview() {
+    AgroDiaryTheme {
+        AddEditStaffScreenContent(
+            isEditMode = false,
+            name = "",
+            position = "",
+            phone = "",
+            email = "",
+            hireDate = 0L,
+            salaryText = "",
+            status = StaffStatus.ACTIVE,
+            notes = "",
+            nameError = false,
+            positionError = false,
+            onNavigateBack = {},
+            onNameChange = {},
+            onPositionChange = {},
+            onPhoneChange = {},
+            onEmailChange = {},
+            onHireDateChange = {},
+            onSalaryChange = {},
+            onStatusChange = {},
+            onNotesChange = {},
+            onSave = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddEditStaffScreenEditPreview() {
+    AgroDiaryTheme {
+        AddEditStaffScreenContent(
+            isEditMode = true,
+            name = "Иван Петров",
+            position = "Управляющий фермой",
+            phone = "+7 (999) 123-45-67",
+            email = "ivan@example.com",
+            hireDate = System.currentTimeMillis(),
+            salaryText = "50000",
+            status = StaffStatus.ACTIVE,
+            notes = "Опытный управляющий",
+            nameError = false,
+            positionError = false,
+            onNavigateBack = {},
+            onNameChange = {},
+            onTypeChange = {},
+            onBreedChange = {},
+            onBirthDateChange = {},
+            onGenderChange = {},
+            onWeightChange = {},
+            onStatusChange = {},
+            onNotesChange = {},
+            onSave = {}
+        )
+    }
+}
+
+/**
+ * Вспомогательный Composable для Preview.
+ */
+@Composable
+private fun AddEditStaffScreenContent(
+    isEditMode: Boolean,
+    name: String,
+    position: String,
+    phone: String,
+    email: String,
+    hireDate: Long,
+    salaryText: String,
+    status: StaffStatus,
+    notes: String,
+    nameError: Boolean,
+    positionError: Boolean,
+    onNavigateBack: () -> Unit,
+    onNameChange: (String) -> Unit,
+    onPositionChange: (String) -> Unit,
+    onPhoneChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onHireDateChange: (Long?) -> Unit,
+    onSalaryChange: (String) -> Unit,
+    onStatusChange: (StaffStatus) -> Unit,
+    onNotesChange: (String) -> Unit,
+    onSave: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            AgroDiaryTopBar(
+                title = if (isEditMode) "Редактировать сотрудника" else "Добавить сотрудника",
+                onBackClick = onNavigateBack
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "Основная информация",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            AgroDiaryTextField(
+                value = name,
+                onValueChange = onNameChange,
+                label = "Имя *",
+                placeholder = "Введите имя сотрудника",
+                isError = nameError,
+                errorMessage = if (nameError) "Имя обязательно" else null
+            )
+
+            AgroDiaryTextField(
+                value = position,
+                onValueChange = onPositionChange,
+                label = "Должность *",
+                placeholder = "Введите должность",
+                isError = positionError,
+                errorMessage = if (positionError) "Должность обязательна" else null
+            )
+
+            DropdownField(
+                selectedItem = status,
+                items = StaffStatus.entries,
+                onItemSelected = onStatusChange,
+                itemLabel = { it.displayName },
+                label = "Статус"
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Контактная информация",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            AgroDiaryTextField(
+                value = phone,
+                onValueChange = onPhoneChange,
+                label = "Телефон",
+                placeholder = "+7 (999) 123-45-67"
+            )
+
+            AgroDiaryTextField(
+                value = email,
+                onValueChange = onEmailChange,
+                label = "Email",
+                placeholder = "example@example.com"
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Информация о работе",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            DatePickerField(
+                selectedDate = if (hireDate > 0) hireDate else null,
+                onDateSelected = onHireDateChange,
+                label = "Дата приёма на работу"
+            )
+
+            AgroDiaryTextField(
+                value = salaryText,
+                onValueChange = onSalaryChange,
+                label = "Зарплата (руб.)",
+                placeholder = "Введите зарплату"
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Дополнительно",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            AgroDiaryMultilineTextField(
+                value = notes,
+                onValueChange = onNotesChange,
+                label = "Заметки",
+                placeholder = "Дополнительная информация"
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                AgroDiaryOutlinedButton(
+                    text = "Отмена",
+                    onClick = onNavigateBack,
+                    modifier = Modifier.weight(1f)
+                )
+
+                AgroDiaryButton(
+                    text = if (isEditMode) "Сохранить" else "Добавить",
+                    onClick = onSave,
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
