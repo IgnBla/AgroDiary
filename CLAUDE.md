@@ -507,39 +507,39 @@ AgroDiary/
 
 ---
 
-### ЭТАП 12: Модуль «Учёт товаров» 🧺
+### ЭТАП 12: Модуль «Учёт товаров» 🧺 ✅
 **Агенты:** `kotlin-specialist` + `ui-designer`
 
 #### 12.1 ViewModels
 
-- [ ] 12.1.1 Создать `ProductViewModel.kt`
-- [ ] 12.1.2 Загрузка товаров
-- [ ] 12.1.3 CRUD операции
-- [ ] 12.1.4 Группировка по категориям
+- [x] 12.1.1 Создать `ProductViewModel.kt`
+- [x] 12.1.2 Загрузка товаров
+- [x] 12.1.3 CRUD операции
+- [x] 12.1.4 Группировка по категориям
 - [ ] 12.1.5 Создать `ProductTransactionViewModel.kt`
 - [ ] 12.1.6 Операции с товарами
 
 #### 12.2 Экраны
 
-- [ ] 12.2.1 `ProductsListScreen.kt`
-  - [ ] Группировка по категориям
-  - [ ] Список товаров
-- [ ] 12.2.2 `ProductDetailScreen.kt`
-  - [ ] История операций
-  - [ ] Статистика продаж
-- [ ] 12.2.3 `AddEditProductScreen.kt`
+- [x] 12.2.1 `ProductsListScreen.kt`
+  - [x] Группировка по категориям
+  - [x] Список товаров
+- [x] 12.2.2 `ProductDetailScreen.kt`
+  - [x] История операций
+  - [x] Статистика продаж
+- [x] 12.2.3 `AddEditProductScreen.kt`
 - [ ] 12.2.4 `ProductTransactionScreen.kt`
 
 #### 12.3 Компоненты
 
-- [ ] 12.3.1 `ProductCard.kt`
-- [ ] 12.3.2 `CategoryHeader.kt`
-- [ ] 12.3.3 `ProductTransactionCard.kt`
+- [x] 12.3.1 `ProductCard.kt`
+- [x] 12.3.2 `CategoryHeader.kt`
+- [x] 12.3.3 `ProductTransactionCard.kt`
 
 #### 12.4 Интеграция
 
-- [ ] 12.4.1 Подключить навигацию
-- [ ] 12.4.2 Протестировать функционал
+- [x] 12.4.1 Подключить навигацию
+- [x] 12.4.2 Протестировать функционал
 
 ---
 
