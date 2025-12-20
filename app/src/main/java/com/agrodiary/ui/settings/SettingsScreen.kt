@@ -1,5 +1,6 @@
 package com.agrodiary.ui.settings
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.agrodiary.ui.auth.AuthViewModel
 import com.agrodiary.ui.components.AgroDiaryTopBar
+import com.agrodiary.ui.components.ImagePickerField
 
 @Composable
 fun SettingsScreen(
@@ -92,21 +94,38 @@ fun SettingsScreen(
             // Account section
             SettingsSection(title = "Аккаунт", icon = Icons.Default.Person) {
                 currentUser?.let { user ->
-                    Text(
-                        text = user.displayName,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = "@${user.username}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    user.farmName?.let { farm ->
-                        Text(
-                            text = farm,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ImagePickerField(
+                            selectedImageUri = user.photoUri?.let { Uri.parse(it) },
+                            onImageSelected = { uri ->
+                                authViewModel.updateProfile(user.copy(photoUri = uri?.toString()))
+                            },
+                            label = "Фото профиля",
+                            isCircle = true,
+                            modifier = Modifier.padding(bottom = 0.dp)
                         )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                text = user.displayName,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = "@${user.username}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            user.farmName?.let { farm ->
+                                Text(
+                                    text = farm,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))

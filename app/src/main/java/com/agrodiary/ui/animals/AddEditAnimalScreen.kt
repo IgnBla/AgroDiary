@@ -44,8 +44,10 @@ import com.agrodiary.ui.components.AgroDiaryTextField
 import com.agrodiary.ui.components.AgroDiaryTopBar
 import com.agrodiary.ui.components.DatePickerField
 import com.agrodiary.ui.components.DropdownField
+import com.agrodiary.ui.components.ImagePickerField
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import kotlinx.coroutines.launch
+import android.net.Uri
 
 import com.agrodiary.common.ValidationUtils
 
@@ -84,6 +86,7 @@ fun AddEditAnimalScreen(
     var weightText by remember { mutableStateOf("") }
     var status by remember { mutableStateOf(AnimalStatus.ACTIVE) }
     var notes by remember { mutableStateOf("") }
+    var photoUri by remember { mutableStateOf<Uri?>(null) }
 
     // Ошибки валидации
     var nameError by remember { mutableStateOf(false) }
@@ -108,6 +111,7 @@ fun AddEditAnimalScreen(
                     weightText = it.weight?.toString() ?: ""
                     status = it.status
                     notes = it.notes ?: ""
+                    photoUri = it.photoUri?.let { uri -> Uri.parse(uri) }
                 }
             }
         }
@@ -180,6 +184,13 @@ fun AddEditAnimalScreen(
                     errorMessage = if (nameError) "Имя должно быть не менее 2 символов" else null,
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
+                )
+
+                // Фото животного
+                ImagePickerField(
+                    selectedImageUri = photoUri,
+                    onImageSelected = { photoUri = it },
+                    label = "Фото животного"
                 )
 
                 // Тип (обязательное)

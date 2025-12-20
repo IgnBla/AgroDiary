@@ -135,6 +135,17 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun updateProfile(user: UserEntity) {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
+            val result = authRepository.updateProfile(user)
+            _authState.value = when (result) {
+                is AuthResult.Success -> AuthState.Success
+                is AuthResult.Error -> AuthState.Error(result.message)
+            }
+        }
+    }
+
     fun clearError() {
         if (_authState.value is AuthState.Error) {
             _authState.value = AuthState.Idle
