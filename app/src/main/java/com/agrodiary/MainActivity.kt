@@ -15,13 +15,30 @@ import com.agrodiary.ui.navigation.NavGraph
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.agrodiary.data.local.PreferenceManager
+import javax.inject.Inject
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AgroDiaryTheme {
+            val themeMode by preferenceManager.themeMode.collectAsState()
+            val darkTheme = when (themeMode) {
+                "light" -> false
+                "dark" -> true
+                else -> isSystemInDarkTheme()
+            }
+
+            AgroDiaryTheme(darkTheme = darkTheme) {
                 AgroDiaryAppContent()
             }
         }

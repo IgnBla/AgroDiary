@@ -31,6 +31,7 @@ import com.agrodiary.ui.products.ProductsListScreen
 import com.agrodiary.ui.products.ProductDetailScreen
 import com.agrodiary.ui.products.AddEditProductScreen
 import com.agrodiary.ui.reports.ReportsScreen
+import com.agrodiary.ui.settings.SettingsScreen
 
 @Composable
 fun NavGraph(
@@ -50,7 +51,8 @@ fun NavGraph(
                 onNavigateToFeed = { navController.navigate(Screen.FeedStock.route) },
                 onNavigateToProducts = { navController.navigate(Screen.Products.route) },
                 onNavigateToStaff = { navController.navigate(Screen.Staff.route) },
-                onNavigateToJournal = { navController.navigate(Screen.Journal.route) }
+                onNavigateToJournal = { navController.navigate(Screen.Journal.route) },
+                onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
             )
         }
 
@@ -311,7 +313,9 @@ fun NavGraph(
 
         // Settings
         composable(Screen.Settings.route) {
-            PlaceholderScreen(title = "Настройки")
+            SettingsScreen(
+                onNavigateBack = { navController.navigateUp() }
+            )
         }
     }
 }

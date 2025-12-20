@@ -23,11 +23,14 @@ import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.agrodiary.ui.components.AgroDiaryTopBar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -50,206 +54,220 @@ fun HomeScreen(
     onNavigateToProducts: () -> Unit,
     onNavigateToStaff: () -> Unit,
     onNavigateToJournal: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val dateFormatter = SimpleDateFormat("EEEE, d MMMM", Locale("ru"))
     val today = dateFormatter.format(Date())
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Welcome header
-        item {
-            Column {
-                Text(
-                    text = "AgroDiary",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = today.replaceFirstChar { it.uppercase() },
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-
-        // Quick access cards
-        item {
-            Text(
-                text = "Быстрый доступ",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+    Scaffold(
+        topBar = {
+            AgroDiaryTopBar(
+                title = "AgroDiary",
+                onBackClick = null,
+                actions = {
+                    IconButton(onClick = onNavigateToSettings) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Настройки"
+                        )
+                    }
+                }
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(
-                    listOf(
-                        QuickAccessItem("Животные", Icons.Default.Pets, onNavigateToAnimals),
-                        QuickAccessItem("Задачи", Icons.Default.Assignment, onNavigateToTasks),
-                        QuickAccessItem("Корма", Icons.Default.Grass, onNavigateToFeed),
-                        QuickAccessItem("Товары", Icons.Default.Inventory, onNavigateToProducts),
-                        QuickAccessItem("Персонал", Icons.Default.People, onNavigateToStaff)
-                    )
-                ) { item ->
-                    QuickAccessCard(
-                        title = item.title,
-                        icon = item.icon,
-                        onClick = item.onClick
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Welcome header
+            item {
+                Column {
+                    Text(
+                        text = today.replaceFirstChar { it.uppercase() },
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
-        }
 
-        // Statistics section with real data
-        item {
-            Text(
-                text = "Статистика",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            // Quick access cards
+            item {
+                Text(
+                    text = "Быстрый доступ",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(
+                        listOf(
+                            QuickAccessItem("Животные", Icons.Default.Pets, onNavigateToAnimals),
+                            QuickAccessItem("Задачи", Icons.Default.Assignment, onNavigateToTasks),
+                            QuickAccessItem("Корма", Icons.Default.Grass, onNavigateToFeed),
+                            QuickAccessItem("Товары", Icons.Default.Inventory, onNavigateToProducts),
+                            QuickAccessItem("Персонал", Icons.Default.People, onNavigateToStaff)
+                        )
+                    ) { item ->
+                        QuickAccessCard(
+                            title = item.title,
+                            icon = item.icon,
+                            onClick = item.onClick
+                        )
+                    }
+                }
+            }
 
-            if (uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(24.dp)
+            // Statistics section with real data
+            item {
+                Text(
+                    text = "Статистика",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (uiState.isLoading) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(24.dp)
+                        )
+                    }
+                } else {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            StatCard(
+                                title = "Животных",
+                                value = uiState.statistics.totalAnimals.toString(),
+                                icon = Icons.Default.Pets,
+                                modifier = Modifier.weight(1f)
+                            )
+                            StatCard(
+                                title = "Активных задач",
+                                value = uiState.statistics.activeTasks.toString(),
+                                icon = Icons.Default.Assignment,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            StatCard(
+                                title = "Выполнено",
+                                value = uiState.statistics.completedTasks.toString(),
+                                icon = Icons.Default.Assignment,
+                                modifier = Modifier.weight(1f)
+                            )
+                            StatCard(
+                                title = "Предупреждений",
+                                value = uiState.statistics.lowStockCount.toString(),
+                                icon = Icons.Default.Warning,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Urgent tasks section
+            if (uiState.urgentTasks.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Срочные задачи",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                items(uiState.urgentTasks) { task ->
+                    QuickTaskCard(
+                        task = task,
+                        onClick = onNavigateToTasks
+                    )
+                }
+            }
+
+            // Low stock warnings section
+            if (uiState.lowStockWarnings.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Предупреждения о запасах",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                items(uiState.lowStockWarnings) { feedStock ->
+                    WarningCard(
+                        feedStock = feedStock,
+                        onClick = onNavigateToFeed
+                    )
+                }
+            }
+
+            // Recent journal entries section
+            item {
+                Text(
+                    text = "Последние записи журнала",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            if (uiState.recentJournalEntries.isEmpty()) {
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Agriculture,
+                                contentDescription = null,
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Записей пока нет",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = "Добавьте первую запись в журнал",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
                 }
             } else {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        StatCard(
-                            title = "Животных",
-                            value = uiState.statistics.totalAnimals.toString(),
-                            icon = Icons.Default.Pets,
-                            modifier = Modifier.weight(1f)
-                        )
-                        StatCard(
-                            title = "Активных задач",
-                            value = uiState.statistics.activeTasks.toString(),
-                            icon = Icons.Default.Assignment,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        StatCard(
-                            title = "Выполнено",
-                            value = uiState.statistics.completedTasks.toString(),
-                            icon = Icons.Default.Assignment,
-                            modifier = Modifier.weight(1f)
-                        )
-                        StatCard(
-                            title = "Предупреждений",
-                            value = uiState.statistics.lowStockCount.toString(),
-                            icon = Icons.Default.Warning,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-        }
-
-        // Urgent tasks section
-        if (uiState.urgentTasks.isNotEmpty()) {
-            item {
-                Text(
-                    text = "Срочные задачи",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            items(uiState.urgentTasks) { task ->
-                QuickTaskCard(
-                    task = task,
-                    onClick = onNavigateToTasks
-                )
-            }
-        }
-
-        // Low stock warnings section
-        if (uiState.lowStockWarnings.isNotEmpty()) {
-            item {
-                Text(
-                    text = "Предупреждения о запасах",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            items(uiState.lowStockWarnings) { feedStock ->
-                WarningCard(
-                    feedStock = feedStock,
-                    onClick = onNavigateToFeed
-                )
-            }
-        }
-
-        // Recent journal entries section
-        item {
-            Text(
-                text = "Последние записи журнала",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        if (uiState.recentJournalEntries.isEmpty()) {
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                items(uiState.recentJournalEntries) { entry ->
+                    JournalEntryCard(
+                        entry = entry,
+                        onClick = onNavigateToJournal
                     )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Agriculture,
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Записей пока нет",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "Добавьте первую запись в журнал",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                        )
-                    }
                 }
-            }
-        } else {
-            items(uiState.recentJournalEntries) { entry ->
-                JournalEntryCard(
-                    entry = entry,
-                    onClick = onNavigateToJournal
-                )
             }
         }
     }
