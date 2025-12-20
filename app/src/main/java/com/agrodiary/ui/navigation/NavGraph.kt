@@ -30,6 +30,7 @@ import com.agrodiary.ui.journal.AddJournalEntryScreen
 import com.agrodiary.ui.products.ProductsListScreen
 import com.agrodiary.ui.products.ProductDetailScreen
 import com.agrodiary.ui.products.AddEditProductScreen
+import com.agrodiary.ui.reports.ReportsScreen
 
 @Composable
 fun NavGraph(
@@ -305,7 +306,7 @@ fun NavGraph(
 
         // Reports
         composable(Screen.Reports.route) {
-            PlaceholderScreen(title = "Отчёты")
+            ReportsScreen()
         }
 
         // Settings
