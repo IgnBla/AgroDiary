@@ -16,6 +16,9 @@ import com.agrodiary.ui.home.HomeScreen
 import com.agrodiary.ui.animals.AnimalsListScreen
 import com.agrodiary.ui.animals.AnimalDetailScreen
 import com.agrodiary.ui.animals.AddEditAnimalScreen
+import com.agrodiary.ui.staff.StaffListScreen
+import com.agrodiary.ui.staff.StaffDetailScreen
+import com.agrodiary.ui.staff.AddEditStaffScreen
 
 @Composable
 fun NavGraph(
@@ -92,7 +95,14 @@ fun NavGraph(
 
         // Staff module
         composable(Screen.Staff.route) {
-            PlaceholderScreen(title = "Персонал")
+            StaffListScreen(
+                onStaffClick = { staffId ->
+                    navController.navigate(Screen.StaffDetail.createRoute(staffId))
+                },
+                onAddClick = {
+                    navController.navigate(Screen.AddStaff.route)
+                }
+            )
         }
 
         composable(
@@ -100,11 +110,34 @@ fun NavGraph(
             arguments = listOf(navArgument("staffId") { type = NavType.LongType })
         ) { backStackEntry ->
             val staffId = backStackEntry.arguments?.getLong("staffId") ?: return@composable
-            PlaceholderScreen(title = "Сотрудник #$staffId")
+            StaffDetailScreen(
+                staffId = staffId,
+                onNavigateBack = { navController.navigateUp() },
+                onEditClick = { id ->
+                    navController.navigate(Screen.EditStaff.createRoute(id))
+                },
+                onDeleteSuccess = { navController.navigateUp() }
+            )
         }
 
         composable(Screen.AddStaff.route) {
-            PlaceholderScreen(title = "Добавить сотрудника")
+            AddEditStaffScreen(
+                staffId = null,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = Screen.EditStaff.route,
+            arguments = listOf(navArgument("staffId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val staffId = backStackEntry.arguments?.getLong("staffId") ?: return@composable
+            AddEditStaffScreen(
+                staffId = staffId,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
         }
 
         // Tasks module
