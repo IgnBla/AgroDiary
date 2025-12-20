@@ -12,6 +12,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.agrodiary.ui.auth.LoginScreen
+import com.agrodiary.ui.auth.RegisterScreen
 import com.agrodiary.ui.home.HomeScreen
 import com.agrodiary.ui.animals.AnimalsListScreen
 import com.agrodiary.ui.animals.AnimalDetailScreen
@@ -37,13 +39,41 @@ import com.agrodiary.ui.settings.SettingsScreen
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    startDestination: String = Screen.Login.route,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
+        // Auth screens
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Screen.Register.route)
+                }
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
         // Main tabs
         composable(Screen.Home.route) {
             HomeScreen(
@@ -111,7 +141,9 @@ fun NavGraph(
                 },
                 onAddClick = {
                     navController.navigate(Screen.AddJournalEntry.route)
-                }
+                },
+                onNavigateToFeed = { navController.navigate(Screen.FeedStock.route) },
+                onNavigateToProducts = { navController.navigate(Screen.Products.route) }
             )
         }
         
@@ -346,7 +378,12 @@ fun NavGraph(
         // Settings
         composable(Screen.Settings.route) {
             SettingsScreen(
-                onNavigateBack = { navController.navigateUp() }
+                onNavigateBack = { navController.navigateUp() },
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }

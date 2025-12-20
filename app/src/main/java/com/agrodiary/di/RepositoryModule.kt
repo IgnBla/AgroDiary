@@ -1,5 +1,6 @@
 package com.agrodiary.di
 
+import android.content.Context
 import com.agrodiary.data.local.dao.AnimalDao
 import com.agrodiary.data.local.dao.FeedStockDao
 import com.agrodiary.data.local.dao.FeedTransactionDao
@@ -8,7 +9,9 @@ import com.agrodiary.data.local.dao.ProductDao
 import com.agrodiary.data.local.dao.ProductTransactionDao
 import com.agrodiary.data.local.dao.StaffDao
 import com.agrodiary.data.local.dao.TaskDao
+import com.agrodiary.data.local.dao.UserDao
 import com.agrodiary.data.repository.AnimalRepository
+import com.agrodiary.data.repository.AuthRepository
 import com.agrodiary.data.repository.FeedStockRepository
 import com.agrodiary.data.repository.FeedTransactionRepository
 import com.agrodiary.data.repository.JournalRepository
@@ -16,6 +19,7 @@ import com.agrodiary.data.repository.ProductRepository
 import com.agrodiary.data.repository.ProductTransactionRepository
 import com.agrodiary.data.repository.StaffRepository
 import com.agrodiary.data.repository.TaskRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -72,5 +76,14 @@ object RepositoryModule {
     @Singleton
     fun provideProductTransactionRepository(productTransactionDao: ProductTransactionDao): ProductTransactionRepository {
         return ProductTransactionRepository(productTransactionDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        userDao: UserDao,
+        @ApplicationContext context: Context
+    ): AuthRepository {
+        return AuthRepository(userDao, context)
     }
 }

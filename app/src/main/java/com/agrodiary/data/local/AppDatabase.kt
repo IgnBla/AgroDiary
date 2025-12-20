@@ -12,6 +12,7 @@ import com.agrodiary.data.local.dao.ProductDao
 import com.agrodiary.data.local.dao.ProductTransactionDao
 import com.agrodiary.data.local.dao.StaffDao
 import com.agrodiary.data.local.dao.TaskDao
+import com.agrodiary.data.local.dao.UserDao
 import com.agrodiary.data.local.entity.AnimalEntity
 import com.agrodiary.data.local.entity.FeedStockEntity
 import com.agrodiary.data.local.entity.FeedTransactionEntity
@@ -20,6 +21,7 @@ import com.agrodiary.data.local.entity.ProductEntity
 import com.agrodiary.data.local.entity.ProductTransactionEntity
 import com.agrodiary.data.local.entity.StaffEntity
 import com.agrodiary.data.local.entity.TaskEntity
+import com.agrodiary.data.local.entity.UserEntity
 
 @Database(
     entities = [
@@ -30,9 +32,10 @@ import com.agrodiary.data.local.entity.TaskEntity
         FeedStockEntity::class,
         FeedTransactionEntity::class,
         ProductEntity::class,
-        ProductTransactionEntity::class
+        ProductTransactionEntity::class,
+        UserEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -46,6 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun feedTransactionDao(): FeedTransactionDao
     abstract fun productDao(): ProductDao
     abstract fun productTransactionDao(): ProductTransactionDao
+    abstract fun userDao(): UserDao
 
     companion object {
         const val DATABASE_NAME = "agrodiary_database"

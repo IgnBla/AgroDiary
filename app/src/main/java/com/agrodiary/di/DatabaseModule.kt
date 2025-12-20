@@ -11,6 +11,7 @@ import com.agrodiary.data.local.dao.ProductDao
 import com.agrodiary.data.local.dao.ProductTransactionDao
 import com.agrodiary.data.local.dao.StaffDao
 import com.agrodiary.data.local.dao.TaskDao
+import com.agrodiary.data.local.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,5 +83,11 @@ object DatabaseModule {
     @Singleton
     fun provideProductTransactionDao(database: AppDatabase): ProductTransactionDao {
         return database.productTransactionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: AppDatabase): UserDao {
+        return database.userDao()
     }
 }
