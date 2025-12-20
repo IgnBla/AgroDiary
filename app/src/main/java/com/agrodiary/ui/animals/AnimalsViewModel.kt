@@ -83,7 +83,7 @@ class AnimalsViewModel @Inject constructor(
         emit(emptyList())
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.Lazily,
         initialValue = emptyList()
     )
 
@@ -252,7 +252,7 @@ class AnimalsViewModel @Inject constructor(
      */
     fun deleteAnimal(animal: AnimalEntity, onSuccess: (() -> Unit)? = null) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            // _uiState.update { it.copy(isLoading = true, error = null) } // Removed to prevent flicker
 
             try {
                 repository.deleteAnimal(animal)
@@ -280,7 +280,7 @@ class AnimalsViewModel @Inject constructor(
      */
     fun deleteAnimalById(id: Long, onSuccess: (() -> Unit)? = null) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            // _uiState.update { it.copy(isLoading = true, error = null) } // Removed to prevent flicker
 
             try {
                 repository.deleteAnimalById(id)

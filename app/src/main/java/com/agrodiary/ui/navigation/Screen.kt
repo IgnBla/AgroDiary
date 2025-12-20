@@ -1,6 +1,10 @@
 package com.agrodiary.ui.navigation
 
 sealed class Screen(val route: String) {
+    // Auth screens
+    object Login : Screen("login")
+    object Register : Screen("register")
+
     // Main tabs
     object Home : Screen("home")
     object Animals : Screen("animals")

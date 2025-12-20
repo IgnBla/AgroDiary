@@ -28,11 +28,23 @@ fun AgroDiaryTextField(
     minLines: Int = 1,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onImeAction: (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
+    // Use provided keyboardActions if not default, otherwise create from onImeAction
+    val effectiveKeyboardActions = if (keyboardActions != KeyboardActions.Default) {
+        keyboardActions
+    } else {
+        KeyboardActions(
+            onDone = { onImeAction?.invoke() },
+            onSearch = { onImeAction?.invoke() },
+            onGo = { onImeAction?.invoke() }
+        )
+    }
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -52,11 +64,7 @@ fun AgroDiaryTextField(
             keyboardType = keyboardType,
             imeAction = imeAction
         ),
-        keyboardActions = KeyboardActions(
-            onDone = { onImeAction?.invoke() },
-            onSearch = { onImeAction?.invoke() },
-            onGo = { onImeAction?.invoke() }
-        ),
+        keyboardActions = effectiveKeyboardActions,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         visualTransformation = visualTransformation,

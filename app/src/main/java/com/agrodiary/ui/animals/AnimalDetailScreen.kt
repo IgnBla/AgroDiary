@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,6 @@ import com.agrodiary.data.local.entity.AnimalStatus
 import com.agrodiary.data.local.entity.AnimalType
 import com.agrodiary.ui.components.AgroDiaryCard
 import com.agrodiary.ui.components.AgroDiaryTopBar
-import com.agrodiary.ui.components.DeleteConfirmDialog
 import com.agrodiary.ui.components.EmptyStateView
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import java.text.SimpleDateFormat
@@ -56,7 +56,7 @@ import java.util.Locale
  * Отображает:
  * - Полную информацию о животном
  * - Фото (placeholder если нет)
- * - Кнопки редактирования и удаления
+ * - Кнопки редактирования и удаления (в TopBar)
  * - История записей журнала (placeholder)
  *
  * @param animalId ID животного
@@ -78,12 +78,13 @@ fun AnimalDetailScreen(
     val animal by viewModel.getAnimalByIdFlow(animalId).collectAsState()
     val uiState by viewModel.uiState.collectAsState()
 
-    var showDeleteDialog by remember { mutableStateOf(false) }
+    var isDeleting by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Обработка ошибок и успешных сообщений
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
+            isDeleting = false // Reset deleting state on error
             snackbarHostState.showSnackbar(error)
             viewModel.clearError()
         }
@@ -109,17 +110,25 @@ fun AnimalDetailScreen(
                     // Кнопка редактирования
                     IconButton(
                         onClick = { animal?.let { onEditClick(it.id) } },
-                        enabled = animal != null && !uiState.isLoading
+                        enabled = animal != null && !uiState.isLoading && !isDeleting
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Редактировать"
                         )
                     }
-                    // Кнопка удаления
+                    
+                    Spacer(modifier = Modifier.width(16.dp))
+                    
+                    // Кнопка удаления (мгновенное удаление)
                     IconButton(
-                        onClick = { showDeleteDialog = true },
-                        enabled = animal != null && !uiState.isLoading
+                        onClick = {
+                             animal?.let {
+                                 isDeleting = true
+                                 viewModel.deleteAnimal(it)
+                             }
+                        },
+                        enabled = animal != null && !uiState.isLoading && !isDeleting
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
@@ -133,7 +142,7 @@ fun AnimalDetailScreen(
         modifier = modifier
     ) { padding ->
         when {
-            uiState.isLoading -> {
+            uiState.isLoading || isDeleting -> {
                 // Индикатор загрузки
                 Column(
                     modifier = Modifier
@@ -161,18 +170,6 @@ fun AnimalDetailScreen(
                 )
             }
         }
-    }
-
-    // Диалог подтверждения удаления
-    if (showDeleteDialog && animal != null) {
-        DeleteConfirmDialog(
-            itemName = animal!!.name,
-            onConfirm = {
-                viewModel.deleteAnimal(animal!!)
-                showDeleteDialog = false
-            },
-            onDismiss = { showDeleteDialog = false }
-        )
     }
 }
 
