@@ -40,6 +40,9 @@ sealed class Screen(val route: String) {
         fun createRoute(entryId: Long) = "journal/$entryId"
     }
     object AddJournalEntry : Screen("journal/add")
+    object EditJournalEntry : Screen("journal/edit/{entryId}") {
+        fun createRoute(entryId: Long) = "journal/edit/$entryId"
+    }
 
     // Feed module
     object FeedStock : Screen("feed")

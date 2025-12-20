@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,25 +36,14 @@ import java.util.Locale
 fun JournalDetailScreen(
     entryId: Long,
     onNavigateBack: () -> Unit,
+    onEditClick: (Long) -> Unit,
     viewModel: JournalViewModel = hiltViewModel()
 ) {
-    // In a real app, we'd probably have a specific GetEntry use case or separate ViewModel logic
-    // For now, we can fetch it via the repository directly in the VM or add a method.
-    // Let's assume we add getEntryById to JournalViewModel or similar.
-    // But JournalViewModel as defined earlier handles the list.
-    // I should add getEntryById to JournalViewModel.
-    
     var entry by remember { mutableStateOf<JournalEntryEntity?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    // We need to extend JournalViewModel to support fetching a single entry by ID if not already there
-    // Or we can just use the repository if we inject it here? No, better to use ViewModel.
-    
     LaunchedEffect(entryId) {
-        // This requires JournalViewModel to have a getEntryById method
-        // I will add it in the next step.
-        // For now, I'll assume it exists.
         entry = viewModel.getEntryById(entryId)
         isLoading = false
     }
@@ -77,6 +67,9 @@ fun JournalDetailScreen(
                 title = "Детали записи",
                 onBackClick = onNavigateBack,
                 actions = {
+                    IconButton(onClick = { onEditClick(entryId) }) {
+                        Icon(Icons.Default.Edit, contentDescription = "Редактировать")
+                    }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(Icons.Default.Delete, contentDescription = "Удалить")
                     }
@@ -129,8 +122,6 @@ fun JournalDetailScreen(
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
-                    
-                    // TODO: Show related animal/staff if available
                 }
             } ?: run {
                 Text("Запись не найдена", modifier = Modifier.padding(padding))

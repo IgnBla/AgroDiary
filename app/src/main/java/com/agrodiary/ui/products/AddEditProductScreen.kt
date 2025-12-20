@@ -113,7 +113,7 @@ fun AddEditProductScreen(
             AgroDiaryTextField(
                 value = pricePerUnit,
                 onValueChange = { if (it.all { char -> char.isDigit() || char == '.' }) pricePerUnit = it },
-                label = "Цена за единицу",
+                label = "Цена за единицу (₽)",
                 keyboardType = KeyboardType.Number,
                 modifier = Modifier.fillMaxWidth()
             )

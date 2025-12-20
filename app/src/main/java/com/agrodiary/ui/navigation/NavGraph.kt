@@ -26,14 +26,13 @@ import com.agrodiary.ui.feed.FeedStockListScreen
 import com.agrodiary.ui.feed.FeedDetailScreen
 import com.agrodiary.ui.feed.AddEditFeedScreen
 import com.agrodiary.ui.journal.JournalListScreen
-import com.agrodiary.ui.journal.AddJournalEntryScreen
+import com.agrodiary.ui.journal.AddEditJournalEntryScreen
+import com.agrodiary.ui.journal.JournalDetailScreen
 import com.agrodiary.ui.products.ProductsListScreen
 import com.agrodiary.ui.products.ProductDetailScreen
 import com.agrodiary.ui.products.AddEditProductScreen
 import com.agrodiary.ui.reports.ReportsScreen
 import com.agrodiary.ui.settings.SettingsScreen
-
-import com.agrodiary.ui.journal.JournalDetailScreen
 
 @Composable
 fun NavGraph(
@@ -123,12 +122,28 @@ fun NavGraph(
             val entryId = backStackEntry.arguments?.getLong("entryId") ?: return@composable
             JournalDetailScreen(
                 entryId = entryId,
-                onNavigateBack = { navController.navigateUp() }
+                onNavigateBack = { navController.navigateUp() },
+                onEditClick = { id ->
+                    navController.navigate(Screen.EditJournalEntry.createRoute(id))
+                }
             )
         }
         
         composable(Screen.AddJournalEntry.route) {
-            AddJournalEntryScreen(
+            AddEditJournalEntryScreen(
+                entryId = null,
+                onNavigateBack = { navController.navigateUp() },
+                onSaveSuccess = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = Screen.EditJournalEntry.route,
+            arguments = listOf(navArgument("entryId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val entryId = backStackEntry.arguments?.getLong("entryId") ?: return@composable
+            AddEditJournalEntryScreen(
+                entryId = entryId,
                 onNavigateBack = { navController.navigateUp() },
                 onSaveSuccess = { navController.navigateUp() }
             )

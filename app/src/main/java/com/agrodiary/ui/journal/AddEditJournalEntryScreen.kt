@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +32,8 @@ import com.agrodiary.ui.components.DatePickerField
 import com.agrodiary.ui.components.DropdownFieldNullable
 
 @Composable
-fun AddJournalEntryScreen(
+fun AddEditJournalEntryScreen(
+    entryId: Long?,
     onNavigateBack: () -> Unit,
     onSaveSuccess: () -> Unit,
     viewModel: JournalViewModel = hiltViewModel()
@@ -39,17 +41,33 @@ fun AddJournalEntryScreen(
     var date by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var type by remember { mutableStateOf(JournalEntryType.OTHER) }
     var description by remember { mutableStateOf("") }
-    var selectedAnimal by remember { mutableStateOf<AnimalEntity?>(null) }
-    var selectedStaff by remember { mutableStateOf<StaffEntity?>(null) }
+    var selectedAnimalId by remember { mutableStateOf<Long?>(null) }
+    var selectedStaffId by remember { mutableStateOf<Long?>(null) }
     var notes by remember { mutableStateOf("") }
-
+    
     val animals by viewModel.animals.collectAsStateWithLifecycle()
     val staff by viewModel.staff.collectAsStateWithLifecycle()
+    
+    val isEditMode = entryId != null
+
+    LaunchedEffect(entryId) {
+        if (isEditMode) {
+            val entry = viewModel.getEntryById(entryId!!)
+            entry?.let {
+                date = it.date
+                type = it.entryType
+                description = it.description
+                selectedAnimalId = it.relatedAnimalId
+                selectedStaffId = it.relatedStaffId
+                notes = it.notes ?: ""
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
-                title = "Новая запись",
+                title = if (isEditMode) "Редактировать запись" else "Новая запись",
                 onBackClick = onNavigateBack
             )
         }
@@ -88,20 +106,22 @@ fun AddJournalEntryScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val selectedAnimal = animals.find { it.id == selectedAnimalId }
             DropdownFieldNullable(
                 label = "Животное (опционально)",
                 items = animals,
                 selectedItem = selectedAnimal,
-                onItemSelected = { selectedAnimal = it },
+                onItemSelected = { selectedAnimalId = it?.id },
                 itemLabel = { "${it.name} (${it.type.displayName})" }
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val selectedStaff = staff.find { it.id == selectedStaffId }
             DropdownFieldNullable(
                 label = "Сотрудник (опционально)",
                 items = staff,
                 selectedItem = selectedStaff,
-                onItemSelected = { selectedStaff = it },
+                onItemSelected = { selectedStaffId = it?.id },
                 itemLabel = { it.name }
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -120,15 +140,20 @@ fun AddJournalEntryScreen(
             Button(
                 onClick = {
                     val entry = JournalEntryEntity(
+                        id = entryId ?: 0,
                         date = date,
                         entryType = type,
                         description = description,
-                        relatedAnimalId = selectedAnimal?.id,
-                        relatedStaffId = selectedStaff?.id,
+                        relatedAnimalId = selectedAnimalId,
+                        relatedStaffId = selectedStaffId,
                         notes = notes,
-                        amount = null // Amount field unused in UI for now
+                        amount = null
                     )
-                    viewModel.addEntry(entry, onSaveSuccess)
+                    if (isEditMode) {
+                        viewModel.updateEntry(entry, onSaveSuccess)
+                    } else {
+                        viewModel.addEntry(entry, onSaveSuccess)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = description.isNotBlank()

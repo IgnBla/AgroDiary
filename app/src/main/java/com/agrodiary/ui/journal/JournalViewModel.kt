@@ -86,6 +86,20 @@ class JournalViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateEntry(entry: JournalEntryEntity, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            try {
+                repository.updateEntry(entry)
+                onSuccess()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message) }
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
     
     fun deleteEntry(entry: JournalEntryEntity) {
         viewModelScope.launch {
