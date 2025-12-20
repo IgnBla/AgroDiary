@@ -94,7 +94,7 @@ fun AddEditTaskScreen(
             
             DropdownField(
                 label = "Приоритет",
-                items = TaskPriority.values().toList(),
+                items = TaskPriority.entries,
                 selectedItem = priority,
                 onItemSelected = { priority = it },
                 itemLabel = { it.displayName }
@@ -103,7 +103,7 @@ fun AddEditTaskScreen(
             
             DropdownField(
                 label = "Статус",
-                items = TaskStatus.values().toList(),
+                items = TaskStatus.entries,
                 selectedItem = status,
                 onItemSelected = { status = it },
                 itemLabel = { it.displayName }
