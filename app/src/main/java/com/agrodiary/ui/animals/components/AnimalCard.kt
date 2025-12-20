@@ -17,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.agrodiary.data.local.entity.AnimalEntity
 import com.agrodiary.data.local.entity.AnimalStatus
 import com.agrodiary.data.local.entity.AnimalType
@@ -33,7 +35,7 @@ import java.util.Locale
  * Карточка животного для отображения в списке.
  *
  * Отображает основную информацию о животном:
- * - Иконка типа животного
+ * - Фото (или иконка типа животного)
  * - Имя
  * - Тип и порода
  * - Статус (цветной badge)
@@ -59,18 +61,27 @@ fun AnimalCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Иконка типа животного
+            // Фото или иконка типа животного
             Surface(
                 shape = MaterialTheme.shapes.small,
                 color = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier.size(48.dp)
             ) {
-                Icon(
-                    imageVector = getAnimalIcon(animal.type),
-                    contentDescription = animal.type.displayName,
-                    modifier = Modifier.padding(8.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                if (!animal.photoUri.isNullOrBlank()) {
+                    AsyncImage(
+                        model = animal.photoUri,
+                        contentDescription = "Фото ${animal.name}",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        imageVector = getAnimalIcon(animal.type),
+                        contentDescription = animal.type.displayName,
+                        modifier = Modifier.padding(8.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
 
             // Информация о животном

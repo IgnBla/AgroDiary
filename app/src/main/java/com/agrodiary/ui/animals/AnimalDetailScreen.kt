@@ -35,10 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.agrodiary.data.local.entity.AnimalEntity
 import com.agrodiary.data.local.entity.AnimalStatus
 import com.agrodiary.data.local.entity.AnimalType
@@ -188,8 +190,8 @@ private fun AnimalDetailContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Фото (placeholder)
-        AnimalPhotoPlaceholder()
+        // Фото
+        AnimalPhotoHeader(photoUri = animal.photoUri)
 
         // Основная информация
         AgroDiaryCard {
@@ -320,35 +322,126 @@ private fun AnimalDetailContent(
 }
 
 /**
- * Placeholder для фото животного.
+ * Заголовок с фото животного.
  */
 @Composable
-private fun AnimalPhotoPlaceholder() {
+private fun AnimalPhotoHeader(photoUri: String?) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .height(240.dp),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Pets,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        if (!photoUri.isNullOrBlank()) {
+            AsyncImage(
+                model = photoUri,
+                contentDescription = "Фото животного",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Фото не добавлено",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Pets,
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Фото не добавлено",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
+    }
+}
+
+/**
+ * Строка информации с меткой и значением.
+ */
+@Composable
+private fun InfoRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+// Вспомогательные функции для склонения слов
+private fun yearWord(years: Int): String = when {
+    years % 10 == 1 && years % 100 != 11 -> "год"
+    years % 10 in 2..4 && years % 100 !in 12..14 -> "года"
+    else -> "лет"
+}
+
+private fun monthWord(months: Int): String = when {
+    months % 10 == 1 && months % 100 != 11 -> "месяц"
+    months % 10 in 2..4 && months % 100 !in 12..14 -> "месяца"
+    else -> "месяцев"
+}
+
+private fun dayWord(days: Int): String = when {
+    days % 10 == 1 && days % 100 != 11 -> "день"
+    days % 10 in 2..4 && days % 100 !in 12..14 -> "дня"
+    else -> "дней"
+}
+
+// PREVIEWS
+
+@Preview(showBackground = true)
+@Composable
+private fun AnimalDetailScreenPreview() {
+    AgroDiaryTheme {
+        AnimalDetailContent(
+            animal = AnimalEntity(
+                id = 1,
+                name = "Буренка",
+                type = AnimalType.COW,
+                breed = "Голштинская",
+                birthDate = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000, // 1 год назад
+                gender = "Ж",
+                weight = 450f,
+                status = AnimalStatus.ACTIVE,
+                notes = "Здоровая корова, регулярно даёт молоко.",
+                createdAt = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AnimalDetailScreenMinimalPreview() {
+    AgroDiaryTheme {
+        AnimalDetailContent(
+            animal = AnimalEntity(
+                id = 2,
+                name = "Козочка",
+                type = AnimalType.GOAT,
+                status = AnimalStatus.ACTIVE
+            )
+        )
     }
 }
 
