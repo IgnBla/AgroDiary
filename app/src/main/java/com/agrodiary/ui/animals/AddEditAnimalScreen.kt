@@ -47,6 +47,8 @@ import com.agrodiary.ui.components.DropdownField
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import kotlinx.coroutines.launch
 
+import com.agrodiary.common.ValidationUtils
+
 /**
  * Экран добавления/редактирования животного.
  *
@@ -86,6 +88,8 @@ fun AddEditAnimalScreen(
     // Ошибки валидации
     var nameError by remember { mutableStateOf(false) }
     var typeError by remember { mutableStateOf(false) }
+    var weightError by remember { mutableStateOf(false) }
+    var birthDateError by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -168,12 +172,12 @@ fun AddEditAnimalScreen(
                     value = name,
                     onValueChange = {
                         name = it
-                        nameError = it.isBlank()
+                        nameError = !ValidationUtils.isValidName(it)
                     },
                     label = "Имя *",
                     placeholder = "Введите имя животного",
                     isError = nameError,
-                    errorMessage = if (nameError) "Имя обязательно" else null,
+                    errorMessage = if (nameError) "Имя должно быть не менее 2 символов" else null,
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 )
@@ -215,8 +219,13 @@ fun AddEditAnimalScreen(
                 // Дата рождения
                 DatePickerField(
                     selectedDate = if (birthDate > 0) birthDate else null,
-                    onDateSelected = { birthDate = it ?: 0L },
-                    label = "Дата рождения"
+                    onDateSelected = {
+                        birthDate = it ?: 0L
+                        birthDateError = it != null && it > System.currentTimeMillis()
+                    },
+                    label = "Дата рождения",
+                    isError = birthDateError,
+                    errorMessage = if (birthDateError) "Дата не может быть в будущем" else null
                 )
 
                 // Пол
@@ -234,10 +243,18 @@ fun AddEditAnimalScreen(
                     value = weightText,
                     onValueChange = {
                         weightText = it
-                        weight = it.toFloatOrNull() ?: 0f
+                        val w = it.toFloatOrNull()
+                        if (w != null) {
+                            weight = w
+                            weightError = !ValidationUtils.isValidWeight(w)
+                        } else {
+                            weightError = it.isNotEmpty()
+                        }
                     },
                     label = "Вес (кг)",
                     placeholder = "Введите вес",
+                    isError = weightError,
+                    errorMessage = if (weightError) "Введите корректный вес" else null,
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
                 )
@@ -289,10 +306,15 @@ fun AddEditAnimalScreen(
                         text = if (isEditMode) "Сохранить" else "Добавить",
                         onClick = {
                             // Валидация
-                            nameError = name.isBlank()
+                            nameError = !ValidationUtils.isValidName(name)
                             typeError = type == null
+                            
+                            val w = weightText.toFloatOrNull()
+                            weightError = weightText.isNotEmpty() && (w == null || !ValidationUtils.isValidWeight(w))
+                            
+                            birthDateError = birthDate > System.currentTimeMillis()
 
-                            if (!nameError && !typeError) {
+                            if (!nameError && !typeError && !weightError && !birthDateError) {
                                 val animal = AnimalEntity(
                                     id = animalId ?: 0,
                                     name = name.trim(),
