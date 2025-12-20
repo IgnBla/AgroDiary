@@ -313,7 +313,7 @@ private fun AnimalDetailContent(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "История записей журнала будет доступна после реализации модуля Журнал",
+                    text = "Записей журнала для этого животного пока нет",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

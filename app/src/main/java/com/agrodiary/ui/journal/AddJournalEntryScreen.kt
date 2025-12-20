@@ -117,7 +117,7 @@ fun AddJournalEntryScreen(
                 items = animals,
                 selectedItem = selectedAnimal,
                 onItemSelected = { selectedAnimal = it },
-                itemLabel = { "${it.name} (${it.type.name})" }
+                itemLabel = { "${it.name} (${it.type.displayName})" }
             )
             Spacer(modifier = Modifier.height(16.dp))
 

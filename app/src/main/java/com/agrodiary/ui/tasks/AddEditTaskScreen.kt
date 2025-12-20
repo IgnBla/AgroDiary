@@ -97,7 +97,7 @@ fun AddEditTaskScreen(
                 items = TaskPriority.values().toList(),
                 selectedItem = priority,
                 onItemSelected = { priority = it },
-                itemLabel = { it.name } // Should use localized names
+                itemLabel = { it.displayName }
             )
             Spacer(modifier = Modifier.height(16.dp))
             
@@ -106,7 +106,7 @@ fun AddEditTaskScreen(
                 items = TaskStatus.values().toList(),
                 selectedItem = status,
                 onItemSelected = { status = it },
-                itemLabel = { it.name }
+                itemLabel = { it.displayName }
             )
             Spacer(modifier = Modifier.height(16.dp))
             
