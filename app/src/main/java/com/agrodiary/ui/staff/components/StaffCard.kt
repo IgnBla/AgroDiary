@@ -31,17 +31,6 @@ import com.agrodiary.ui.theme.AgroDiaryTheme
 
 /**
  * Карточка сотрудника для отображения в списке.
- *
- * Отображает основную информацию о сотруднике:
- * - Фото сотрудника (или иконка)
- * - Имя
- * - Должность
- * - Телефон и email (если есть)
- * - Статус (цветной badge)
- *
- * @param staff Данные сотрудника
- * @param onClick Обработчик клика по карточке
- * @param modifier Модификатор
  */
 @Composable
 fun StaffCard(
@@ -60,7 +49,6 @@ fun StaffCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Фото сотрудника
             Surface(
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.secondaryContainer,
@@ -83,12 +71,10 @@ fun StaffCard(
                 }
             }
 
-            // Информация о сотруднике
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Имя
                 Text(
                     text = staff.name,
                     style = MaterialTheme.typography.titleMedium,
@@ -97,7 +83,6 @@ fun StaffCard(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                // Должность
                 if (!staff.position.isNullOrBlank()) {
                     Text(
                         text = staff.position,
@@ -108,12 +93,10 @@ fun StaffCard(
                     )
                 }
 
-                // Контактная информация
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Телефон
                     if (!staff.phone.isNullOrBlank()) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -133,7 +116,6 @@ fun StaffCard(
                         }
                     }
 
-                    // Email
                     if (!staff.email.isNullOrBlank()) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -157,15 +139,11 @@ fun StaffCard(
                 }
             }
 
-            // Статус
             StaffStatusBadge(status = staff.status)
         }
     }
 }
 
-/**
- * Badge со статусом сотрудника.
- */
 @Composable
 private fun StaffStatusBadge(
     status: StaffStatus,
@@ -191,8 +169,6 @@ private fun StaffStatusBadge(
     }
 }
 
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffCardPreview() {
@@ -201,47 +177,6 @@ private fun StaffCardPreview() {
             staff = StaffEntity(
                 id = 1,
                 name = "Иван Петров",
-                position = "Управляющий фермой",
-                phone = "+7 (999) 123-45-67",
-                email = "ivan@example.com",
-                hireDate = System.currentTimeMillis(),
-                salary = 50000.0,
-                status = StaffStatus.ACTIVE
-            ),
-            onClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StaffCardOnVacationPreview() {
-    AgroDiaryTheme {
-        StaffCard(
-            staff = StaffEntity(
-                id = 2,
-                name = "Мария Сидорова",
-                position = "Ветеринар",
-                phone = "+7 (999) 987-65-43",
-                email = null,
-                status = StaffStatus.ON_VACATION
-            ),
-            onClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StaffCardMinimalPreview() {
-    AgroDiaryTheme {
-        StaffCard(
-            staff = StaffEntity(
-                id = 3,
-                name = "Петр Иванов",
-                position = null,
-                phone = null,
-                email = null,
                 status = StaffStatus.ACTIVE
             ),
             onClick = {}

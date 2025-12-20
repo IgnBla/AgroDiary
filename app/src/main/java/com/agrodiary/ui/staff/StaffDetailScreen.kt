@@ -52,19 +52,6 @@ import java.util.Locale
 
 /**
  * Экран детальной информации о сотруднике.
- *
- * Отображает:
- * - Полную информацию о сотруднике
- * - Фото (placeholder если нет)
- * - Кнопки редактирования и удаления
- * - Список задач сотрудника (placeholder)
- *
- * @param staffId ID сотрудника
- * @param onNavigateBack Обработчик возврата назад
- * @param onEditClick Обработчик клика по кнопке редактирования
- * @param onDeleteSuccess Обработчик успешного удаления
- * @param viewModel ViewModel
- * @param modifier Модификатор
  */
 @Composable
 fun StaffDetailScreen(
@@ -81,7 +68,6 @@ fun StaffDetailScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Обработка ошибок и успешных сообщений
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             snackbarHostState.showSnackbar(error)
@@ -93,7 +79,6 @@ fun StaffDetailScreen(
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             viewModel.clearSuccessMessage()
-            // Если сотрудник удален, вызываем callback успешного удаления
             if (message.contains("удален", ignoreCase = true)) {
                 onDeleteSuccess()
             }
@@ -106,25 +91,17 @@ fun StaffDetailScreen(
                 title = staff?.name ?: "Сотрудник",
                 onBackClick = onNavigateBack,
                 actions = {
-                    // Кнопка редактирования
                     IconButton(
                         onClick = { staff?.let { onEditClick(it.id) } },
                         enabled = staff != null && !uiState.isLoading
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Редактировать"
-                        )
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Редактировать")
                     }
-                    // Кнопка удаления
                     IconButton(
                         onClick = { showDeleteDialog = true },
                         enabled = staff != null && !uiState.isLoading
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Удалить"
-                        )
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Удалить")
                     }
                 }
             )
@@ -134,11 +111,8 @@ fun StaffDetailScreen(
     ) { padding ->
         when {
             uiState.isLoading -> {
-                // Индикатор загрузки
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    modifier = Modifier.fillMaxSize().padding(padding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -146,7 +120,6 @@ fun StaffDetailScreen(
                 }
             }
             staff == null -> {
-                // Сотрудник не найден
                 EmptyStateView(
                     message = "Сотрудник не найден",
                     icon = Icons.Default.Person,
@@ -154,7 +127,6 @@ fun StaffDetailScreen(
                 )
             }
             else -> {
-                // Детали сотрудника
                 StaffDetailContent(
                     staff = staff!!,
                     modifier = Modifier.padding(padding)
@@ -163,7 +135,6 @@ fun StaffDetailScreen(
         }
     }
 
-    // Диалог подтверждения удаления
     if (showDeleteDialog && staff != null) {
         DeleteConfirmDialog(
             itemName = staff!!.name,
@@ -176,9 +147,6 @@ fun StaffDetailScreen(
     }
 }
 
-/**
- * Контент с деталями сотрудника.
- */
 @Composable
 private fun StaffDetailContent(
     staff: StaffEntity,
@@ -191,10 +159,8 @@ private fun StaffDetailContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Фото
         StaffPhotoHeader(photoUri = staff.photoUri)
 
-        // Основная информация
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -206,34 +172,12 @@ private fun StaffDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 InfoRow(label = "Имя", value = staff.name)
                 staff.position?.let { InfoRow(label = "Должность", value = it) }
                 InfoRow(label = "Статус", value = staff.status.displayName)
             }
         }
 
-        // Контактная информация
-        if (!staff.phone.isNullOrBlank() || !staff.email.isNullOrBlank()) {
-            AgroDiaryCard {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        text = "Контактная информация",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    staff.phone?.let { InfoRow(label = "Телефон", value = it) }
-                    staff.email?.let { InfoRow(label = "Email", value = it) }
-                }
-            }
-        }
-
-        // Информация о работе
         if (staff.hireDate != null || staff.salary != null) {
             AgroDiaryCard {
                 Column(
@@ -246,63 +190,18 @@ private fun StaffDetailContent(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     staff.hireDate?.let {
                         val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale("ru"))
                         InfoRow(label = "Дата приёма", value = dateFormatter.format(Date(it)))
-
-                        // Вычисляем стаж
-                        val daysWorked = (System.currentTimeMillis() - it) / (1000 * 60 * 60 * 24)
-                        val yearsWorked = daysWorked / 365
-                        val monthsWorked = (daysWorked % 365) / 30
-                        val experienceText = when {
-                            yearsWorked > 0 -> {
-                                if (monthsWorked > 0) {
-                                    "$yearsWorked ${yearWord(yearsWorked.toInt())} $monthsWorked ${monthWord(monthsWorked.toInt())}"
-                                } else {
-                                    "$yearsWorked ${yearWord(yearsWorked.toInt())}"
-                                }
-                            }
-                            monthsWorked > 0 -> "$monthsWorked ${monthWord(monthsWorked.toInt())}"
-                            else -> "$daysWorked ${dayWord(daysWorked.toInt())}"
-                        }
-                        InfoRow(label = "Стаж работы", value = experienceText)
                     }
-
                     staff.salary?.let {
                         val numberFormat = NumberFormat.getNumberInstance(Locale("ru"))
-                        InfoRow(
-                            label = "Зарплата",
-                            value = "${numberFormat.format(it)} руб."
-                        )
+                        InfoRow(label = "Зарплата", value = "${numberFormat.format(it)} руб.")
                     }
                 }
             }
         }
 
-        // Заметки
-        if (!staff.notes.isNullOrBlank()) {
-            AgroDiaryCard {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "Заметки",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = staff.notes,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        }
-
-        // Системная информация
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -314,50 +213,18 @@ private fun StaffDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale("ru"))
-                InfoRow(
-                    label = "Создано",
-                    value = dateFormatter.format(Date(staff.createdAt))
-                )
-                InfoRow(
-                    label = "Обновлено",
-                    value = dateFormatter.format(Date(staff.updatedAt))
-                )
-            }
-        }
-
-        // Задачи сотрудника (placeholder)
-        AgroDiaryCard {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Задачи сотрудника",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = "Задачи сотрудника будут доступны после реализации модуля Задачи",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                InfoRow(label = "Создано", value = dateFormatter.format(Date(staff.createdAt)))
+                InfoRow(label = "Обновлено", value = dateFormatter.format(Date(staff.updatedAt)))
             }
         }
     }
 }
 
-/**
- * Заголовок с фото сотрудника.
- */
 @Composable
 private fun StaffPhotoHeader(photoUri: String?) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(240.dp),
+        modifier = Modifier.fillMaxWidth().height(240.dp),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
@@ -391,15 +258,8 @@ private fun StaffPhotoHeader(photoUri: String?) {
     }
 }
 
-/**
- * Строка информации с меткой и значением.
- */
 @Composable
-private fun InfoRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
+private fun InfoRow(label: String, value: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -415,7 +275,6 @@ private fun InfoRow(
     }
 }
 
-// Вспомогательные функции для склонения слов
 private fun yearWord(years: Int): String = when {
     years % 10 == 1 && years % 100 != 11 -> "год"
     years % 10 in 2..4 && years % 100 !in 12..14 -> "года"
@@ -434,8 +293,6 @@ private fun dayWord(days: Int): String = when {
     else -> "дней"
 }
 
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffDetailScreenPreview() {
@@ -444,31 +301,6 @@ private fun StaffDetailScreenPreview() {
             staff = StaffEntity(
                 id = 1,
                 name = "Иван Петров",
-                position = "Управляющий фермой",
-                phone = "+7 (999) 123-45-67",
-                email = "ivan@example.com",
-                hireDate = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000, // 1 год назад
-                salary = 50000.0,
-                status = StaffStatus.ACTIVE,
-                notes = "Опытный управляющий с 10-летним стажем работы в сельском хозяйстве.",
-                createdAt = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000,
-                updatedAt = System.currentTimeMillis()
-            )
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun StaffDetailScreenMinimalPreview() {
-    AgroDiaryTheme {
-        StaffDetailContent(
-            staff = StaffEntity(
-                id = 2,
-                name = "Мария Сидорова",
-                position = null,
-                phone = null,
-                email = null,
                 status = StaffStatus.ACTIVE
             )
         )

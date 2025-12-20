@@ -336,6 +336,7 @@ fun AddEditAnimalScreen(
                                     weight = if (weight > 0) weight else null,
                                     status = status,
                                     notes = notes.trim().ifBlank { null },
+                                    photoUri = photoUri?.toString(),
                                     createdAt = if (isEditMode) 0 else System.currentTimeMillis(),
                                     updatedAt = System.currentTimeMillis()
                                 )

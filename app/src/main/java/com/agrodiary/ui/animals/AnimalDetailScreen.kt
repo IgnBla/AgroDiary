@@ -17,7 +17,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,19 +53,6 @@ import java.util.Locale
 
 /**
  * Экран детальной информации о животном.
- *
- * Отображает:
- * - Полную информацию о животном
- * - Фото (placeholder если нет)
- * - Кнопки редактирования и удаления (в TopBar)
- * - История записей журнала (placeholder)
- *
- * @param animalId ID животного
- * @param onNavigateBack Обработчик возврата назад
- * @param onEditClick Обработчик клика по кнопке редактирования
- * @param onDeleteSuccess Обработчик успешного удаления
- * @param viewModel ViewModel
- * @param modifier Модификатор
  */
 @Composable
 fun AnimalDetailScreen(
@@ -83,10 +69,9 @@ fun AnimalDetailScreen(
     var isDeleting by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Обработка ошибок и успешных сообщений
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
-            isDeleting = false // Reset deleting state on error
+            isDeleting = false
             snackbarHostState.showSnackbar(error)
             viewModel.clearError()
         }
@@ -96,7 +81,6 @@ fun AnimalDetailScreen(
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             viewModel.clearSuccessMessage()
-            // Если животное удалено, вызываем callback успешного удаления
             if (message.contains("удалено", ignoreCase = true)) {
                 onDeleteSuccess()
             }
@@ -109,20 +93,13 @@ fun AnimalDetailScreen(
                 title = animal?.name ?: "Животное",
                 onBackClick = onNavigateBack,
                 actions = {
-                    // Кнопка редактирования
                     IconButton(
                         onClick = { animal?.let { onEditClick(it.id) } },
                         enabled = animal != null && !uiState.isLoading && !isDeleting
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Редактировать"
-                        )
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Редактировать")
                     }
-                    
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    // Кнопка удаления (мгновенное удаление)
+                    Spacer(modifier = Modifier.width(8.dp))
                     IconButton(
                         onClick = {
                              animal?.let {
@@ -132,10 +109,7 @@ fun AnimalDetailScreen(
                         },
                         enabled = animal != null && !uiState.isLoading && !isDeleting
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Удалить"
-                        )
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Удалить")
                     }
                 }
             )
@@ -145,11 +119,8 @@ fun AnimalDetailScreen(
     ) { padding ->
         when {
             uiState.isLoading || isDeleting -> {
-                // Индикатор загрузки
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    modifier = Modifier.fillMaxSize().padding(padding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -157,7 +128,6 @@ fun AnimalDetailScreen(
                 }
             }
             animal == null -> {
-                // Животное не найдено
                 EmptyStateView(
                     message = "Животное не найдено",
                     icon = Icons.Default.Pets,
@@ -165,7 +135,6 @@ fun AnimalDetailScreen(
                 )
             }
             else -> {
-                // Детали животного
                 AnimalDetailContent(
                     animal = animal!!,
                     modifier = Modifier.padding(padding)
@@ -175,9 +144,6 @@ fun AnimalDetailScreen(
     }
 }
 
-/**
- * Контент с деталями животного.
- */
 @Composable
 private fun AnimalDetailContent(
     animal: AnimalEntity,
@@ -190,10 +156,8 @@ private fun AnimalDetailContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Фото
         AnimalPhotoHeader(photoUri = animal.photoUri)
 
-        // Основная информация
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -205,7 +169,6 @@ private fun AnimalDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 InfoRow(label = "Имя", value = animal.name)
                 InfoRow(label = "Тип", value = animal.type.displayName)
                 animal.breed?.let { InfoRow(label = "Порода", value = it) }
@@ -214,7 +177,6 @@ private fun AnimalDetailContent(
             }
         }
 
-        // Физические параметры
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -226,13 +188,10 @@ private fun AnimalDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 animal.weight?.let { InfoRow(label = "Вес", value = "${it.toInt()} кг") }
                 animal.birthDate?.let {
                     val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale("ru"))
                     InfoRow(label = "Дата рождения", value = dateFormatter.format(Date(it)))
-
-                    // Вычисляем возраст
                     val ageInDays = (System.currentTimeMillis() - it) / (1000 * 60 * 60 * 24)
                     val ageInYears = ageInDays / 365
                     val ageInMonths = (ageInDays % 365) / 30
@@ -252,7 +211,6 @@ private fun AnimalDetailContent(
             }
         }
 
-        // Заметки
         if (!animal.notes.isNullOrBlank()) {
             AgroDiaryCard {
                 Column(
@@ -274,7 +232,6 @@ private fun AnimalDetailContent(
             }
         }
 
-        // Системная информация
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -286,50 +243,18 @@ private fun AnimalDetailContent(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale("ru"))
-                InfoRow(
-                    label = "Создано",
-                    value = dateFormatter.format(Date(animal.createdAt))
-                )
-                InfoRow(
-                    label = "Обновлено",
-                    value = dateFormatter.format(Date(animal.updatedAt))
-                )
-            }
-        }
-
-        // История записей журнала (placeholder)
-        AgroDiaryCard {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "История записей",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = "Записей журнала для этого животного пока нет",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                InfoRow(label = "Создано", value = dateFormatter.format(Date(animal.createdAt)))
+                InfoRow(label = "Обновлено", value = dateFormatter.format(Date(animal.updatedAt)))
             }
         }
     }
 }
 
-/**
- * Заголовок с фото животного.
- */
 @Composable
 private fun AnimalPhotoHeader(photoUri: String?) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(240.dp),
+        modifier = Modifier.fillMaxWidth().height(240.dp),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
@@ -363,15 +288,8 @@ private fun AnimalPhotoHeader(photoUri: String?) {
     }
 }
 
-/**
- * Строка информации с меткой и значением.
- */
 @Composable
-private fun InfoRow(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
+private fun InfoRow(label: String, value: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -387,7 +305,6 @@ private fun InfoRow(
     }
 }
 
-// Вспомогательные функции для склонения слов
 private fun yearWord(years: Int): String = when {
     years % 10 == 1 && years % 100 != 11 -> "год"
     years % 10 in 2..4 && years % 100 !in 12..14 -> "года"
@@ -406,8 +323,6 @@ private fun dayWord(days: Int): String = when {
     else -> "дней"
 }
 
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalDetailScreenPreview() {
@@ -418,27 +333,6 @@ private fun AnimalDetailScreenPreview() {
                 name = "Буренка",
                 type = AnimalType.COW,
                 breed = "Голштинская",
-                birthDate = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000, // 1 год назад
-                gender = "Ж",
-                weight = 450f,
-                status = AnimalStatus.ACTIVE,
-                notes = "Здоровая корова, регулярно даёт молоко.",
-                createdAt = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000,
-                updatedAt = System.currentTimeMillis()
-            )
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AnimalDetailScreenMinimalPreview() {
-    AgroDiaryTheme {
-        AnimalDetailContent(
-            animal = AnimalEntity(
-                id = 2,
-                name = "Козочка",
-                type = AnimalType.GOAT,
                 status = AnimalStatus.ACTIVE
             )
         )
