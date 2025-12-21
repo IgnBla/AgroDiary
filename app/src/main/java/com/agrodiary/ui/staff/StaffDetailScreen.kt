@@ -27,9 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -42,7 +40,6 @@ import com.agrodiary.data.local.entity.StaffEntity
 import com.agrodiary.data.local.entity.StaffStatus
 import com.agrodiary.ui.components.AgroDiaryCard
 import com.agrodiary.ui.components.AgroDiaryTopBar
-import com.agrodiary.ui.components.DeleteConfirmDialog
 import com.agrodiary.ui.components.EmptyStateView
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import java.text.NumberFormat
@@ -65,7 +62,6 @@ fun StaffDetailScreen(
     val staff by viewModel.getStaffByIdFlow(staffId).collectAsState()
     val uiState by viewModel.uiState.collectAsState()
 
-    var showDeleteDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.error) {
@@ -95,7 +91,15 @@ fun StaffDetailScreen(
                         Icon(imageVector = Icons.Default.Edit, contentDescription = "Редактировать")
                     }
                     IconButton(
-                        onClick = { showDeleteDialog = true },
+                        onClick = {
+                            staff?.let {
+                                viewModel.deleteStaff(
+                                    staff = it,
+                                    onSuccess = onDeleteSuccess,
+                                    showSuccessMessage = false
+                                )
+                            }
+                        },
                         enabled = staff != null && !uiState.isLoading
                     ) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Удалить")
@@ -132,20 +136,6 @@ fun StaffDetailScreen(
         }
     }
 
-    if (showDeleteDialog && staff != null) {
-        DeleteConfirmDialog(
-            itemName = staff!!.name,
-            onConfirm = {
-                viewModel.deleteStaff(
-                    staff = staff!!,
-                    onSuccess = onDeleteSuccess,
-                    showSuccessMessage = false
-                )
-                showDeleteDialog = false
-            },
-            onDismiss = { showDeleteDialog = false }
-        )
-    }
 }
 
 @Composable
