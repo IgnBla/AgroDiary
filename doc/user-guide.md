@@ -25,89 +25,72 @@ AgroDiary — локальный дневник хозяйства: животн
 
 ## 6. Разделы и сценарии
 ### 6.1 Главная
-- Видит статистику (животные, задачи, низкие остатки кормов), срочные задачи (<=3 дня), предупреждения по складу, последние записи журнала.
-- Клик по карточке или задаче ведёт в соответствующий раздел.
+- Статистика: животные, задачи, низкие остатки кормов; срочные задачи (<=3 дня); последние записи журнала.
+- Быстрые карточки переходов к основным модулям.
 
 ### 6.2 Животные
 - Список: поиск по имени, фильтр по типу.
-- Создать: кнопка «+». Заполните имя и тип (обязательно); порода, дата рождения, пол, вес, статус, примечания и фото — опционально. Сохранить.
-- Редактировать: открыть карточку животного → иконка «карандаш» в AppBar.
-- Удалить: иконка «корзина» в AppBar удаляет сразу без подтверждения.
+- Создать: кнопка «+». Имя и тип обязательны; порода/дата рождения/пол/вес/статус/примечания/фото — опционально.
+- Редактировать: карточка → «карандаш» в AppBar.
+- Удалить: «корзина» в AppBar, без подтверждения.
 
 ### 6.3 Сотрудники
 - Список: поиск по имени, фильтр по статусу.
-- Создать: кнопка «+». Обязательные поля: имя, должность. Телефон/email/дата найма/зарплата/примечания/фото — опционально.
-- Редактировать: открыть карточку → «карандаш» в AppBar.
-- Удалить: иконка «корзина» в AppBar удаляет сразу без подтверждения.
+- Создать: «+». Обязательные поля: имя, должность. Остальное — опционально.
+- Редактировать: карточка → «карандаш».
+- Удалить: «корзина» без подтверждения.
 
 ### 6.4 Задачи
-- Список: поиск по названию/описанию, фильтр по статусу.
-- Создать: «+». Укажите название (обязательно), описание (опц.), приоритет, статус, срок выполнения.
-- Редактировать: карточка задачи → «карандаш».
-- Удалить: иконка «корзина» требует подтверждения.
+- Список: поиск/фильтр по статусу.
+- Создать: «+». Название обязательно, описание/приоритет/срок — по желанию.
+- Редактировать: карточка → «карандаш».
+- Удалить: «корзина» с подтверждением.
 
 ### 6.5 Корма
 - Список: фильтр по категории.
-- Создать: «+». Поля: имя*, категория, остаток*, единица измерения, минимальный остаток, примечания.
-- Редактировать: открыть позицию → «карандаш».
-- Удалить: иконка «корзина» с подтверждением.
+- Создать: «+». Поля: имя*, категория, остаток*, ед. измерения, минимальный остаток, примечания.
+- Редактировать: карточка → «карандаш».
+- Удалить: «корзина» с подтверждением.
 
 ### 6.6 Продукты
 - Список: фильтр по категории.
-- Создать: «+». Поля: имя*, категория, количество*, единица измерения, цена за единицу (опц.), примечания.
+- Создать: «+». Поля: имя*, категория, количество*, ед. измерения, цена (опц.), примечания.
 - Редактировать: карточка → «карандаш».
-- Удалить: иконка «корзина» с подтверждением.
+- Удалить: «корзина» с подтверждением.
 
 ### 6.7 Журнал записей
-- Список: фильтр по типу записи; быстрые кнопки к Кормам и Продуктам.
-- Создать: «+». Поля: дата, тип*, описание*, связанное животное (опц.), сотрудник (опц.), примечания.
+- Список: фильтр по типу; быстрые кнопки к Кормам и Продуктам.
+- Создать: «+». Поля: дата, тип*, описание*, животное (опц.), сотрудник (опц.), примечания.
 - Редактировать: карточка → «карандаш».
-- Удалить: иконка «корзина» с подтверждением.
+- Удалить: «корзина» с подтверждением.
 
 ### 6.8 Журнал действий
-- Открыть: кнопка «История» в AppBar журнала.
-- Содержимое: события создания/обновления/удаления животных и сотрудников (тип, детали, время).
+- Кнопка «История» в AppBar журнала; события создания/обновления/удаления животных и сотрудников.
 
 ### 6.9 Настройки
 - Смена темы: системная/светлая/тёмная.
-- Обновление аватара: выбрать фото в профиле.
-- Выход из аккаунта: кнопка «Выйти» с подтверждением.
+- Обновление аватара: выбрать фото.
+- Выход: кнопка «Выйти» с подтверждением.
 
 ### 6.10 Отчеты
-- Доступ: маршрут `reports` (кнопка в UI отсутствует).
-- Показатели: всего животных; задачи (выполнено/всего); низкий остаток кормов; стоимость продуктов.
+- Маршрут `reports` (кнопки в UI нет). Показывает животных, задачи (выполнено/всего), низкий остаток кормов, стоимость продуктов.
 
 ## 7. Подсказки и ограничения
-- Привязка задач к сотрудникам/животным не поддерживается в UI (поля в модели есть).
-- Транзакции по кормам/продуктам не представлены в интерфейсе.
-- Данные остаются на устройстве; удаление приложения удаляет данные.
+- Привязка задач к сотрудникам/животным пока не реализована в UI (поля в модели есть).
+- Транзакции по кормам/продуктам в интерфейсе отсутствуют.
+- Данные локальные; удаление приложения удаляет базу и prefs.
 
-## ?????? ?? ?????????
-- ?????????: `../app/src/main/java/com/agrodiary/ui/navigation/NavGraph.kt`
-- ??????????????: `../app/src/main/java/com/agrodiary/ui/auth/LoginScreen.kt`, `../app/src/main/java/com/agrodiary/ui/auth/RegisterScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/AuthRepository.kt`
-- ???????: `../app/src/main/java/com/agrodiary/ui/home/HomeScreen.kt`
-- ????????: `../app/src/main/java/com/agrodiary/ui/animals/AnimalsListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/animals/AnimalDetailScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/AnimalRepository.kt`
-- ??????????: `../app/src/main/java/com/agrodiary/ui/staff/StaffListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/staff/StaffDetailScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/StaffRepository.kt`
-- ??????: `../app/src/main/java/com/agrodiary/ui/tasks/TasksListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/tasks/TaskDetailScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/TaskRepository.kt`
-- ?????: `../app/src/main/java/com/agrodiary/ui/feed/FeedStockListScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/FeedStockRepository.kt`
-- ????????: `../app/src/main/java/com/agrodiary/ui/products/ProductsListScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/ProductRepository.kt`
-- ?????? ???????: `../app/src/main/java/com/agrodiary/ui/journal/JournalListScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/JournalRepository.kt`
-- ?????? ????????: `../app/src/main/java/com/agrodiary/ui/activitylog/ActivityLogScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/ActivityLogRepository.kt`
-- ?????????: `../app/src/main/java/com/agrodiary/ui/settings/SettingsScreen.kt`
-- ??????: `../app/src/main/java/com/agrodiary/ui/reports/ReportsScreen.kt`
-- ??????: `../app/build.gradle.kts`
-
-## Ссылки на исходники
+## Ссылки на исходники (относительно корня репозитория)
 - Навигация: `../app/src/main/java/com/agrodiary/ui/navigation/NavGraph.kt`
 - Аутентификация: `../app/src/main/java/com/agrodiary/ui/auth/LoginScreen.kt`, `../app/src/main/java/com/agrodiary/ui/auth/RegisterScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/AuthRepository.kt`
-- Главная: `../app/src/main/java/com/agrodiary/ui/home/HomeScreen.kt`
-- Животные: `../app/src/main/java/com/agrodiary/ui/animals/AnimalsListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/animals/AnimalDetailScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/AnimalRepository.kt`
-- Сотрудники: `../app/src/main/java/com/agrodiary/ui/staff/StaffListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/staff/StaffDetailScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/StaffRepository.kt`
-- Задачи: `../app/src/main/java/com/agrodiary/ui/tasks/TasksListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/tasks/TaskDetailScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/TaskRepository.kt`
-- Корма: `../app/src/main/java/com/agrodiary/ui/feed/FeedStockListScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/FeedStockRepository.kt`
-- Продукты: `../app/src/main/java/com/agrodiary/ui/products/ProductsListScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/ProductRepository.kt`
-- Журнал записей: `../app/src/main/java/com/agrodiary/ui/journal/JournalListScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/JournalRepository.kt`
-- Журнал действий: `../app/src/main/java/com/agrodiary/ui/activitylog/ActivityLogScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/ActivityLogRepository.kt`
+- Главная: `../app/src/main/java/com/agrodiary/ui/home/HomeScreen.kt`, `../app/src/main/java/com/agrodiary/ui/home/HomeViewModel.kt`
+- Животные: `../app/src/main/java/com/agrodiary/ui/animals/AnimalsListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/animals/AnimalDetailScreen.kt`, `../app/src/main/java/com/agrodiary/ui/animals/AddEditAnimalScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/AnimalRepository.kt`
+- Сотрудники: `../app/src/main/java/com/agrodiary/ui/staff/StaffListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/staff/StaffDetailScreen.kt`, `../app/src/main/java/com/agrodiary/ui/staff/AddEditStaffScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/StaffRepository.kt`
+- Задачи: `../app/src/main/java/com/agrodiary/ui/tasks/TasksListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/tasks/TaskDetailScreen.kt`, `../app/src/main/java/com/agrodiary/ui/tasks/AddEditTaskScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/TaskRepository.kt`
+- Корма: `../app/src/main/java/com/agrodiary/ui/feed/FeedStockListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/feed/FeedDetailScreen.kt`, `../app/src/main/java/com/agrodiary/ui/feed/AddEditFeedScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/FeedStockRepository.kt`
+- Продукты: `../app/src/main/java/com/agrodiary/ui/products/ProductsListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/products/ProductDetailScreen.kt`, `../app/src/main/java/com/agrodiary/ui/products/AddEditProductScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/ProductRepository.kt`
+- Журнал записей: `../app/src/main/java/com/agrodiary/ui/journal/JournalListScreen.kt`, `../app/src/main/java/com/agrodiary/ui/journal/JournalDetailScreen.kt`, `../app/src/main/java/com/agrodiary/ui/journal/AddEditJournalEntryScreen.kt`, `../app/src/main/java/com/agrodiary/data/repository/JournalRepository.kt`
+- Журнал действий: `../app/src/main/java/com/agrodiary/ui/activitylog/ActivityLogScreen.kt`, `../app/src/main/java/com/agrodiary/ui/activitylog/ActivityLogViewModel.kt`, `../app/src/main/java/com/agrodiary/data/repository/ActivityLogRepository.kt`
 - Настройки: `../app/src/main/java/com/agrodiary/ui/settings/SettingsScreen.kt`
-- Отчеты: `../app/src/main/java/com/agrodiary/ui/reports/ReportsScreen.kt`
+- Отчеты: `../app/src/main/java/com/agrodiary/ui/reports/ReportsScreen.kt`, `../app/src/main/java/com/agrodiary/ui/reports/ReportsViewModel.kt`
 - Сборка: `../app/build.gradle.kts`
