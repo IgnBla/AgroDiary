@@ -13,8 +13,8 @@ android {
         applicationId = "com.agrodiary"
         minSdk = 26
         targetSdk = 34
-        versionCode = 12
-        versionName = "1.4.6"
+        versionCode = 13
+        versionName = "1.4.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -24,7 +24,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
