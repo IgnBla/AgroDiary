@@ -205,7 +205,7 @@ class StaffViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        successMessage = "Сотрудник \"${staff.name}\" успешно добавлен"
+                        successMessage = "Сотрудник ${staff.name} успешно добавлен"
                     )
                 }
                 onSuccess?.invoke(id)
@@ -234,7 +234,7 @@ class StaffViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        successMessage = "Данные сотрудника \"${staff.name}\" обновлены"
+                        successMessage = "Сотрудник ${staff.name} обновлен"
                     )
                 }
                 onSuccess?.invoke()
@@ -254,7 +254,11 @@ class StaffViewModel @Inject constructor(
      * @param staff Сотрудник для удаления
      * @param onSuccess Callback при успешном удалении
      */
-    fun deleteStaff(staff: StaffEntity, onSuccess: (() -> Unit)? = null) {
+    fun deleteStaff(
+        staff: StaffEntity,
+        onSuccess: (() -> Unit)? = null,
+        showSuccessMessage: Boolean = true
+    ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
@@ -263,7 +267,11 @@ class StaffViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        successMessage = "Сотрудник \"${staff.name}\" удален"
+                        successMessage = if (showSuccessMessage) {
+                            "????????? ${staff.name} ??????"
+                        } else {
+                            null
+                        }
                     )
                 }
                 onSuccess?.invoke()
@@ -283,7 +291,11 @@ class StaffViewModel @Inject constructor(
      * @param id Идентификатор сотрудника
      * @param onSuccess Callback при успешном удалении
      */
-    fun deleteStaffById(id: Long, onSuccess: (() -> Unit)? = null) {
+    fun deleteStaffById(
+        id: Long,
+        onSuccess: (() -> Unit)? = null,
+        showSuccessMessage: Boolean = true
+    ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
@@ -292,7 +304,11 @@ class StaffViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        successMessage = "Сотрудник удален"
+                        successMessage = if (showSuccessMessage) {
+                            "Сотрудник удален"
+                        } else {
+                            null
+                        }
                     )
                 }
                 onSuccess?.invoke()

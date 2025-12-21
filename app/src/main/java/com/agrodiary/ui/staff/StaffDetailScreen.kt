@@ -79,9 +79,6 @@ fun StaffDetailScreen(
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             viewModel.clearSuccessMessage()
-            if (message.contains("удален", ignoreCase = true)) {
-                onDeleteSuccess()
-            }
         }
     }
 
@@ -139,7 +136,11 @@ fun StaffDetailScreen(
         DeleteConfirmDialog(
             itemName = staff!!.name,
             onConfirm = {
-                viewModel.deleteStaff(staff!!)
+                viewModel.deleteStaff(
+                    staff = staff!!,
+                    onSuccess = onDeleteSuccess,
+                    showSuccessMessage = false
+                )
                 showDeleteDialog = false
             },
             onDismiss = { showDeleteDialog = false }
