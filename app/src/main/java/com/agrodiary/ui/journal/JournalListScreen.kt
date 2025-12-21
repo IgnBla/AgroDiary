@@ -16,15 +16,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Grass
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -56,7 +57,15 @@ fun JournalListScreen(
         topBar = {
             AgroDiaryTopBar(
                 title = "Журнал",
-                onBackClick = null
+                onBackClick = null,
+                actions = {
+                    IconButton(onClick = onNavigateToActivityLog) {
+                        Icon(
+                            imageVector = Icons.Default.History,
+                            contentDescription = "Журнал действий"
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -89,17 +98,6 @@ fun JournalListScreen(
                     onClick = onNavigateToProducts,
                     modifier = Modifier.weight(1f)
                 )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = onNavigateToActivityLog) {
-                    Text(text = "Activity Log")
-                }
             }
 
             AgroDiaryFilterChips(

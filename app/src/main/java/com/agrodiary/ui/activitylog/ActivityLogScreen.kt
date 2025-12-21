@@ -42,14 +42,14 @@ fun ActivityLogScreen(
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
-                title = "Activity Log",
+                title = "Журнал действий",
                 onBackClick = onNavigateBack
             )
         }
     ) { padding ->
         if (logs.isEmpty()) {
             EmptyStateView(
-                message = "No activity yet",
+                message = "Пока нет действий",
                 icon = Icons.Default.History,
                 modifier = Modifier
                     .fillMaxSize()
