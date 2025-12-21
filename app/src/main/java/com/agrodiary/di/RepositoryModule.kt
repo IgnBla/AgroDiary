@@ -1,6 +1,7 @@
 package com.agrodiary.di
 
 import android.content.Context
+import com.agrodiary.data.local.dao.ActivityLogDao
 import com.agrodiary.data.local.dao.AnimalDao
 import com.agrodiary.data.local.dao.FeedStockDao
 import com.agrodiary.data.local.dao.FeedTransactionDao
@@ -10,6 +11,7 @@ import com.agrodiary.data.local.dao.ProductTransactionDao
 import com.agrodiary.data.local.dao.StaffDao
 import com.agrodiary.data.local.dao.TaskDao
 import com.agrodiary.data.local.dao.UserDao
+import com.agrodiary.data.repository.ActivityLogRepository
 import com.agrodiary.data.repository.AnimalRepository
 import com.agrodiary.data.repository.AuthRepository
 import com.agrodiary.data.repository.FeedStockRepository
@@ -32,14 +34,26 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideAnimalRepository(animalDao: AnimalDao): AnimalRepository {
-        return AnimalRepository(animalDao)
+    fun provideActivityLogRepository(activityLogDao: ActivityLogDao): ActivityLogRepository {
+        return ActivityLogRepository(activityLogDao)
     }
 
     @Provides
     @Singleton
-    fun provideStaffRepository(staffDao: StaffDao): StaffRepository {
-        return StaffRepository(staffDao)
+    fun provideAnimalRepository(
+        animalDao: AnimalDao,
+        activityLogRepository: ActivityLogRepository
+    ): AnimalRepository {
+        return AnimalRepository(animalDao, activityLogRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStaffRepository(
+        staffDao: StaffDao,
+        activityLogRepository: ActivityLogRepository
+    ): StaffRepository {
+        return StaffRepository(staffDao, activityLogRepository)
     }
 
     @Provides

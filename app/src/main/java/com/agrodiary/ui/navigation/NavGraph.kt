@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import com.agrodiary.ui.auth.LoginScreen
 import com.agrodiary.ui.auth.RegisterScreen
 import com.agrodiary.ui.home.HomeScreen
+import com.agrodiary.ui.activitylog.ActivityLogScreen
 import com.agrodiary.ui.animals.AnimalsListScreen
 import com.agrodiary.ui.animals.AnimalDetailScreen
 import com.agrodiary.ui.animals.AddEditAnimalScreen
@@ -143,7 +144,8 @@ fun NavGraph(
                     navController.navigate(Screen.AddJournalEntry.route)
                 },
                 onNavigateToFeed = { navController.navigate(Screen.FeedStock.route) },
-                onNavigateToProducts = { navController.navigate(Screen.Products.route) }
+                onNavigateToProducts = { navController.navigate(Screen.Products.route) },
+                onNavigateToActivityLog = { navController.navigate(Screen.ActivityLog.route) }
             )
         }
         
@@ -166,6 +168,12 @@ fun NavGraph(
                 entryId = null,
                 onNavigateBack = { navController.navigateUp() },
                 onSaveSuccess = { navController.navigateUp() }
+            )
+        }
+
+        composable(Screen.ActivityLog.route) {
+            ActivityLogScreen(
+                onNavigateBack = { navController.navigateUp() }
             )
         }
 

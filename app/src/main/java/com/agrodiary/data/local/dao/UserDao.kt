@@ -42,8 +42,13 @@ interface UserDao {
     @Query("UPDATE users SET lastLoginAt = :timestamp, updatedAt = :timestamp WHERE id = :userId")
     suspend fun updateLastLogin(userId: Long, timestamp: Long = System.currentTimeMillis())
 
-    @Query("UPDATE users SET passwordHash = :newPasswordHash, updatedAt = :timestamp WHERE id = :userId")
-    suspend fun updatePassword(userId: Long, newPasswordHash: String, timestamp: Long = System.currentTimeMillis())
+    @Query("UPDATE users SET passwordHash = :newPasswordHash, passwordSalt = :newPasswordSalt, updatedAt = :timestamp WHERE id = :userId")
+    suspend fun updatePassword(
+        userId: Long,
+        newPasswordHash: String,
+        newPasswordSalt: String?,
+        timestamp: Long = System.currentTimeMillis()
+    )
 
     @Delete
     suspend fun deleteUser(user: UserEntity)

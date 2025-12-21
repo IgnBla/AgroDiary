@@ -1,6 +1,7 @@
 package com.agrodiary.data.local.converter
 
 import androidx.room.TypeConverter
+import com.agrodiary.data.local.entity.ActivityLogType
 import com.agrodiary.data.local.entity.AnimalStatus
 import com.agrodiary.data.local.entity.AnimalType
 import com.agrodiary.data.local.entity.FeedCategory
@@ -83,4 +84,11 @@ class Converters {
 
     @TypeConverter
     fun toMeasureUnit(value: String): MeasureUnit = MeasureUnit.valueOf(value)
+
+    // ActivityLogType converters
+    @TypeConverter
+    fun fromActivityLogType(value: ActivityLogType): String = value.name
+
+    @TypeConverter
+    fun toActivityLogType(value: String): ActivityLogType = ActivityLogType.valueOf(value)
 }

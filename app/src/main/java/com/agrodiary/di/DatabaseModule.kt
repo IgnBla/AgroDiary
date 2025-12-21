@@ -3,6 +3,7 @@ package com.agrodiary.di
 import android.content.Context
 import androidx.room.Room
 import com.agrodiary.data.local.AppDatabase
+import com.agrodiary.data.local.dao.ActivityLogDao
 import com.agrodiary.data.local.dao.AnimalDao
 import com.agrodiary.data.local.dao.FeedStockDao
 import com.agrodiary.data.local.dao.FeedTransactionDao
@@ -33,8 +34,17 @@ object DatabaseModule {
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(
+                AppDatabase.MIGRATION_1_2,
+                AppDatabase.MIGRATION_2_3
+            )
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityLogDao(database: AppDatabase): ActivityLogDao {
+        return database.activityLogDao()
     }
 
     @Provides

@@ -1,6 +1,8 @@
 package com.agrodiary.data.repository
 
 import com.agrodiary.data.local.dao.AnimalDao
+import com.agrodiary.data.local.entity.ActivityLogEntity
+import com.agrodiary.data.local.entity.ActivityLogType
 import com.agrodiary.data.local.entity.AnimalEntity
 import com.agrodiary.data.local.entity.AnimalStatus
 import com.agrodiary.data.local.entity.AnimalType
@@ -10,7 +12,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AnimalRepository @Inject constructor(
-    private val animalDao: AnimalDao
+    private val animalDao: AnimalDao,
+    private val activityLogRepository: ActivityLogRepository
 ) {
     fun getAllAnimals(): Flow<List<AnimalEntity>> = animalDao.getAllAnimals()
 
@@ -34,13 +37,61 @@ class AnimalRepository @Inject constructor(
 
     fun getTotalAnimalCount(): Flow<Int> = animalDao.getTotalAnimalCount()
 
-    suspend fun insertAnimal(animal: AnimalEntity): Long = animalDao.insertAnimal(animal)
+    suspend fun insertAnimal(animal: AnimalEntity): Long {
+        val id = animalDao.insertAnimal(animal)
+        logActivity(
+            type = ActivityLogType.ANIMAL_CREATED,
+            details = animal.name,
+            entityId = id
+        )
+        return id
+    }
 
-    suspend fun updateAnimal(animal: AnimalEntity) = animalDao.updateAnimal(
-        animal.copy(updatedAt = System.currentTimeMillis())
-    )
+    suspend fun updateAnimal(animal: AnimalEntity) {
+        val updatedAnimal = animal.copy(updatedAt = System.currentTimeMillis())
+        animalDao.updateAnimal(updatedAnimal)
+        logActivity(
+            type = ActivityLogType.ANIMAL_UPDATED,
+            details = updatedAnimal.name,
+            entityId = updatedAnimal.id
+        )
+    }
 
-    suspend fun deleteAnimal(animal: AnimalEntity) = animalDao.deleteAnimal(animal)
+    suspend fun deleteAnimal(animal: AnimalEntity) {
+        animalDao.deleteAnimal(animal)
+        logActivity(
+            type = ActivityLogType.ANIMAL_DELETED,
+            details = animal.name,
+            entityId = animal.id
+        )
+    }
 
-    suspend fun deleteAnimalById(id: Long) = animalDao.deleteAnimalById(id)
+    suspend fun deleteAnimalById(id: Long) {
+        val existing = animalDao.getAnimalById(id)
+        animalDao.deleteAnimalById(id)
+        logActivity(
+            type = ActivityLogType.ANIMAL_DELETED,
+            details = existing?.name ?: "ID: $id",
+            entityId = id
+        )
+    }
+
+    private suspend fun logActivity(
+        type: ActivityLogType,
+        details: String?,
+        entityId: Long?
+    ) {
+        activityLogRepository.insertLog(
+            ActivityLogEntity(
+                type = type,
+                details = details,
+                entityType = ENTITY_TYPE_ANIMAL,
+                entityId = entityId
+            )
+        )
+    }
+
+    companion object {
+        private const val ENTITY_TYPE_ANIMAL = "animal"
+    }
 }

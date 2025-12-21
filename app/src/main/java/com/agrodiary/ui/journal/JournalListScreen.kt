@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,6 +46,7 @@ fun JournalListScreen(
     onAddClick: () -> Unit,
     onNavigateToFeed: () -> Unit,
     onNavigateToProducts: () -> Unit,
+    onNavigateToActivityLog: () -> Unit,
     viewModel: JournalViewModel = hiltViewModel()
 ) {
     val entries by viewModel.entries.collectAsStateWithLifecycle()
@@ -87,6 +89,17 @@ fun JournalListScreen(
                     onClick = onNavigateToProducts,
                     modifier = Modifier.weight(1f)
                 )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(onClick = onNavigateToActivityLog) {
+                    Text(text = "Activity Log")
+                }
             }
 
             AgroDiaryFilterChips(

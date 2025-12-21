@@ -13,8 +13,8 @@ android {
         applicationId = "com.agrodiary"
         minSdk = 26
         targetSdk = 34
-        versionCode = 13
-        versionName = "1.4.7"
+        versionCode = 14
+        versionName = "1.4.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.security.crypto)
 
     // Compose BOM
     implementation(platform(libs.androidx.compose.bom))

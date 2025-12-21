@@ -1,6 +1,8 @@
 package com.agrodiary.data.repository
 
 import android.content.Context
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.agrodiary.data.local.dao.UserDao
 import com.agrodiary.data.local.entity.UserEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -9,6 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.security.MessageDigest
+import java.security.SecureRandom
+import java.util.Base64
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +27,7 @@ class AuthRepository @Inject constructor(
     private val userDao: UserDao,
     @ApplicationContext private val context: Context
 ) {
-    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs by lazy { createSecurePrefs(context) }
 
     private val _currentUser = MutableStateFlow<UserEntity?>(null)
     val currentUser: StateFlow<UserEntity?> = _currentUser.asStateFlow()
@@ -60,21 +66,23 @@ class AuthRepository @Inject constructor(
             return AuthResult.Error("Аккаунт деактивирован")
         }
 
-        val passwordHash = hashPassword(password)
-        if (user.passwordHash != passwordHash) {
+        val verifiedUser = verifyPasswordAndUpgradeIfNeeded(user, password)
+        if (verifiedUser == null) {
             return AuthResult.Error("Неверный пароль")
         }
 
         // Update last login time
-        userDao.updateLastLogin(user.id)
+        val loginTimestamp = System.currentTimeMillis()
+        userDao.updateLastLogin(user.id, loginTimestamp)
 
         // Save session
         saveSession(user.id)
 
-        _currentUser.value = user.copy(lastLoginAt = System.currentTimeMillis())
+        val sessionUser = verifiedUser.copy(lastLoginAt = loginTimestamp)
+        _currentUser.value = sessionUser
         _isLoggedIn.value = true
 
-        return AuthResult.Success(user)
+        return AuthResult.Success(sessionUser)
     }
 
     suspend fun register(
@@ -85,10 +93,12 @@ class AuthRepository @Inject constructor(
         farmName: String? = null
     ): AuthResult {
         // Validation
-        if (username.isBlank()) {
+        val normalizedUsername = username.trim().lowercase()
+        val trimmedDisplayName = displayName.trim()
+        if (normalizedUsername.isBlank()) {
             return AuthResult.Error("Введите имя пользователя")
         }
-        if (username.length < 3) {
+        if (normalizedUsername.length < 3) {
             return AuthResult.Error("Имя пользователя должно содержать минимум 3 символа")
         }
         if (password.isBlank()) {
@@ -100,11 +110,10 @@ class AuthRepository @Inject constructor(
         if (password != confirmPassword) {
             return AuthResult.Error("Пароли не совпадают")
         }
-        if (displayName.isBlank()) {
+        if (trimmedDisplayName.isBlank()) {
             return AuthResult.Error("Введите ваше имя")
         }
 
-        val normalizedUsername = username.trim().lowercase()
 
         if (userDao.isUsernameExists(normalizedUsername)) {
             return AuthResult.Error("Пользователь с таким именем уже существует")
@@ -113,8 +122,9 @@ class AuthRepository @Inject constructor(
         val passwordHash = hashPassword(password)
         val user = UserEntity(
             username = normalizedUsername,
-            passwordHash = passwordHash,
-            displayName = displayName.trim(),
+            passwordHash = passwordHash.hash,
+            passwordSalt = passwordHash.salt,
+            displayName = trimmedDisplayName,
             farmName = farmName?.trim()?.takeIf { it.isNotBlank() }
         )
 
@@ -141,9 +151,11 @@ class AuthRepository @Inject constructor(
 
     suspend fun updateProfile(user: UserEntity): AuthResult {
         return try {
-            userDao.updateUser(user.copy(updatedAt = System.currentTimeMillis()))
-            _currentUser.value = user
-            AuthResult.Success(user)
+            val updatedAt = System.currentTimeMillis()
+            val updatedUser = user.copy(updatedAt = updatedAt)
+            userDao.updateUser(updatedUser)
+            _currentUser.value = updatedUser
+            AuthResult.Success(updatedUser)
         } catch (e: Exception) {
             AuthResult.Error("Ошибка при обновлении профиля: ${e.message}")
         }
@@ -160,8 +172,7 @@ class AuthRepository @Inject constructor(
             return AuthResult.Error("Введите текущий пароль")
         }
 
-        val currentHash = hashPassword(currentPassword)
-        if (user.passwordHash != currentHash) {
+        if (!isPasswordValid(currentPassword, user)) {
             return AuthResult.Error("Неверный текущий пароль")
         }
 
@@ -176,10 +187,16 @@ class AuthRepository @Inject constructor(
         }
 
         val newHash = hashPassword(newPassword)
-        userDao.updatePassword(user.id, newHash)
-        _currentUser.value = user.copy(passwordHash = newHash, updatedAt = System.currentTimeMillis())
+        val updatedAt = System.currentTimeMillis()
+        userDao.updatePassword(user.id, newHash.hash, newHash.salt, updatedAt)
+        val updatedUser = user.copy(
+            passwordHash = newHash.hash,
+            passwordSalt = newHash.salt,
+            updatedAt = updatedAt
+        )
+        _currentUser.value = updatedUser
 
-        return AuthResult.Success(user)
+        return AuthResult.Success(updatedUser)
     }
 
     suspend fun hasUsers(): Boolean {
@@ -196,7 +213,77 @@ class AuthRepository @Inject constructor(
         prefs.edit().remove(KEY_USER_ID).apply()
     }
 
-    private fun hashPassword(password: String): String {
+    private data class PasswordHash(
+        val hash: String,
+        val salt: String
+    )
+
+    private val secureRandom = SecureRandom()
+
+    private fun createSecurePrefs(context: Context): android.content.SharedPreferences {
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+        return EncryptedSharedPreferences.create(
+            PREFS_NAME,
+            masterKeyAlias,
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
+    private suspend fun verifyPasswordAndUpgradeIfNeeded(
+        user: UserEntity,
+        password: String
+    ): UserEntity? {
+        val salt = user.passwordSalt
+        if (salt.isNullOrBlank()) {
+            val legacyHash = legacyHashPassword(password)
+            if (legacyHash != user.passwordHash) {
+                return null
+            }
+            val upgradedHash = hashPassword(password)
+            val updatedAt = System.currentTimeMillis()
+            userDao.updatePassword(user.id, upgradedHash.hash, upgradedHash.salt, updatedAt)
+            return user.copy(
+                passwordHash = upgradedHash.hash,
+                passwordSalt = upgradedHash.salt,
+                updatedAt = updatedAt
+            )
+        }
+
+        val saltBytes = Base64.getDecoder().decode(salt)
+        val computedHash = hashPasswordWithSalt(password, saltBytes)
+        return if (computedHash == user.passwordHash) user else null
+    }
+
+    private fun isPasswordValid(password: String, user: UserEntity): Boolean {
+        val salt = user.passwordSalt
+        return if (salt.isNullOrBlank()) {
+            legacyHashPassword(password) == user.passwordHash
+        } else {
+            val saltBytes = Base64.getDecoder().decode(salt)
+            hashPasswordWithSalt(password, saltBytes) == user.passwordHash
+        }
+    }
+
+    private fun hashPassword(password: String): PasswordHash {
+        val saltBytes = ByteArray(SALT_LENGTH_BYTES).apply { secureRandom.nextBytes(this) }
+        val hash = hashPasswordWithSalt(password, saltBytes)
+        return PasswordHash(
+            hash = hash,
+            salt = Base64.getEncoder().encodeToString(saltBytes)
+        )
+    }
+
+    private fun hashPasswordWithSalt(password: String, saltBytes: ByteArray): String {
+        val spec = PBEKeySpec(password.toCharArray(), saltBytes, PBKDF2_ITERATIONS, KEY_LENGTH_BITS)
+        val factory = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM)
+        val hashBytes = factory.generateSecret(spec).encoded
+        return Base64.getEncoder().encodeToString(hashBytes)
+    }
+
+    private fun legacyHashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
@@ -204,6 +291,10 @@ class AuthRepository @Inject constructor(
     companion object {
         private const val PREFS_NAME = "agrodiary_auth_prefs"
         private const val KEY_USER_ID = "current_user_id"
+        private const val PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA256"
+        private const val PBKDF2_ITERATIONS = 65536
+        private const val KEY_LENGTH_BITS = 256
+        private const val SALT_LENGTH_BYTES = 16
     }
 }
 

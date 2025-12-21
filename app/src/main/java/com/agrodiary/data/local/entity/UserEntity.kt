@@ -17,6 +17,7 @@ data class UserEntity(
     val id: Long = 0,
     val username: String,
     val passwordHash: String,
+    val passwordSalt: String? = null,
     val displayName: String,
     val farmName: String? = null,
     val email: String? = null,
