@@ -13,14 +13,14 @@
 ## Скриншоты
 
 <p align="center">
-  <img src="Screenshot_20260314_105749_AgroDiary.jpg" width="30%" alt="Главный экран"/>
-  <img src="Screenshot_20260314_105800_AgroDiary.jpg" width="30%" alt="Список животных"/>
-  <img src="Screenshot_20260314_105807_AgroDiary.jpg" width="30%" alt="Журнал"/>
+  <img src="media/Screenshot_20260314_105749_AgroDiary.jpg" width="30%" alt="Главный экран"/>
+  <img src="media/Screenshot_20260314_105800_AgroDiary.jpg" width="30%" alt="Список животных"/>
+  <img src="media/Screenshot_20260314_105807_AgroDiary.jpg" width="30%" alt="Журнал"/>
 </p>
 
 ## Презентация
 
-📊 [AgroDiary_Presentation_v1.5.1.pptx](AgroDiary_Presentation_v1.5.1.pptx)
+📊 [AgroDiary_Presentation_v1.5.1.pptx](media/AgroDiary_Presentation_v1.5.1.pptx)
 
 ---
 
