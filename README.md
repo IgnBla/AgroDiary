@@ -13,9 +13,10 @@
 ## Скриншоты
 
 <p align="center">
-  <img src="media/Screenshot_20260314_105749_AgroDiary.jpg" width="30%" alt="Главный экран"/>
-  <img src="media/Screenshot_20260314_105800_AgroDiary.jpg" width="30%" alt="Список животных"/>
-  <img src="media/Screenshot_20260314_105807_AgroDiary.jpg" width="30%" alt="Журнал"/>
+  <img src="media/Screenshot_20260314_105749_AgroDiary.jpg" width="22%" alt="Главный экран"/>
+  <img src="media/Screenshot_20260314_105800_AgroDiary.jpg" width="22%" alt="Список животных"/>
+  <img src="media/Screenshot_20260314_105807_AgroDiary.jpg" width="22%" alt="Журнал"/>
+  <img src="media/Screenshot_20260314_110530_AgroDiary.jpg" width="22%" alt="Экран приложения"/>
 </p>
 
 ## Презентация
