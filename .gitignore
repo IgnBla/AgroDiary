@@ -1,40 +1,61 @@
-*.iml
-.gradle
-/local.properties
-/.idea/
-.DS_Store
-/build
-*/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-
-# Kotlin
+# Build outputs
+/build/
+*/build/
 *.class
-*.jar
-*.war
-*.ear
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
 
 # Android
 *.apk
 *.aab
 *.dex
 *.ap_
+/captures
+.externalNativeBuild/
+.cxx/
+output-metadata.json
+
+# Signing / credentials
+*.jks
+*.keystore
+*.pk8
+*.pem
+*.p12
+signing.properties
+keystore.properties
+
+# Secrets / environment
+local.properties
+.env
+.env.*
+secrets.properties
+
+# IDE
+/.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# OS files
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+.directory
+
+# Kotlin / Java
+*.class
+*.jar
+*.war
+*.ear
 
 # Logs
 *.log
 
-# OS files
-Thumbs.db
-*.swp
-*~
-
-# IDE
-*.ipr
-*.iws
-
-# Gradle
-.gradle/
-gradle-app.setting
-!gradle-wrapper.jar
+# Misc
+*.hprof
