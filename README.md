@@ -18,6 +18,10 @@
   <img src="Screenshot_20260314_105807_AgroDiary.jpg" width="30%" alt="Журнал"/>
 </p>
 
+## Презентация
+
+📊 [AgroDiary_Presentation_v1.5.1.pptx](AgroDiary_Presentation_v1.5.1.pptx)
+
 ---
 
 ## Возможности
