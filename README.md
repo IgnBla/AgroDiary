@@ -10,6 +10,16 @@
 
 ---
 
+## Скриншоты
+
+<p align="center">
+  <img src="Screenshot_20260314_105749_AgroDiary.jpg" width="30%" alt="Главный экран"/>
+  <img src="Screenshot_20260314_105800_AgroDiary.jpg" width="30%" alt="Список животных"/>
+  <img src="Screenshot_20260314_105807_AgroDiary.jpg" width="30%" alt="Журнал"/>
+</p>
+
+---
+
 ## Возможности
 
 | Модуль | Описание |
