@@ -1,5 +1,4 @@
 package com.agrodiary.ui.home
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,17 +26,6 @@ import com.agrodiary.ui.theme.AgroDiaryTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-/**
- * Компонент карточки записи журнала для главного экрана.
- *
- * Отображает краткую информацию о записи журнала, включая
- * тип события, описание и дату.
- *
- * @param entry Запись журнала
- * @param onClick Обработчик клика на карточку
- * @param modifier Модификатор для настройки внешнего вида
- */
 @Composable
 fun JournalEntryCard(
     entry: JournalEntryEntity,
@@ -46,7 +34,6 @@ fun JournalEntryCard(
 ) {
     val dateFormatter = SimpleDateFormat("dd MMM, HH:mm", Locale("ru"))
     val dateText = dateFormatter.format(Date(entry.date))
-
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -61,7 +48,6 @@ fun JournalEntryCard(
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Иконка записи
             Icon(
                 imageVector = Icons.Default.Book,
                 contentDescription = null,
@@ -70,23 +56,18 @@ fun JournalEntryCard(
                     .align(Alignment.CenterVertically),
                 tint = MaterialTheme.colorScheme.primary
             )
-
-            // Информация о записи
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Тип записи
                 Text(
                     text = entry.entryType.displayName,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary
                 )
-
-                // Описание
                 Text(
                     text = entry.description,
                     style = MaterialTheme.typography.bodyMedium,
@@ -94,8 +75,6 @@ fun JournalEntryCard(
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
-                // Дата и время
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -111,8 +90,6 @@ fun JournalEntryCard(
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
-
-                    // Сумма, если есть
                     if (entry.amount != null) {
                         Text(
                             text = "•",
@@ -131,7 +108,6 @@ fun JournalEntryCard(
         }
     }
 }
-
 @Preview(name = "Journal Entry Card - Feeding", showBackground = true)
 @Composable
 private fun JournalEntryCardFeedingPreview() {
@@ -148,7 +124,6 @@ private fun JournalEntryCardFeedingPreview() {
         )
     }
 }
-
 @Preview(name = "Journal Entry Card - Health Check", showBackground = true)
 @Composable
 private fun JournalEntryCardHealthPreview() {
@@ -156,7 +131,7 @@ private fun JournalEntryCardHealthPreview() {
         JournalEntryCard(
             entry = JournalEntryEntity(
                 id = 2,
-                date = System.currentTimeMillis() - (2 * 60 * 60 * 1000), // 2 часа назад
+                date = System.currentTimeMillis() - (2 * 60 * 60 * 1000),
                 entryType = JournalEntryType.HEALTH_CHECK,
                 description = "Ветеринарный осмотр всего стада. Все животные здоровы",
                 relatedStaffId = 1
@@ -165,7 +140,6 @@ private fun JournalEntryCardHealthPreview() {
         )
     }
 }
-
 @Preview(name = "Journal Entry Card - Sale", showBackground = true)
 @Composable
 private fun JournalEntryCardSalePreview() {
@@ -173,7 +147,7 @@ private fun JournalEntryCardSalePreview() {
         JournalEntryCard(
             entry = JournalEntryEntity(
                 id = 3,
-                date = System.currentTimeMillis() - (24 * 60 * 60 * 1000), // Вчера
+                date = System.currentTimeMillis() - (24 * 60 * 60 * 1000),
                 entryType = JournalEntryType.SALE,
                 description = "Продано 100 литров молока местному магазину",
                 amount = 5000.0,
@@ -183,7 +157,6 @@ private fun JournalEntryCardSalePreview() {
         )
     }
 }
-
 @Preview(name = "Journal Entry Card - Vaccination", showBackground = true)
 @Composable
 private fun JournalEntryCardVaccinationPreview() {
@@ -191,7 +164,7 @@ private fun JournalEntryCardVaccinationPreview() {
         JournalEntryCard(
             entry = JournalEntryEntity(
                 id = 4,
-                date = System.currentTimeMillis() - (3 * 24 * 60 * 60 * 1000), // 3 дня назад
+                date = System.currentTimeMillis() - (3 * 24 * 60 * 60 * 1000),
                 entryType = JournalEntryType.VACCINATION,
                 description = "Вакцинация молодняка от ящура",
                 relatedAnimalId = 5,
@@ -202,7 +175,6 @@ private fun JournalEntryCardVaccinationPreview() {
         )
     }
 }
-
 @Preview(name = "Journal Entry Card - Birth", showBackground = true)
 @Composable
 private fun JournalEntryCardBirthPreview() {
@@ -210,7 +182,7 @@ private fun JournalEntryCardBirthPreview() {
         JournalEntryCard(
             entry = JournalEntryEntity(
                 id = 5,
-                date = System.currentTimeMillis() - (5 * 24 * 60 * 60 * 1000), // 5 дней назад
+                date = System.currentTimeMillis() - (5 * 24 * 60 * 60 * 1000),
                 entryType = JournalEntryType.BIRTH,
                 description = "Родился телёнок у коровы Зорька. Пол: женский, вес: 35 кг",
                 relatedAnimalId = 3,

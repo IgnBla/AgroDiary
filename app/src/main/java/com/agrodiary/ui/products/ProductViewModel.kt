@@ -6,6 +6,7 @@ import com.agrodiary.data.local.entity.ProductCategory
 import com.agrodiary.data.local.entity.ProductEntity
 import com.agrodiary.data.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,6 +29,7 @@ class ProductViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProductUiState())
     val uiState = _uiState.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val products = _selectedCategory.flatMapLatest { category ->
         if (category != null) {
             repository.getProductsByCategory(category)

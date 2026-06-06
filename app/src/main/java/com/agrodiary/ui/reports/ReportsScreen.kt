@@ -1,5 +1,4 @@
 package com.agrodiary.ui.reports
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,18 +22,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.agrodiary.ui.components.AgroDiaryTopBar
 import com.agrodiary.ui.reports.components.ReportStatCard
-
 @Composable
 fun ReportsScreen(
     viewModel: ReportsViewModel = hiltViewModel()
 ) {
     val reportData by viewModel.reportData.collectAsStateWithLifecycle()
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
                 title = "Отчёты и статистика",
-                onBackClick = null // Top level screen
+                onBackClick = null
             )
         }
     ) { padding ->
@@ -64,7 +61,6 @@ fun ReportsScreen(
                     )
                 }
             }
-
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

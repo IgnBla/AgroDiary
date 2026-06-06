@@ -1,5 +1,4 @@
 package com.agrodiary.ui.home
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,18 +24,6 @@ import com.agrodiary.data.local.entity.FeedStockEntity
 import com.agrodiary.data.local.entity.MeasureUnit
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import kotlin.math.min
-
-/**
- * Компонент карточки предупреждения о низком запасе корма.
- *
- * Отображает информацию о корме с низким запасом, включая
- * название, текущее количество, минимальное количество и
- * визуальный индикатор уровня запаса.
- *
- * @param feedStock Корм с низким запасом
- * @param onClick Обработчик клика на карточку
- * @param modifier Модификатор для настройки внешнего вида
- */
 @Composable
 fun WarningCard(
     feedStock: FeedStockEntity,
@@ -48,13 +35,11 @@ fun WarningCard(
     } else {
         1f
     }
-
     val warningColor = when {
         stockLevel <= 0.25f -> MaterialTheme.colorScheme.error
         stockLevel <= 0.5f -> MaterialTheme.colorScheme.tertiary
         else -> MaterialTheme.colorScheme.primary
     }
-
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -69,7 +54,6 @@ fun WarningCard(
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Иконка предупреждения
             Icon(
                 imageVector = Icons.Default.Warning,
                 contentDescription = null,
@@ -78,23 +62,18 @@ fun WarningCard(
                     .align(Alignment.CenterVertically),
                 tint = warningColor
             )
-
-            // Информация о запасе
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Название корма
                 Text(
                     text = feedStock.name,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
-                // Количество
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -112,7 +91,6 @@ fun WarningCard(
                         color = warningColor
                     )
                 }
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -130,8 +108,6 @@ fun WarningCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
-                // Индикатор уровня запаса
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -152,7 +128,6 @@ fun WarningCard(
         }
     }
 }
-
 @Preview(name = "Warning Card - Critical Low", showBackground = true)
 @Composable
 private fun WarningCardCriticalPreview() {
@@ -171,7 +146,6 @@ private fun WarningCardCriticalPreview() {
         )
     }
 }
-
 @Preview(name = "Warning Card - Low", showBackground = true)
 @Composable
 private fun WarningCardLowPreview() {
@@ -190,7 +164,6 @@ private fun WarningCardLowPreview() {
         )
     }
 }
-
 @Preview(name = "Warning Card - Medium", showBackground = true)
 @Composable
 private fun WarningCardMediumPreview() {
@@ -208,7 +181,6 @@ private fun WarningCardMediumPreview() {
         )
     }
 }
-
 @Preview(name = "Warning Card - Ton Unit", showBackground = true)
 @Composable
 private fun WarningCardTonPreview() {

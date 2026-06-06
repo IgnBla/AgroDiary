@@ -1,5 +1,4 @@
 package com.agrodiary.ui.home
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +44,6 @@ import com.agrodiary.ui.components.AgroDiaryTopBar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 @Composable
 fun HomeScreen(
     onNavigateToAnimals: () -> Unit,
@@ -60,7 +58,6 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val dateFormatter = SimpleDateFormat("EEEE, d MMMM", Locale("ru"))
     val today = dateFormatter.format(Date())
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -84,7 +81,6 @@ fun HomeScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Welcome header
             item {
                 Column {
                     Text(
@@ -94,8 +90,6 @@ fun HomeScreen(
                     )
                 }
             }
-
-            // Quick access cards
             item {
                 Text(
                     text = "Быстрый доступ",
@@ -123,8 +117,6 @@ fun HomeScreen(
                     }
                 }
             }
-
-            // Statistics section with real data
             item {
                 Text(
                     text = "Статистика",
@@ -132,7 +124,6 @@ fun HomeScreen(
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-
                 if (uiState.isLoading) {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
@@ -180,8 +171,6 @@ fun HomeScreen(
                     }
                 }
             }
-
-            // Urgent tasks section
             if (uiState.urgentTasks.isNotEmpty()) {
                 item {
                     Text(
@@ -198,8 +187,6 @@ fun HomeScreen(
                     )
                 }
             }
-
-            // Low stock warnings section
             if (uiState.lowStockWarnings.isNotEmpty()) {
                 item {
                     Text(
@@ -216,8 +203,6 @@ fun HomeScreen(
                     )
                 }
             }
-
-            // Recent journal entries section
             item {
                 Text(
                     text = "Последние записи журнала",
@@ -226,7 +211,6 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
             if (uiState.recentJournalEntries.isEmpty()) {
                 item {
                     Card(
@@ -272,7 +256,6 @@ fun HomeScreen(
         }
     }
 }
-
 @Composable
 private fun QuickAccessCard(
     title: String,
@@ -307,7 +290,6 @@ private fun QuickAccessCard(
         }
     }
 }
-
 @Composable
 private fun StatCard(
     title: String,
@@ -349,7 +331,6 @@ private fun StatCard(
         }
     }
 }
-
 private data class QuickAccessItem(
     val title: String,
     val icon: ImageVector,

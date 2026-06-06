@@ -1,5 +1,4 @@
 package com.agrodiary.ui.animals.components
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,15 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.agrodiary.data.local.entity.AnimalType
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * FilterChip для фильтрации по типу животного.
- *
- * @param type Тип животного
- * @param selected Выбран ли этот тип
- * @param onClick Обработчик клика
- * @param modifier Модификатор
- */
 @Composable
 fun AnimalTypeChip(
     type: AnimalType,
@@ -61,14 +51,6 @@ fun AnimalTypeChip(
         )
     )
 }
-
-/**
- * Горизонтальный список фильтров по типам животных.
- *
- * @param selectedType Выбранный тип (null = все типы)
- * @param onTypeSelected Обработчик выбора типа (null для сброса фильтра)
- * @param modifier Модификатор
- */
 @Composable
 fun AnimalTypeFilterRow(
     selectedType: AnimalType?,
@@ -80,7 +62,6 @@ fun AnimalTypeFilterRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // Кнопка "Все"
         item {
             FilterChip(
                 selected = selectedType == null,
@@ -107,8 +88,6 @@ fun AnimalTypeFilterRow(
                 )
             )
         }
-
-        // Кнопки для каждого типа животного
         items(AnimalType.entries) { type ->
             AnimalTypeChip(
                 type = type,
@@ -120,9 +99,6 @@ fun AnimalTypeFilterRow(
         }
     }
 }
-
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalTypeChipSelectedPreview() {
@@ -134,7 +110,6 @@ private fun AnimalTypeChipSelectedPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalTypeChipUnselectedPreview() {
@@ -146,7 +121,6 @@ private fun AnimalTypeChipUnselectedPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalTypeFilterRowPreview() {
@@ -157,7 +131,6 @@ private fun AnimalTypeFilterRowPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalTypeFilterRowAllPreview() {

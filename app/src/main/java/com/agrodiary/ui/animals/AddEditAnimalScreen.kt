@@ -1,5 +1,4 @@
 package com.agrodiary.ui.animals
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,22 +47,7 @@ import com.agrodiary.ui.components.ImagePickerField
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import kotlinx.coroutines.launch
 import android.net.Uri
-
 import com.agrodiary.common.ValidationUtils
-
-/**
- * Экран добавления/редактирования животного.
- *
- * Режимы работы:
- * - Добавление: animalId = null
- * - Редактирование: animalId = ID существующего животного
- *
- * @param animalId ID животного для редактирования (null для добавления)
- * @param onNavigateBack Обработчик возврата назад
- * @param onSaveSuccess Обработчик успешного сохранения
- * @param viewModel ViewModel
- * @param modifier Модификатор
- */
 @Composable
 fun AddEditAnimalScreen(
     animalId: Long?,
@@ -75,8 +59,6 @@ fun AddEditAnimalScreen(
     val isEditMode = animalId != null
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
-
-    // Состояние формы
     var name by remember { mutableStateOf("") }
     var type by remember { mutableStateOf<AnimalType?>(null) }
     var breed by remember { mutableStateOf("") }
@@ -87,16 +69,11 @@ fun AddEditAnimalScreen(
     var status by remember { mutableStateOf(AnimalStatus.ACTIVE) }
     var notes by remember { mutableStateOf("") }
     var photoUri by remember { mutableStateOf<Uri?>(null) }
-
-    // Ошибки валидации
     var nameError by remember { mutableStateOf(false) }
     var typeError by remember { mutableStateOf(false) }
     var weightError by remember { mutableStateOf(false) }
     var birthDateError by remember { mutableStateOf(false) }
-
     val snackbarHostState = remember { SnackbarHostState() }
-
-    // Загрузка данных для редактирования
     LaunchedEffect(animalId) {
         if (isEditMode && animalId != null) {
             scope.launch {
@@ -116,15 +93,12 @@ fun AddEditAnimalScreen(
             }
         }
     }
-
-    // Обработка ошибок и успешных сообщений
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             snackbarHostState.showSnackbar(error)
             viewModel.clearError()
         }
     }
-
     LaunchedEffect(uiState.successMessage) {
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
@@ -132,7 +106,6 @@ fun AddEditAnimalScreen(
             onSaveSuccess()
         }
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -144,7 +117,6 @@ fun AddEditAnimalScreen(
         modifier = modifier
     ) { padding ->
         if (uiState.isLoading) {
-            // Индикатор загрузки
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -155,7 +127,6 @@ fun AddEditAnimalScreen(
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         } else {
-            // Форма
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -164,14 +135,11 @@ fun AddEditAnimalScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Секция: Основная информация
                 Text(
                     text = "Основная информация",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-
-                // Имя (обязательное)
                 AgroDiaryTextField(
                     value = name,
                     onValueChange = {
@@ -185,15 +153,11 @@ fun AddEditAnimalScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 )
-
-                // Фото животного
                 ImagePickerField(
                     selectedImageUri = photoUri,
                     onImageSelected = { photoUri = it },
                     label = "Фото животного"
                 )
-
-                // Тип (обязательное)
                 DropdownField(
                     selectedItem = type,
                     items = AnimalType.entries,
@@ -207,8 +171,6 @@ fun AddEditAnimalScreen(
                     isError = typeError,
                     errorMessage = if (typeError) "Тип обязателен" else null
                 )
-
-                // Порода
                 AgroDiaryTextField(
                     value = breed,
                     onValueChange = { breed = it },
@@ -217,17 +179,12 @@ fun AddEditAnimalScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
-                // Секция: Физические параметры
                 Text(
                     text = "Физические параметры",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-
-                // Дата рождения
                 DatePickerField(
                     selectedDate = if (birthDate > 0) birthDate else null,
                     onDateSelected = {
@@ -238,8 +195,6 @@ fun AddEditAnimalScreen(
                     isError = birthDateError,
                     errorMessage = if (birthDateError) "Дата не может быть в будущем" else null
                 )
-
-                // Пол
                 DropdownField(
                     selectedItem = gender,
                     items = listOf("М", "Ж"),
@@ -248,8 +203,6 @@ fun AddEditAnimalScreen(
                     label = "Пол",
                     placeholder = "Выберите пол"
                 )
-
-                // Вес
                 AgroDiaryTextField(
                     value = weightText,
                     onValueChange = {
@@ -269,8 +222,6 @@ fun AddEditAnimalScreen(
                     keyboardType = KeyboardType.Decimal,
                     imeAction = ImeAction.Next
                 )
-
-                // Статус
                 DropdownField(
                     selectedItem = status,
                     items = AnimalStatus.entries,
@@ -278,17 +229,12 @@ fun AddEditAnimalScreen(
                     itemLabel = { it.displayName },
                     label = "Статус"
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
-                // Секция: Дополнительно
                 Text(
                     text = "Дополнительно",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-
-                // Заметки
                 AgroDiaryMultilineTextField(
                     value = notes,
                     onValueChange = { notes = it },
@@ -297,34 +243,24 @@ fun AddEditAnimalScreen(
                     minLines = 3,
                     maxLines = 5
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Кнопки действий
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Отмена
                     AgroDiaryOutlinedButton(
                         text = "Отмена",
                         onClick = onNavigateBack,
                         modifier = Modifier.weight(1f)
                     )
-
-                    // Сохранить
                     AgroDiaryButton(
                         text = if (isEditMode) "Сохранить" else "Добавить",
                         onClick = {
-                            // Валидация
                             nameError = !ValidationUtils.isValidName(name)
                             typeError = type == null
-                            
                             val w = weightText.toFloatOrNull()
                             weightError = weightText.isNotEmpty() && (w == null || !ValidationUtils.isValidWeight(w))
-                            
                             birthDateError = birthDate > System.currentTimeMillis()
-
                             if (!nameError && !typeError && !weightError && !birthDateError) {
                                 val animal = AnimalEntity(
                                     id = animalId ?: 0,
@@ -340,7 +276,6 @@ fun AddEditAnimalScreen(
                                     createdAt = if (isEditMode) 0 else System.currentTimeMillis(),
                                     updatedAt = System.currentTimeMillis()
                                 )
-
                                 if (isEditMode) {
                                     viewModel.updateAnimal(animal)
                                 } else {
@@ -356,9 +291,6 @@ fun AddEditAnimalScreen(
         }
     }
 }
-
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun AddEditAnimalScreenAddPreview() {
@@ -388,7 +320,6 @@ private fun AddEditAnimalScreenAddPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AddEditAnimalScreenEditPreview() {
@@ -418,10 +349,6 @@ private fun AddEditAnimalScreenEditPreview() {
         )
     }
 }
-
-/**
- * Вспомогательный Composable для Preview.
- */
 @Composable
 private fun AddEditAnimalScreenContent(
     isEditMode: Boolean,
@@ -467,7 +394,6 @@ private fun AddEditAnimalScreenContent(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-
             AgroDiaryTextField(
                 value = name,
                 onValueChange = onNameChange,
@@ -476,7 +402,6 @@ private fun AddEditAnimalScreenContent(
                 isError = nameError,
                 errorMessage = if (nameError) "Имя обязательно" else null
             )
-
             DropdownField(
                 selectedItem = type,
                 items = AnimalType.entries,
@@ -487,28 +412,23 @@ private fun AddEditAnimalScreenContent(
                 isError = typeError,
                 errorMessage = if (typeError) "Тип обязателен" else null
             )
-
             AgroDiaryTextField(
                 value = breed,
                 onValueChange = onBreedChange,
                 label = "Порода",
                 placeholder = "Введите породу"
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Физические параметры",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-
             DatePickerField(
                 selectedDate = if (birthDate > 0) birthDate else null,
                 onDateSelected = onBirthDateChange,
                 label = "Дата рождения"
             )
-
             DropdownField(
                 selectedItem = gender,
                 items = listOf("М", "Ж"),
@@ -517,14 +437,12 @@ private fun AddEditAnimalScreenContent(
                 label = "Пол",
                 placeholder = "Выберите пол"
             )
-
             AgroDiaryTextField(
                 value = weightText,
                 onValueChange = onWeightChange,
                 label = "Вес (кг)",
                 placeholder = "Введите вес"
             )
-
             DropdownField(
                 selectedItem = status,
                 items = AnimalStatus.entries,
@@ -532,24 +450,19 @@ private fun AddEditAnimalScreenContent(
                 itemLabel = { it.displayName },
                 label = "Статус"
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Дополнительно",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-
             AgroDiaryMultilineTextField(
                 value = notes,
                 onValueChange = onNotesChange,
                 label = "Заметки",
                 placeholder = "Дополнительная информация"
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -559,7 +472,6 @@ private fun AddEditAnimalScreenContent(
                     onClick = onNavigateBack,
                     modifier = Modifier.weight(1f)
                 )
-
                 AgroDiaryButton(
                     text = if (isEditMode) "Сохранить" else "Добавить",
                     onClick = onSave,

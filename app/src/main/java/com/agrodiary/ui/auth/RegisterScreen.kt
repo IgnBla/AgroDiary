@@ -1,5 +1,4 @@
 package com.agrodiary.ui.auth
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,14 +46,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.agrodiary.ui.components.AgroDiaryButton
 import com.agrodiary.ui.components.AgroDiaryTextField
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * Registration screen for new user creation.
- *
- * @param onRegisterSuccess Callback when registration is successful
- * @param onNavigateToLogin Callback to navigate back to login
- * @param viewModel AuthViewModel instance
- */
 @Composable
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
@@ -68,14 +59,10 @@ fun RegisterScreen(
     val displayName by viewModel.registerDisplayName.collectAsState()
     val farmName by viewModel.registerFarmName.collectAsState()
     val authState by viewModel.authState.collectAsState()
-
     val snackbarHostState = remember { SnackbarHostState() }
     val focusManager = LocalFocusManager.current
-
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-
-    // Handle auth state changes
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Success -> {
@@ -89,7 +76,6 @@ fun RegisterScreen(
             else -> {}
         }
     }
-
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = modifier
@@ -107,42 +93,31 @@ fun RegisterScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Logo
                 Icon(
                     imageVector = Icons.Default.Agriculture,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = "AgroDiary",
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // Title
                 Text(
                     text = "Регистрация",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
                 Text(
                     text = "Создайте аккаунт для доступа к журналу фермы",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Display name field
                 AgroDiaryTextField(
                     value = displayName,
                     onValueChange = { viewModel.setRegisterDisplayName(it) },
@@ -155,10 +130,7 @@ fun RegisterScreen(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Farm name field (optional)
                 AgroDiaryTextField(
                     value = farmName,
                     onValueChange = { viewModel.setRegisterFarmName(it) },
@@ -171,19 +143,14 @@ fun RegisterScreen(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 Text(
                     text = "Данные для входа",
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Username field
                 AgroDiaryTextField(
                     value = username,
                     onValueChange = { viewModel.setRegisterUsername(it) },
@@ -196,10 +163,7 @@ fun RegisterScreen(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Password field
                 AgroDiaryTextField(
                     value = password,
                     onValueChange = { viewModel.setRegisterPassword(it) },
@@ -233,10 +197,7 @@ fun RegisterScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Confirm password field
                 AgroDiaryTextField(
                     value = confirmPassword,
                     onValueChange = { viewModel.setRegisterConfirmPassword(it) },
@@ -275,17 +236,13 @@ fun RegisterScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Register button
                 AgroDiaryButton(
                     text = "Зарегистрироваться",
                     onClick = { viewModel.register() },
                     enabled = authState !is AuthState.Loading,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (authState is AuthState.Loading) {
                     Spacer(modifier = Modifier.height(16.dp))
                     CircularProgressIndicator(
@@ -293,23 +250,18 @@ fun RegisterScreen(
                         strokeWidth = 2.dp
                     )
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // Login link
                 TextButton(onClick = onNavigateToLogin) {
                     Text(
                         text = "Уже есть аккаунт? Войти",
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun RegisterScreenPreview() {
@@ -331,7 +283,6 @@ private fun RegisterScreenPreview() {
         )
     }
 }
-
 @Composable
 private fun RegisterScreenContent(
     username: String,
@@ -358,31 +309,24 @@ private fun RegisterScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(32.dp))
-
             Icon(
                 imageVector = Icons.Default.Agriculture,
                 contentDescription = null,
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "AgroDiary",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.height(24.dp))
-
             Text(
                 text = "Регистрация",
                 style = MaterialTheme.typography.titleLarge
             )
-
             Spacer(modifier = Modifier.height(32.dp))
-
             AgroDiaryTextField(
                 value = displayName,
                 onValueChange = onDisplayNameChange,
@@ -390,9 +334,7 @@ private fun RegisterScreenContent(
                 placeholder = "Как вас зовут?",
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             AgroDiaryTextField(
                 value = farmName,
                 onValueChange = onFarmNameChange,
@@ -400,9 +342,7 @@ private fun RegisterScreenContent(
                 placeholder = "Необязательно",
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             AgroDiaryTextField(
                 value = username,
                 onValueChange = onUsernameChange,
@@ -410,9 +350,7 @@ private fun RegisterScreenContent(
                 placeholder = "Минимум 3 символа",
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             AgroDiaryTextField(
                 value = password,
                 onValueChange = onPasswordChange,
@@ -421,9 +359,7 @@ private fun RegisterScreenContent(
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             AgroDiaryTextField(
                 value = confirmPassword,
                 onValueChange = onConfirmPasswordChange,
@@ -432,18 +368,14 @@ private fun RegisterScreenContent(
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(32.dp))
-
             AgroDiaryButton(
                 text = "Зарегистрироваться",
                 onClick = onRegisterClick,
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(24.dp))
-
             TextButton(onClick = onNavigateToLogin) {
                 Text(
                     text = "Уже есть аккаунт? Войти",

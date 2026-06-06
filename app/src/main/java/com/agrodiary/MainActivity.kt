@@ -1,5 +1,4 @@
 package com.agrodiary
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,22 +23,17 @@ import com.agrodiary.ui.navigation.NavGraph
 import com.agrodiary.ui.navigation.Screen
 import com.agrodiary.ui.theme.AgroDiaryTheme
 import dagger.hilt.android.AndroidEntryPoint
-
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import com.agrodiary.data.local.PreferenceManager
 import com.agrodiary.data.repository.AuthRepository
 import javax.inject.Inject
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var preferenceManager: PreferenceManager
-
     @Inject
     lateinit var authRepository: AuthRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,29 +44,22 @@ class MainActivity : ComponentActivity() {
                 "dark" -> true
                 else -> isSystemInDarkTheme()
             }
-
             AgroDiaryTheme(darkTheme = darkTheme) {
                 AgroDiaryAppContent(authRepository = authRepository)
             }
         }
     }
 }
-
 @Composable
 fun AgroDiaryAppContent(authRepository: AuthRepository) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-
-    // Determine if bottom bar should be shown
     val showBottomBar = currentRoute != null &&
         currentRoute != Screen.Login.route &&
         currentRoute != Screen.Register.route
-
-    // Determine start destination
     var isInitialized by remember { mutableStateOf(false) }
     var startDestination by remember { mutableStateOf<String?>(null) }
-
     LaunchedEffect(Unit) {
         authRepository.initializeSession()
         startDestination = if (authRepository.isLoggedIn.value) {
@@ -82,9 +69,7 @@ fun AgroDiaryAppContent(authRepository: AuthRepository) {
         }
         isInitialized = true
     }
-
     if (!isInitialized || startDestination == null) {
-        // Show loading while determining auth state
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

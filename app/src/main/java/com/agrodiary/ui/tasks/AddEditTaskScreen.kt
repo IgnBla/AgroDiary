@@ -1,5 +1,4 @@
 package com.agrodiary.ui.tasks
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +27,6 @@ import com.agrodiary.ui.components.AgroDiaryTextField
 import com.agrodiary.ui.components.AgroDiaryTopBar
 import com.agrodiary.ui.components.DatePickerField
 import com.agrodiary.ui.components.DropdownField
-
 @Composable
 fun AddEditTaskScreen(
     taskId: Long?,
@@ -40,11 +38,9 @@ fun AddEditTaskScreen(
     var description by remember { mutableStateOf("") }
     var priority by remember { mutableStateOf(TaskPriority.MEDIUM) }
     var status by remember { mutableStateOf(TaskStatus.NEW) }
-    var dueDate by remember { mutableLongStateOf(System.currentTimeMillis() + 86400000) } // Tomorrow
-    
+    var dueDate by remember { mutableLongStateOf(System.currentTimeMillis() + 86400000) }
     var isEditing by remember { mutableStateOf(false) }
     var existingTask by remember { mutableStateOf<TaskEntity?>(null) }
-
     LaunchedEffect(taskId) {
         if (taskId != null) {
             isEditing = true
@@ -58,7 +54,6 @@ fun AddEditTaskScreen(
             }
         }
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -81,7 +76,6 @@ fun AddEditTaskScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
-            
             AgroDiaryTextField(
                 value = description,
                 onValueChange = { description = it },
@@ -91,7 +85,6 @@ fun AddEditTaskScreen(
                 minLines = 3
             )
             Spacer(modifier = Modifier.height(16.dp))
-            
             DropdownField(
                 label = "Приоритет",
                 items = TaskPriority.entries,
@@ -100,7 +93,6 @@ fun AddEditTaskScreen(
                 itemLabel = { it.displayName }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            
             DropdownField(
                 label = "Статус",
                 items = TaskStatus.entries,
@@ -109,15 +101,12 @@ fun AddEditTaskScreen(
                 itemLabel = { it.displayName }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            
             DatePickerField(
                 label = "Срок выполнения",
                 selectedDate = dueDate,
                 onDateSelected = { it?.let { date -> dueDate = date } }
             )
-            
             Spacer(modifier = Modifier.height(24.dp))
-            
             Button(
                 onClick = {
                     val task = if (isEditing && existingTask != null) {
@@ -136,11 +125,10 @@ fun AddEditTaskScreen(
                             priority = priority,
                             status = status,
                             dueDate = dueDate,
-                            assignedStaffId = null, // TODO: Implement staff selection
-                            animalId = null // TODO: Implement animal selection
+                            assignedStaffId = null,
+                            animalId = null
                         )
                     }
-                    
                     if (isEditing) {
                         viewModel.updateTask(task, onSaveSuccess)
                     } else {

@@ -1,5 +1,4 @@
 package com.agrodiary.common
-
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -9,9 +8,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import androidx.core.content.ContextCompat
-
 object PermissionUtils {
-
     fun hasStoragePermission(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             Environment.isExternalStorageManager()
@@ -22,7 +19,6 @@ object PermissionUtils {
             ) == PackageManager.PERMISSION_GRANTED
         }
     }
-
     fun requestStoragePermission(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             try {
@@ -35,8 +31,6 @@ object PermissionUtils {
                 intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
                 context.startActivity(intent)
             }
-        } else {
-            // For older versions, standard permission request is handled in the UI/Activity
         }
     }
 }

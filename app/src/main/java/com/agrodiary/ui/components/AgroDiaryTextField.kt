@@ -1,5 +1,4 @@
 package com.agrodiary.ui.components
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
-
 @Composable
 fun AgroDiaryTextField(
     value: String,
@@ -34,7 +32,6 @@ fun AgroDiaryTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
-    // Use provided keyboardActions if not default, otherwise create from onImeAction
     val effectiveKeyboardActions = if (keyboardActions != KeyboardActions.Default) {
         keyboardActions
     } else {
@@ -44,7 +41,6 @@ fun AgroDiaryTextField(
             onGo = { onImeAction?.invoke() }
         )
     }
-
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -71,7 +67,6 @@ fun AgroDiaryTextField(
         shape = MaterialTheme.shapes.small
     )
 }
-
 @Composable
 fun AgroDiaryMultilineTextField(
     value: String,

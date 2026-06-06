@@ -1,5 +1,4 @@
 package com.agrodiary.ui.home
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.agrodiary.data.local.entity.FeedStockEntity
@@ -18,16 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
-
-/**
- * ViewModel для главного экрана (Dashboard) приложения AgroDiary.
- *
- * Предоставляет сводную информацию о ферме:
- * - Статистику животных и задач
- * - Последние записи журнала
- * - Срочные задачи
- * - Предупреждения о низких запасах кормов
- */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val animalRepository: AnimalRepository,
@@ -35,13 +24,8 @@ class HomeViewModel @Inject constructor(
     private val journalRepository: JournalRepository,
     private val feedStockRepository: FeedStockRepository
 ) : ViewModel() {
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    /**
-     * Быстрая статистика для отображения на главном экране
-     */
     val statistics: StateFlow<HomeStatistics> = combine(
         animalRepository.getTotalAnimalCount(),
         taskRepository.getActiveTaskCount(),
@@ -59,10 +43,6 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = HomeStatistics()
     )
-
-    /**
-     * Последние 5 записей журнала
-     */
     val recentJournalEntries: StateFlow<List<JournalEntryEntity>> =
         journalRepository.getRecentEntries(limit = 5)
             .stateIn(
@@ -70,11 +50,6 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
-
-    /**
-     * Срочные задачи (срок выполнения до 3 дней от текущей даты)
-     * Включает только активные задачи (NEW и IN_PROGRESS)
-     */
     val urgentTasks: StateFlow<List<TaskEntity>> =
         taskRepository.getUpcomingTasks(daysAhead = 3)
             .stateIn(
@@ -82,11 +57,6 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
-
-    /**
-     * Предупреждения о низких запасах кормов
-     * (где currentQuantity <= minQuantity)
-     */
     val lowStockWarnings: StateFlow<List<FeedStockEntity>> =
         feedStockRepository.getLowStockFeeds()
             .stateIn(
@@ -94,10 +64,6 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
-
-    /**
-     * Объединенное состояние для UI
-     */
     val uiState: StateFlow<HomeUiState> = combine(
         statistics,
         recentJournalEntries,
@@ -117,30 +83,13 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = HomeUiState()
     )
-
-    /**
-     * Обновить все данные
-     */
-    fun refresh() {
-        _isLoading.value = true
-        // Данные автоматически обновятся благодаря Flow
-        _isLoading.value = false
-    }
 }
-
-/**
- * Статистика для главного экрана
- */
 data class HomeStatistics(
     val totalAnimals: Int = 0,
     val activeTasks: Int = 0,
     val completedTasks: Int = 0,
     val lowStockCount: Int = 0
 )
-
-/**
- * UI состояние главного экрана
- */
 data class HomeUiState(
     val statistics: HomeStatistics = HomeStatistics(),
     val recentJournalEntries: List<JournalEntryEntity> = emptyList(),

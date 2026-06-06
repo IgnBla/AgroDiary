@@ -1,5 +1,4 @@
 package com.agrodiary.ui.settings
-
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -40,7 +39,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.agrodiary.ui.auth.AuthViewModel
 import com.agrodiary.ui.components.AgroDiaryTopBar
 import com.agrodiary.ui.components.ImagePickerField
-
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
@@ -51,7 +49,6 @@ fun SettingsScreen(
     val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
     val currentUser by authViewModel.currentUser.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
-
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
@@ -75,7 +72,6 @@ fun SettingsScreen(
             }
         )
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -91,7 +87,6 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Account section
             SettingsSection(title = "Аккаунт", icon = Icons.Default.Person) {
                 currentUser?.let { user ->
                     Row(
@@ -149,9 +144,7 @@ fun SettingsScreen(
                     )
                 }
             }
-
             Divider(modifier = Modifier.padding(vertical = 16.dp))
-
             SettingsSection(title = "Внешний вид", icon = Icons.Default.Palette) {
                 ThemeOption(
                     label = "Системная тема",
@@ -169,9 +162,7 @@ fun SettingsScreen(
                     onClick = { viewModel.setThemeMode("dark") }
                 )
             }
-
             Divider(modifier = Modifier.padding(vertical = 16.dp))
-
             SettingsSection(title = "Уведомления", icon = Icons.Default.Notifications) {
                 Text(
                     text = "Настройки уведомлений скоро появятся",
@@ -179,9 +170,7 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
             Divider(modifier = Modifier.padding(vertical = 16.dp))
-
             SettingsSection(title = "Данные", icon = Icons.Default.Backup) {
                 Text(
                     text = "Резервное копирование скоро появится",
@@ -192,7 +181,6 @@ fun SettingsScreen(
         }
     }
 }
-
 @Composable
 private fun SettingsSection(
     title: String,
@@ -217,7 +205,6 @@ private fun SettingsSection(
         content()
     }
 }
-
 @Composable
 private fun ThemeOption(
     label: String,

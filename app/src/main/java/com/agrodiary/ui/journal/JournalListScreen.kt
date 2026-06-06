@@ -1,5 +1,4 @@
 package com.agrodiary.ui.journal
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -40,7 +39,6 @@ import com.agrodiary.ui.components.AgroDiaryFilterChips
 import com.agrodiary.ui.components.AgroDiaryTopBar
 import com.agrodiary.ui.components.EmptyStateView
 import com.agrodiary.ui.home.JournalEntryCard
-
 @Composable
 fun JournalListScreen(
     onEntryClick: (Long) -> Unit,
@@ -52,7 +50,6 @@ fun JournalListScreen(
 ) {
     val entries by viewModel.entries.collectAsStateWithLifecycle()
     val selectedType by viewModel.selectedType.collectAsStateWithLifecycle()
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -79,7 +76,6 @@ fun JournalListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Quick Access Section (Feed & Products)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,14 +95,12 @@ fun JournalListScreen(
                     modifier = Modifier.weight(1f)
                 )
             }
-
             AgroDiaryFilterChips(
                 items = JournalEntryType.values().toList(),
                 selectedItem = selectedType,
                 onItemSelected = viewModel::setSelectedType,
                 itemLabel = { it.displayName }
             )
-
             if (entries.isEmpty()) {
                 EmptyStateView(
                     message = "Записей нет",
@@ -129,7 +123,6 @@ fun JournalListScreen(
         }
     }
 }
-
 @Composable
 private fun QuickAccessCard(
     title: String,

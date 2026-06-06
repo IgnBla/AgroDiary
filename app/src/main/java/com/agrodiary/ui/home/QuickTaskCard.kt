@@ -1,5 +1,4 @@
 package com.agrodiary.ui.home
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,17 +34,6 @@ import com.agrodiary.ui.theme.PriorityUrgent
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-/**
- * Компонент карточки срочной задачи для главного экрана.
- *
- * Отображает задачу с цветовым индикатором приоритета, названием,
- * описанием и сроком выполнения.
- *
- * @param task Задача для отображения
- * @param onClick Обработчик клика на карточку
- * @param modifier Модификатор для настройки внешнего вида
- */
 @Composable
 fun QuickTaskCard(
     task: TaskEntity,
@@ -58,10 +46,8 @@ fun QuickTaskCard(
         TaskPriority.HIGH -> PriorityHigh
         TaskPriority.URGENT -> PriorityUrgent
     }
-
     val dateFormatter = SimpleDateFormat("dd MMM", Locale("ru"))
     val dueDateText = task.dueDate?.let { dateFormatter.format(Date(it)) } ?: "Без срока"
-
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -76,7 +62,6 @@ fun QuickTaskCard(
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Цветовой индикатор приоритета
             Card(
                 modifier = Modifier
                     .width(4.dp)
@@ -85,8 +70,6 @@ fun QuickTaskCard(
                     containerColor = priorityColor
                 )
             ) {}
-
-            // Иконка задачи
             Icon(
                 imageVector = Icons.Default.Assignment,
                 contentDescription = null,
@@ -95,8 +78,6 @@ fun QuickTaskCard(
                     .align(Alignment.CenterVertically),
                 tint = priorityColor
             )
-
-            // Информация о задаче
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -111,7 +92,6 @@ fun QuickTaskCard(
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 if (!task.description.isNullOrBlank()) {
                     Text(
                         text = task.description,
@@ -121,8 +101,6 @@ fun QuickTaskCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
                 }
-
-                // Приоритет и срок выполнения
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -133,14 +111,12 @@ fun QuickTaskCard(
                         color = priorityColor,
                         fontWeight = FontWeight.Medium
                     )
-
                     Icon(
                         imageVector = Icons.Default.CalendarToday,
                         contentDescription = null,
                         modifier = Modifier.size(12.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
-
                     Text(
                         text = dueDateText,
                         style = MaterialTheme.typography.labelSmall,
@@ -151,7 +127,6 @@ fun QuickTaskCard(
         }
     }
 }
-
 @Preview(name = "Quick Task Card - Urgent", showBackground = true)
 @Composable
 private fun QuickTaskCardUrgentPreview() {
@@ -163,13 +138,12 @@ private fun QuickTaskCardUrgentPreview() {
                 description = "Необходимо провести вакцинацию стада от ящура",
                 priority = TaskPriority.URGENT,
                 status = TaskStatus.NEW,
-                dueDate = System.currentTimeMillis() + (24 * 60 * 60 * 1000) // Завтра
+                dueDate = System.currentTimeMillis() + (24 * 60 * 60 * 1000)
             ),
             onClick = {}
         )
     }
 }
-
 @Preview(name = "Quick Task Card - High", showBackground = true)
 @Composable
 private fun QuickTaskCardHighPreview() {
@@ -181,13 +155,12 @@ private fun QuickTaskCardHighPreview() {
                 description = "Осталось мало сена в первом хранилище",
                 priority = TaskPriority.HIGH,
                 status = TaskStatus.IN_PROGRESS,
-                dueDate = System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000) // Через 2 дня
+                dueDate = System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000)
             ),
             onClick = {}
         )
     }
 }
-
 @Preview(name = "Quick Task Card - Medium", showBackground = true)
 @Composable
 private fun QuickTaskCardMediumPreview() {
@@ -198,13 +171,12 @@ private fun QuickTaskCardMediumPreview() {
                 title = "Осмотр молодняка",
                 priority = TaskPriority.MEDIUM,
                 status = TaskStatus.NEW,
-                dueDate = System.currentTimeMillis() + (3 * 24 * 60 * 60 * 1000) // Через 3 дня
+                dueDate = System.currentTimeMillis() + (3 * 24 * 60 * 60 * 1000)
             ),
             onClick = {}
         )
     }
 }
-
 @Preview(name = "Quick Task Card - No Due Date", showBackground = true)
 @Composable
 private fun QuickTaskCardNoDueDatePreview() {

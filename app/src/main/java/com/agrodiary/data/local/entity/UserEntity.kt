@@ -1,13 +1,7 @@
 package com.agrodiary.data.local.entity
-
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-
-/**
- * Entity for storing user authentication data.
- * Supports local authentication with PIN code or password.
- */
 @Entity(
     tableName = "users",
     indices = [Index(value = ["username"], unique = true)]

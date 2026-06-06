@@ -1,5 +1,4 @@
 package com.agrodiary.ui.staff.components
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,10 +27,6 @@ import com.agrodiary.data.local.entity.StaffEntity
 import com.agrodiary.data.local.entity.StaffStatus
 import com.agrodiary.ui.components.AgroDiaryCard
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * Карточка сотрудника для отображения в списке.
- */
 @Composable
 fun StaffCard(
     staff: StaffEntity,
@@ -70,7 +65,6 @@ fun StaffCard(
                     )
                 }
             }
-
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -82,7 +76,6 @@ fun StaffCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
                 if (!staff.position.isNullOrBlank()) {
                     Text(
                         text = staff.position,
@@ -92,7 +85,6 @@ fun StaffCard(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -115,7 +107,6 @@ fun StaffCard(
                             )
                         }
                     }
-
                     if (!staff.email.isNullOrBlank()) {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -138,12 +129,10 @@ fun StaffCard(
                     }
                 }
             }
-
             StaffStatusBadge(status = staff.status)
         }
     }
 }
-
 @Composable
 private fun StaffStatusBadge(
     status: StaffStatus,
@@ -154,7 +143,6 @@ private fun StaffStatusBadge(
         StaffStatus.ON_VACATION -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
         StaffStatus.FIRED -> MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
     }
-
     Surface(
         shape = MaterialTheme.shapes.small,
         color = backgroundColor,
@@ -168,7 +156,6 @@ private fun StaffStatusBadge(
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffCardPreview() {

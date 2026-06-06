@@ -1,4 +1,4 @@
-# AgroDiary — Дневник хозяйства для Android
+# AgroDiary - Дневник хозяйства для Android
 
 ![Version](https://img.shields.io/badge/version-1.5.1-brightgreen)
 ![Android](https://img.shields.io/badge/Android-8.0%2B-green)
@@ -6,7 +6,7 @@
 ![Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-purple)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-Автономное мобильное приложение для ведения учёта хозяйства: животные, сотрудники, задачи, склады кормов и продуктов, журнал событий и журнал действий. Полностью офлайн, без сетевых зависимостей — все данные хранятся локально на устройстве.
+Автономное мобильное приложение для ведения учёта хозяйства: животные, сотрудники, задачи, склады кормов и продуктов, журнал событий и журнал действий. Полностью офлайн, без сетевых зависимостей - все данные хранятся локально на устройстве.
 
 ---
 
@@ -29,7 +29,7 @@
 
 | Модуль | Описание |
 |--------|----------|
-| **Аутентификация** | Регистрация, вход, выход. Пароли хешируются PBKDF2 (65 536 итераций). Сессия — EncryptedSharedPreferences. |
+| **Аутентификация** | Регистрация, вход, выход. Пароли хешируются PBKDF2 (65 536 итераций). Сессия - EncryptedSharedPreferences. |
 | **Главная (Dashboard)** | Статистика по хозяйству, срочные задачи (≤ 3 дня), предупреждения о низком запасе, быстрый доступ ко всем модулям. |
 | **Животные** | CRUD, поиск по имени, фильтр по типу (корова, свинья, курица, овца, коза, другое), фото. |
 | **Сотрудники** | CRUD, поиск, фильтр по статусу (активен, уволен, в отпуске), фото. |
@@ -49,7 +49,7 @@
 |-----------|------------|--------|
 | Язык | Kotlin | 1.9.22 |
 | UI | Jetpack Compose + Material 3 | BOM 2024.02.00 |
-| Архитектура | MVVM + Clean Architecture | — |
+| Архитектура | MVVM + Clean Architecture | - |
 | БД | Room (SQLite) | 2.6.1 |
 | DI | Hilt | 2.50 |
 | Навигация | Navigation Compose | 2.7.7 |
@@ -105,19 +105,19 @@ APK: `app/build/outputs/apk/release/app-release.apk`
 UI (Composable) → ViewModel → Repository → DAO / Room → Flow → UI
 ```
 
-- **UI слой** — Compose-экраны (~25 шт.), 13 переиспользуемых компонентов. Состояние через `collectAsStateWithLifecycle()`.
-- **ViewModel слой** — 11 ViewModel, управление uiState (loading/error/success), валидация, вызовы репозиториев.
-- **Repository слой** — 10 репозиториев, обёртка над DAO, автоматические таймстемпы, журнал действий.
-- **Data слой** — 10 DAO, 11 сущностей, 10 enum/type-классов, Room DB v3 с явными миграциями.
+- **UI слой** - Compose-экраны (~25 шт.), 13 переиспользуемых компонентов. Состояние через `collectAsStateWithLifecycle()`.
+- **ViewModel слой** - 11 ViewModel, управление uiState (loading/error/success), валидация, вызовы репозиториев.
+- **Repository слой** - 10 репозиториев, обёртка над DAO, автоматические таймстемпы, журнал действий.
+- **Data слой** - 10 DAO, 11 сущностей, 10 enum/type-классов, Room DB v3 с явными миграциями.
 
 ### DI-граф (Hilt)
 
-- `DatabaseModule` — AppDatabase + 10 DAO
-- `RepositoryModule` — 10 репозиториев
+- `DatabaseModule` - AppDatabase + 10 DAO
+- `RepositoryModule` - 10 репозиториев
 
 ### Навигация
 
-3 нижних вкладки (Главная, Животные, Журнал) и 30+ маршрутов. Стартовый маршрут — экран входа с автопереходом на Dashboard при активной сессии.
+3 нижних вкладки (Главная, Животные, Журнал) и 30+ маршрутов. Стартовый маршрут - экран входа с автопереходом на Dashboard при активной сессии.
 
 ---
 
@@ -155,11 +155,11 @@ app/src/main/java/com/agrodiary/
 
 ## База данных
 
-**Room v3** — 10 таблиц: `users`, `animals`, `staff`, `tasks`, `journal_entries`, `feed_stocks`, `feed_transactions`, `products`, `product_transactions`, `activity_logs`.
+**Room v3** - 10 таблиц: `users`, `animals`, `staff`, `tasks`, `journal_entries`, `feed_stocks`, `feed_transactions`, `products`, `product_transactions`, `activity_logs`.
 
 ### Миграции
-- **v1 → v2** — таблица `users` (аутентификация)
-- **v2 → v3** — поле `passwordSalt` в users; таблица `activity_logs`
+- **v1 → v2** - таблица `users` (аутентификация)
+- **v2 → v3** - поле `passwordSalt` в users; таблица `activity_logs`
 
 Схемы экспортируются в `app/schemas/`.
 
@@ -193,11 +193,11 @@ app/src/main/java/com/agrodiary/
 
 ## Известные ограничения
 
-- Offline-only — нет синхронизации и облачных бэкапов.
-- Транзакции кормов/продуктов — маршруты объявлены, экраны-заглушки.
+- Offline-only - нет синхронизации и облачных бэкапов.
+- Транзакции кормов/продуктов - маршруты объявлены, экраны-заглушки.
 - Смена пароля (`changePassword`) реализована в backend, но не вызывается из UI.
 - R8/ProGuard отключён; release подписывается debug-ключом.
-- «Уведомления» и «Резервное копирование» в Настройках — заглушки.
+- «Уведомления» и «Резервное копирование» в Настройках - заглушки.
 
 ---
 

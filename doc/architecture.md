@@ -40,7 +40,7 @@
 
 ## Ошибки и уведомления
 - Ошибки операций показываются через Snackbar (uiState.error).
-- Успешные операции — uiState.successMessage, там же автопереходы (например, после удаления животного/сотрудника — navigateBack).
+- Успешные операции - uiState.successMessage, там же автопереходы (например, после удаления животного/сотрудника - navigateBack).
 
 ## Журнал действий
 - Репозитории Animals/Staff пишут ActivityLogEntity (type, details, entityId, entityType, createdAt).

@@ -1,5 +1,4 @@
 package com.agrodiary.ui.animals
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,24 +35,6 @@ import com.agrodiary.ui.components.AgroDiarySearchBar
 import com.agrodiary.ui.components.AgroDiaryTopBar
 import com.agrodiary.ui.components.EmptyStateView
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * Экран списка животных.
- *
- * Отображает:
- * - Поиск по имени
- * - Фильтры по типу животного
- * - Список животных в LazyColumn
- * - FAB для добавления нового животного
- * - Пустое состояние, если животных нет
- * - Индикатор загрузки
- * - Сообщения об ошибках
- *
- * @param onAnimalClick Обработчик клика по животному
- * @param onAddClick Обработчик клика по кнопке добавления
- * @param viewModel ViewModel для управления состоянием
- * @param modifier Модификатор
- */
 @Composable
 fun AnimalsListScreen(
     onAnimalClick: (Long) -> Unit,
@@ -65,24 +46,19 @@ fun AnimalsListScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val selectedType by viewModel.selectedType.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-
     val snackbarHostState = remember { SnackbarHostState() }
-
-    // Обработка ошибок и успешных сообщений
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             snackbarHostState.showSnackbar(error)
             viewModel.clearError()
         }
     }
-
     LaunchedEffect(uiState.successMessage) {
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             viewModel.clearSuccessMessage()
         }
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -110,24 +86,18 @@ fun AnimalsListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Поиск
             AgroDiarySearchBar(
                 query = searchQuery,
                 onQueryChange = { viewModel.setSearchQuery(it) },
                 placeholder = "Поиск животных...",
                 enabled = !uiState.isLoading
             )
-
-            // Фильтры по типу
             AnimalTypeFilterRow(
                 selectedType = selectedType,
                 onTypeSelected = { viewModel.setSelectedType(it) }
             )
-
-            // Контент
             when {
                 uiState.isLoading -> {
-                    // Индикатор загрузки
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -139,7 +109,6 @@ fun AnimalsListScreen(
                     }
                 }
                 animals.isEmpty() -> {
-                    // Пустое состояние
                     EmptyStateView(
                         message = if (searchQuery.isNotBlank() || selectedType != null) {
                             "Животные не найдены"
@@ -150,7 +119,6 @@ fun AnimalsListScreen(
                     )
                 }
                 else -> {
-                    // Список животных
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -171,14 +139,10 @@ fun AnimalsListScreen(
         }
     }
 }
-
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalsListScreenPreview() {
     AgroDiaryTheme {
-        // Preview с моком данных (без ViewModel)
         AnimalsListScreenContent(
             animals = listOf(
                 AnimalEntity(
@@ -216,7 +180,6 @@ private fun AnimalsListScreenPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalsListScreenEmptyPreview() {
@@ -233,7 +196,6 @@ private fun AnimalsListScreenEmptyPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalsListScreenLoadingPreview() {
@@ -250,10 +212,6 @@ private fun AnimalsListScreenLoadingPreview() {
         )
     }
 }
-
-/**
- * Вспомогательный Composable для Preview.
- */
 @Composable
 private fun AnimalsListScreenContent(
     animals: List<AnimalEntity>,
@@ -296,12 +254,10 @@ private fun AnimalsListScreenContent(
                 placeholder = "Поиск животных...",
                 enabled = !isLoading
             )
-
             AnimalTypeFilterRow(
                 selectedType = selectedType,
                 onTypeSelected = onTypeSelected
             )
-
             when {
                 isLoading -> {
                     Column(

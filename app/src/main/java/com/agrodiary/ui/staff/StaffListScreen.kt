@@ -1,5 +1,4 @@
 package com.agrodiary.ui.staff
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,24 +34,6 @@ import com.agrodiary.ui.components.EmptyStateView
 import com.agrodiary.ui.staff.components.StaffCard
 import com.agrodiary.ui.staff.components.StaffStatusFilterRow
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * Экран списка сотрудников.
- *
- * Отображает:
- * - Поиск по имени и должности
- * - Фильтры по статусу сотрудника
- * - Список сотрудников в LazyColumn
- * - FAB для добавления нового сотрудника
- * - Пустое состояние, если сотрудников нет
- * - Индикатор загрузки
- * - Сообщения об ошибках
- *
- * @param onStaffClick Обработчик клика по сотруднику
- * @param onAddClick Обработчик клика по кнопке добавления
- * @param viewModel ViewModel для управления состоянием
- * @param modifier Модификатор
- */
 @Composable
 fun StaffListScreen(
     onStaffClick: (Long) -> Unit,
@@ -65,24 +46,19 @@ fun StaffListScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val selectedStatus by viewModel.selectedStatus.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-
     val snackbarHostState = remember { SnackbarHostState() }
-
-    // Обработка ошибок и успешных сообщений
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             snackbarHostState.showSnackbar(error)
             viewModel.clearError()
         }
     }
-
     LaunchedEffect(uiState.successMessage) {
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             viewModel.clearSuccessMessage()
         }
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -110,24 +86,18 @@ fun StaffListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Поиск
             AgroDiarySearchBar(
                 query = searchQuery,
                 onQueryChange = { viewModel.setSearchQuery(it) },
                 placeholder = "Поиск по имени и должности...",
                 enabled = !uiState.isLoading
             )
-
-            // Фильтры по статусу
             StaffStatusFilterRow(
                 selectedStatus = selectedStatus,
                 onStatusSelected = { viewModel.setSelectedStatus(it) }
             )
-
-            // Контент
             when {
                 uiState.isLoading -> {
-                    // Индикатор загрузки
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -139,7 +109,6 @@ fun StaffListScreen(
                     }
                 }
                 staff.isEmpty() -> {
-                    // Пустое состояние
                     EmptyStateView(
                         message = if (searchQuery.isNotBlank() || selectedStatus != null) {
                             "Сотрудники не найдены"
@@ -150,7 +119,6 @@ fun StaffListScreen(
                     )
                 }
                 else -> {
-                    // Список сотрудников
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -171,9 +139,6 @@ fun StaffListScreen(
         }
     }
 }
-
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffListScreenPreview() {
@@ -216,7 +181,6 @@ private fun StaffListScreenPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffListScreenEmptyPreview() {
@@ -233,7 +197,6 @@ private fun StaffListScreenEmptyPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffListScreenLoadingPreview() {
@@ -250,10 +213,6 @@ private fun StaffListScreenLoadingPreview() {
         )
     }
 }
-
-/**
- * Вспомогательный Composable для Preview.
- */
 @Composable
 private fun StaffListScreenContent(
     staff: List<StaffEntity>,
@@ -296,12 +255,10 @@ private fun StaffListScreenContent(
                 placeholder = "Поиск по имени и должности...",
                 enabled = !isLoading
             )
-
             StaffStatusFilterRow(
                 selectedStatus = selectedStatus,
                 onStatusSelected = onStatusSelected
             )
-
             when {
                 isLoading -> {
                     Column(

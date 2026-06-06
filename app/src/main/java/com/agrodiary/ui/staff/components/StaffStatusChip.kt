@@ -1,5 +1,4 @@
 package com.agrodiary.ui.staff.components
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -23,18 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.agrodiary.data.local.entity.StaffStatus
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * FilterChip для фильтрации сотрудников по статусу.
- *
- * Отображает фильтр с иконкой и текстом.
- * Поддерживает выбранное и невыбранное состояние.
- *
- * @param status Статус сотрудника (null для "Все")
- * @param selected Флаг выбора
- * @param onClick Обработчик клика
- * @param modifier Модификатор
- */
 @Composable
 fun StaffStatusChip(
     status: StaffStatus?,
@@ -43,7 +30,6 @@ fun StaffStatusChip(
     modifier: Modifier = Modifier
 ) {
     val (icon, label) = getStatusIconAndLabel(status)
-
     FilterChip(
         selected = selected,
         onClick = onClick,
@@ -66,29 +52,13 @@ fun StaffStatusChip(
         modifier = modifier
     )
 }
-
-/**
- * Строка с фильтрами по статусам сотрудников.
- *
- * Отображает горизонтальный список чипов для фильтрации:
- * - Все
- * - Активен
- * - В отпуске
- * - Уволен
- *
- * @param selectedStatus Выбранный статус (null для "Все")
- * @param onStatusSelected Обработчик выбора статуса
- * @param modifier Модификатор
- */
 @Composable
 fun StaffStatusFilterRow(
     selectedStatus: StaffStatus?,
     onStatusSelected: (StaffStatus?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Список всех возможных фильтров (null = "Все")
     val statuses: List<StaffStatus?> = listOf(null) + StaffStatus.entries
-
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -106,10 +76,6 @@ fun StaffStatusFilterRow(
         }
     }
 }
-
-/**
- * Получить иконку и текст для статуса.
- */
 private fun getStatusIconAndLabel(status: StaffStatus?): Pair<ImageVector, String> {
     return when (status) {
         null -> Icons.Default.Groups to "Все"
@@ -118,9 +84,6 @@ private fun getStatusIconAndLabel(status: StaffStatus?): Pair<ImageVector, Strin
         StaffStatus.FIRED -> Icons.Default.PersonOff to status.displayName
     }
 }
-
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffStatusChipSelectedPreview() {
@@ -142,7 +105,6 @@ private fun StaffStatusChipSelectedPreview() {
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffStatusFilterRowPreview() {
@@ -153,7 +115,6 @@ private fun StaffStatusFilterRowPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffStatusFilterRowAllPreview() {

@@ -1,16 +1,10 @@
 package com.agrodiary.ui.navigation
-
 sealed class Screen(val route: String) {
-    // Auth screens
     object Login : Screen("login")
     object Register : Screen("register")
-
-    // Main tabs
     object Home : Screen("home")
     object Animals : Screen("animals")
     object Journal : Screen("journal")
-
-    // Animals module
     object AnimalDetail : Screen("animal/{animalId}") {
         fun createRoute(animalId: Long) = "animal/$animalId"
     }
@@ -18,8 +12,6 @@ sealed class Screen(val route: String) {
     object EditAnimal : Screen("animal/edit/{animalId}") {
         fun createRoute(animalId: Long) = "animal/edit/$animalId"
     }
-
-    // Staff module
     object Staff : Screen("staff")
     object StaffDetail : Screen("staff/{staffId}") {
         fun createRoute(staffId: Long) = "staff/$staffId"
@@ -28,8 +20,6 @@ sealed class Screen(val route: String) {
     object EditStaff : Screen("staff/edit/{staffId}") {
         fun createRoute(staffId: Long) = "staff/edit/$staffId"
     }
-
-    // Tasks module
     object Tasks : Screen("tasks")
     object TaskDetail : Screen("task/{taskId}") {
         fun createRoute(taskId: Long) = "task/$taskId"
@@ -38,8 +28,6 @@ sealed class Screen(val route: String) {
     object EditTask : Screen("task/edit/{taskId}") {
         fun createRoute(taskId: Long) = "task/edit/$taskId"
     }
-
-    // Journal module
     object JournalDetail : Screen("journal/{entryId}") {
         fun createRoute(entryId: Long) = "journal/$entryId"
     }
@@ -48,8 +36,6 @@ sealed class Screen(val route: String) {
         fun createRoute(entryId: Long) = "journal/edit/$entryId"
     }
     object ActivityLog : Screen("journal/activity")
-
-    // Feed module
     object FeedStock : Screen("feed")
     object FeedDetail : Screen("feed/{feedId}") {
         fun createRoute(feedId: Long) = "feed/$feedId"
@@ -61,8 +47,6 @@ sealed class Screen(val route: String) {
     object FeedTransaction : Screen("feed/{feedId}/transaction") {
         fun createRoute(feedId: Long) = "feed/$feedId/transaction"
     }
-
-    // Products module
     object Products : Screen("products")
     object ProductDetail : Screen("product/{productId}") {
         fun createRoute(productId: Long) = "product/$productId"
@@ -74,10 +58,6 @@ sealed class Screen(val route: String) {
     object ProductTransaction : Screen("product/{productId}/transaction") {
         fun createRoute(productId: Long) = "product/$productId/transaction"
     }
-
-    // Reports
     object Reports : Screen("reports")
-
-    // Settings
     object Settings : Screen("settings")
 }

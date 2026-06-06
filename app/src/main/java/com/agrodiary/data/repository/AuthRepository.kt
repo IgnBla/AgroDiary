@@ -1,5 +1,4 @@
 package com.agrodiary.data.repository
-
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -17,27 +16,16 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 import javax.inject.Inject
 import javax.inject.Singleton
-
-/**
- * Repository for handling user authentication operations.
- * Provides login, registration, and session management functionality.
- */
 @Singleton
 class AuthRepository @Inject constructor(
     private val userDao: UserDao,
     @ApplicationContext private val context: Context
 ) {
     private val prefs by lazy { createSecurePrefs(context) }
-
     private val _currentUser = MutableStateFlow<UserEntity?>(null)
     val currentUser: StateFlow<UserEntity?> = _currentUser.asStateFlow()
-
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
-
-    // Note: Session initialization is handled by initializeSession() method
-    // which should be called from MainActivity after composition
-
     suspend fun initializeSession() {
         val savedUserId = prefs.getLong(KEY_USER_ID, -1L)
         if (savedUserId != -1L) {
@@ -50,7 +38,6 @@ class AuthRepository @Inject constructor(
             }
         }
     }
-
     suspend fun login(username: String, password: String): AuthResult {
         if (username.isBlank()) {
             return AuthResult.Error("Введите имя пользователя")
@@ -58,33 +45,23 @@ class AuthRepository @Inject constructor(
         if (password.isBlank()) {
             return AuthResult.Error("Введите пароль")
         }
-
         val user = userDao.getUserByUsername(username.trim().lowercase())
             ?: return AuthResult.Error("Пользователь не найден")
-
         if (!user.isActive) {
             return AuthResult.Error("Аккаунт деактивирован")
         }
-
         val verifiedUser = verifyPasswordAndUpgradeIfNeeded(user, password)
         if (verifiedUser == null) {
             return AuthResult.Error("Неверный пароль")
         }
-
-        // Update last login time
         val loginTimestamp = System.currentTimeMillis()
         userDao.updateLastLogin(user.id, loginTimestamp)
-
-        // Save session
         saveSession(user.id)
-
         val sessionUser = verifiedUser.copy(lastLoginAt = loginTimestamp)
         _currentUser.value = sessionUser
         _isLoggedIn.value = true
-
         return AuthResult.Success(sessionUser)
     }
-
     suspend fun register(
         username: String,
         password: String,
@@ -92,7 +69,6 @@ class AuthRepository @Inject constructor(
         displayName: String,
         farmName: String? = null
     ): AuthResult {
-        // Validation
         val normalizedUsername = username.trim().lowercase()
         val trimmedDisplayName = displayName.trim()
         if (normalizedUsername.isBlank()) {
@@ -113,12 +89,9 @@ class AuthRepository @Inject constructor(
         if (trimmedDisplayName.isBlank()) {
             return AuthResult.Error("Введите ваше имя")
         }
-
-
         if (userDao.isUsernameExists(normalizedUsername)) {
             return AuthResult.Error("Пользователь с таким именем уже существует")
         }
-
         val passwordHash = hashPassword(password)
         val user = UserEntity(
             username = normalizedUsername,
@@ -127,28 +100,22 @@ class AuthRepository @Inject constructor(
             displayName = trimmedDisplayName,
             farmName = farmName?.trim()?.takeIf { it.isNotBlank() }
         )
-
         return try {
             val userId = userDao.insertUser(user)
             val createdUser = user.copy(id = userId)
-
-            // Auto-login after registration
             saveSession(userId)
             _currentUser.value = createdUser
             _isLoggedIn.value = true
-
             AuthResult.Success(createdUser)
         } catch (e: Exception) {
             AuthResult.Error("Ошибка при регистрации: ${e.message}")
         }
     }
-
     suspend fun logout() {
         clearSession()
         _currentUser.value = null
         _isLoggedIn.value = false
     }
-
     suspend fun updateProfile(user: UserEntity): AuthResult {
         return try {
             val updatedAt = System.currentTimeMillis()
@@ -160,22 +127,18 @@ class AuthRepository @Inject constructor(
             AuthResult.Error("Ошибка при обновлении профиля: ${e.message}")
         }
     }
-
     suspend fun changePassword(
         currentPassword: String,
         newPassword: String,
         confirmNewPassword: String
     ): AuthResult {
         val user = _currentUser.value ?: return AuthResult.Error("Пользователь не авторизован")
-
         if (currentPassword.isBlank()) {
             return AuthResult.Error("Введите текущий пароль")
         }
-
         if (!isPasswordValid(currentPassword, user)) {
             return AuthResult.Error("Неверный текущий пароль")
         }
-
         if (newPassword.isBlank()) {
             return AuthResult.Error("Введите новый пароль")
         }
@@ -185,7 +148,6 @@ class AuthRepository @Inject constructor(
         if (newPassword != confirmNewPassword) {
             return AuthResult.Error("Новые пароли не совпадают")
         }
-
         val newHash = hashPassword(newPassword)
         val updatedAt = System.currentTimeMillis()
         userDao.updatePassword(user.id, newHash.hash, newHash.salt, updatedAt)
@@ -195,43 +157,65 @@ class AuthRepository @Inject constructor(
             updatedAt = updatedAt
         )
         _currentUser.value = updatedUser
-
         return AuthResult.Success(updatedUser)
     }
-
     suspend fun hasUsers(): Boolean {
         return userDao.getUserCount() > 0
     }
-
     fun getAllUsers(): Flow<List<UserEntity>> = userDao.getAllUsers()
-
     private fun saveSession(userId: Long) {
         prefs.edit().putLong(KEY_USER_ID, userId).apply()
     }
-
     private fun clearSession() {
         prefs.edit().remove(KEY_USER_ID).apply()
     }
-
     private data class PasswordHash(
         val hash: String,
         val salt: String
     )
-
     private val secureRandom = SecureRandom()
-
     private fun createSecurePrefs(context: Context): android.content.SharedPreferences {
-        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-
-        return EncryptedSharedPreferences.create(
-            PREFS_NAME,
-            masterKeyAlias,
-            context,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        return try {
+            val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+            EncryptedSharedPreferences.create(
+                PREFS_NAME,
+                masterKeyAlias,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            deleteSharedPreferencesFile(context, PREFS_NAME)
+            try {
+                val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+                EncryptedSharedPreferences.create(
+                    PREFS_NAME,
+                    masterKeyAlias,
+                    context,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            } catch (ex: Exception) {
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            }
+        }
     }
-
+    private fun deleteSharedPreferencesFile(context: Context, name: String) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                context.deleteSharedPreferences(name)
+            } else {
+                context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().clear().apply()
+                val sharedPrefsDir = java.io.File(context.filesDir.parent, "shared_prefs")
+                val sharedPrefsFile = java.io.File(sharedPrefsDir, "$name.xml")
+                if (sharedPrefsFile.exists()) {
+                    sharedPrefsFile.delete()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
     private suspend fun verifyPasswordAndUpgradeIfNeeded(
         user: UserEntity,
         password: String
@@ -251,12 +235,10 @@ class AuthRepository @Inject constructor(
                 updatedAt = updatedAt
             )
         }
-
         val saltBytes = Base64.getDecoder().decode(salt)
         val computedHash = hashPasswordWithSalt(password, saltBytes)
         return if (computedHash == user.passwordHash) user else null
     }
-
     private fun isPasswordValid(password: String, user: UserEntity): Boolean {
         val salt = user.passwordSalt
         return if (salt.isNullOrBlank()) {
@@ -266,7 +248,6 @@ class AuthRepository @Inject constructor(
             hashPasswordWithSalt(password, saltBytes) == user.passwordHash
         }
     }
-
     private fun hashPassword(password: String): PasswordHash {
         val saltBytes = ByteArray(SALT_LENGTH_BYTES).apply { secureRandom.nextBytes(this) }
         val hash = hashPasswordWithSalt(password, saltBytes)
@@ -275,19 +256,16 @@ class AuthRepository @Inject constructor(
             salt = Base64.getEncoder().encodeToString(saltBytes)
         )
     }
-
     private fun hashPasswordWithSalt(password: String, saltBytes: ByteArray): String {
         val spec = PBEKeySpec(password.toCharArray(), saltBytes, PBKDF2_ITERATIONS, KEY_LENGTH_BITS)
         val factory = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM)
         val hashBytes = factory.generateSecret(spec).encoded
         return Base64.getEncoder().encodeToString(hashBytes)
     }
-
     private fun legacyHashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
-
     companion object {
         private const val PREFS_NAME = "agrodiary_auth_prefs"
         private const val KEY_USER_ID = "current_user_id"
@@ -297,7 +275,6 @@ class AuthRepository @Inject constructor(
         private const val SALT_LENGTH_BYTES = 16
     }
 }
-
 sealed class AuthResult {
     data class Success(val user: UserEntity) : AuthResult()
     data class Error(val message: String) : AuthResult()

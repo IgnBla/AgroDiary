@@ -1,5 +1,4 @@
 package com.agrodiary.ui.animals.components
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,20 +30,6 @@ import com.agrodiary.ui.theme.AgroDiaryTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-/**
- * Карточка животного для отображения в списке.
- *
- * Отображает основную информацию о животном:
- * - Фото (или иконка типа животного)
- * - Имя
- * - Тип и порода
- * - Статус (цветной badge)
- *
- * @param animal Данные животного
- * @param onClick Обработчик клика по карточке
- * @param modifier Модификатор
- */
 @Composable
 fun AnimalCard(
     animal: AnimalEntity,
@@ -62,7 +47,6 @@ fun AnimalCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Фото или иконка типа животного
             Surface(
                 shape = MaterialTheme.shapes.small,
                 color = MaterialTheme.colorScheme.primaryContainer,
@@ -84,13 +68,10 @@ fun AnimalCard(
                     )
                 }
             }
-
-            // Информация о животном
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Имя
                 Text(
                     text = animal.name,
                     style = MaterialTheme.typography.titleMedium,
@@ -98,8 +79,6 @@ fun AnimalCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
-                // Тип и порода
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -124,8 +103,6 @@ fun AnimalCard(
                         )
                     }
                 }
-
-                // Дополнительная информация (вес, дата рождения)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -154,16 +131,10 @@ fun AnimalCard(
                     }
                 }
             }
-
-            // Статус
             AnimalStatusBadge(status = animal.status)
         }
     }
 }
-
-/**
- * Badge со статусом животного.
- */
 @Composable
 private fun AnimalStatusBadge(
     status: AnimalStatus,
@@ -175,7 +146,6 @@ private fun AnimalStatusBadge(
         AnimalStatus.SOLD -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
         AnimalStatus.DEAD -> MaterialTheme.colorScheme.surfaceVariant to MaterialTheme.colorScheme.onSurfaceVariant
     }
-
     Surface(
         shape = MaterialTheme.shapes.small,
         color = backgroundColor,
@@ -189,18 +159,9 @@ private fun AnimalStatusBadge(
         )
     }
 }
-
-/**
- * Получить иконку для типа животного.
- */
 private fun getAnimalIcon(type: AnimalType) = when (type) {
-    // Используем общую иконку для всех животных
-    // В будущем можно добавить специфичные иконки для каждого типа
     else -> Icons.Default.Pets
 }
-
-// PREVIEWS
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalCardPreview() {
@@ -211,7 +172,7 @@ private fun AnimalCardPreview() {
                 name = "Буренка",
                 type = AnimalType.COW,
                 breed = "Голштинская",
-                birthDate = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000, // 1 год назад
+                birthDate = System.currentTimeMillis() - 365L * 24 * 60 * 60 * 1000,
                 gender = "Ж",
                 weight = 450f,
                 status = AnimalStatus.ACTIVE,
@@ -221,7 +182,6 @@ private fun AnimalCardPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalCardSickPreview() {
@@ -242,7 +202,6 @@ private fun AnimalCardSickPreview() {
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalCardMinimalPreview() {

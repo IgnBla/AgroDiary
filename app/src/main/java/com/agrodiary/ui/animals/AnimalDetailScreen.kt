@@ -1,5 +1,4 @@
 package com.agrodiary.ui.animals
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,10 +49,6 @@ import com.agrodiary.ui.theme.AgroDiaryTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-/**
- * Экран детальной информации о животном.
- */
 @Composable
 fun AnimalDetailScreen(
     animalId: Long,
@@ -65,10 +60,8 @@ fun AnimalDetailScreen(
 ) {
     val animal by viewModel.getAnimalByIdFlow(animalId).collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-
     var isDeleting by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             isDeleting = false
@@ -76,7 +69,6 @@ fun AnimalDetailScreen(
             viewModel.clearError()
         }
     }
-
     LaunchedEffect(uiState.successMessage) {
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
@@ -86,7 +78,6 @@ fun AnimalDetailScreen(
             }
         }
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -143,7 +134,6 @@ fun AnimalDetailScreen(
         }
     }
 }
-
 @Composable
 private fun AnimalDetailContent(
     animal: AnimalEntity,
@@ -157,7 +147,6 @@ private fun AnimalDetailContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         AnimalPhotoHeader(photoUri = animal.photoUri)
-
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -176,7 +165,6 @@ private fun AnimalDetailContent(
                 InfoRow(label = "Статус", value = animal.status.displayName)
             }
         }
-
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -210,7 +198,6 @@ private fun AnimalDetailContent(
                 }
             }
         }
-
         if (!animal.notes.isNullOrBlank()) {
             AgroDiaryCard {
                 Column(
@@ -231,7 +218,6 @@ private fun AnimalDetailContent(
                 }
             }
         }
-
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -250,7 +236,6 @@ private fun AnimalDetailContent(
         }
     }
 }
-
 @Composable
 private fun AnimalPhotoHeader(photoUri: String?) {
     Surface(
@@ -287,7 +272,6 @@ private fun AnimalPhotoHeader(photoUri: String?) {
         }
     }
 }
-
 @Composable
 private fun InfoRow(label: String, value: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -304,25 +288,21 @@ private fun InfoRow(label: String, value: String, modifier: Modifier = Modifier)
         )
     }
 }
-
 private fun yearWord(years: Int): String = when {
     years % 10 == 1 && years % 100 != 11 -> "год"
     years % 10 in 2..4 && years % 100 !in 12..14 -> "года"
     else -> "лет"
 }
-
 private fun monthWord(months: Int): String = when {
     months % 10 == 1 && months % 100 != 11 -> "месяц"
     months % 10 in 2..4 && months % 100 !in 12..14 -> "месяца"
     else -> "месяцев"
 }
-
 private fun dayWord(days: Int): String = when {
     days % 10 == 1 && days % 100 != 11 -> "день"
     days % 10 in 2..4 && days % 100 !in 12..14 -> "дня"
     else -> "дней"
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun AnimalDetailScreenPreview() {

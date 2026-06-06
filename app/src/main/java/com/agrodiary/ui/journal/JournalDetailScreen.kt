@@ -1,5 +1,4 @@
 package com.agrodiary.ui.journal
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +43,6 @@ import com.agrodiary.ui.journal.components.EntryTypeChip
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 @Composable
 fun JournalDetailScreen(
     entryId: Long,
@@ -57,7 +55,6 @@ fun JournalDetailScreen(
     var relatedStaff by remember { mutableStateOf<StaffEntity?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-
     LaunchedEffect(entryId) {
         entry = viewModel.getEntryById(entryId)
         entry?.let { e ->
@@ -70,7 +67,6 @@ fun JournalDetailScreen(
         }
         isLoading = false
     }
-
     if (showDeleteDialog && entry != null) {
         ConfirmDialog(
             title = "Удалить запись?",
@@ -83,7 +79,6 @@ fun JournalDetailScreen(
             onDismiss = { showDeleteDialog = false }
         )
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -111,20 +106,14 @@ fun JournalDetailScreen(
                         .verticalScroll(rememberScrollState())
                         .padding(16.dp)
                 ) {
-                    // Date
                     Text(
                         text = SimpleDateFormat("dd MMMM yyyy", Locale("ru")).format(Date(e.date)),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-
-                    // Entry Type
                     EntryTypeChip(type = e.entryType)
-
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    // Description
                     if (e.description.isNotBlank()) {
                         DetailSection(title = "Описание") {
                             Text(
@@ -134,8 +123,6 @@ fun JournalDetailScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-
-                    // Amount
                     e.amount?.let { amount ->
                         DetailCard(
                             icon = { Icon(Icons.Default.Payments, contentDescription = null) },
@@ -144,8 +131,6 @@ fun JournalDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
-                    // Related Animal
                     relatedAnimal?.let { animal ->
                         DetailCard(
                             icon = { Icon(Icons.Default.Pets, contentDescription = null) },
@@ -154,8 +139,6 @@ fun JournalDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
-                    // Related Staff
                     relatedStaff?.let { staff ->
                         DetailCard(
                             icon = { Icon(Icons.Default.Person, contentDescription = null) },
@@ -164,8 +147,6 @@ fun JournalDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
-                    // Notes
                     if (!e.notes.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(4.dp))
                         DetailSection(title = "Заметки") {
@@ -176,8 +157,6 @@ fun JournalDetailScreen(
                             )
                         }
                     }
-
-                    // Created At
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         text = "Создано: ${SimpleDateFormat("dd.MM.yyyy HH:mm", Locale("ru")).format(Date(e.createdAt))}",
@@ -191,7 +170,6 @@ fun JournalDetailScreen(
         }
     }
 }
-
 @Composable
 private fun DetailSection(
     title: String,
@@ -206,7 +184,6 @@ private fun DetailSection(
     Spacer(modifier = Modifier.height(4.dp))
     content()
 }
-
 @Composable
 private fun DetailCard(
     icon: @Composable () -> Unit,

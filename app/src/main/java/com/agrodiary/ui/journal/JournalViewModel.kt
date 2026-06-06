@@ -1,5 +1,4 @@
 package com.agrodiary.ui.journal
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.agrodiary.data.local.entity.AnimalEntity
@@ -18,30 +17,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class JournalViewModel @Inject constructor(
     private val repository: JournalRepository,
     private val animalRepository: AnimalRepository,
     private val staffRepository: StaffRepository
 ) : ViewModel() {
-
     private val _selectedType = MutableStateFlow<JournalEntryType?>(null)
     val selectedType = _selectedType.asStateFlow()
-    
     private val _selectedDate = MutableStateFlow<Long?>(null)
     val selectedDate = _selectedDate.asStateFlow()
-
     private val _uiState = MutableStateFlow(JournalUiState())
     val uiState = _uiState.asStateFlow()
-
-    // Dropdown data sources
     val animals = animalRepository.getAllAnimals()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
     val staff = staffRepository.getAllStaff()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
     val entries = combine(
         repository.getAllEntries(),
         _selectedType,
@@ -52,7 +43,7 @@ class JournalViewModel @Inject constructor(
             filtered = filtered.filter { it.entryType == type }
         }
         if (date != null) {
-             filtered = filtered.filter { entry -> 
+             filtered = filtered.filter { entry ->
                  val entryDay = entry.date / (24 * 60 * 60 * 1000)
                  val selectedDay = date / (24 * 60 * 60 * 1000)
                  entryDay == selectedDay
@@ -64,15 +55,12 @@ class JournalViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
-
     fun setSelectedType(type: JournalEntryType?) {
         _selectedType.value = type
     }
-    
     fun setSelectedDate(date: Long?) {
         _selectedDate.value = date
     }
-
     fun addEntry(entry: JournalEntryEntity, onSuccess: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -86,7 +74,6 @@ class JournalViewModel @Inject constructor(
             }
         }
     }
-
     fun updateEntry(entry: JournalEntryEntity, onSuccess: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -100,7 +87,6 @@ class JournalViewModel @Inject constructor(
             }
         }
     }
-    
     fun deleteEntry(entry: JournalEntryEntity) {
         viewModelScope.launch {
             try {
@@ -110,20 +96,16 @@ class JournalViewModel @Inject constructor(
             }
         }
     }
-
     suspend fun getEntryById(id: Long): JournalEntryEntity? {
         return repository.getEntryById(id)
     }
-
     suspend fun getAnimalById(id: Long): AnimalEntity? {
         return animalRepository.getAnimalById(id)
     }
-
     suspend fun getStaffById(id: Long): StaffEntity? {
         return staffRepository.getStaffById(id)
     }
 }
-
 data class JournalUiState(
     val isLoading: Boolean = false,
     val error: String? = null

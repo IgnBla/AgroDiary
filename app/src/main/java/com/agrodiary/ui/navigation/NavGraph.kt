@@ -1,5 +1,4 @@
 package com.agrodiary.ui.navigation
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +35,6 @@ import com.agrodiary.ui.products.ProductDetailScreen
 import com.agrodiary.ui.products.AddEditProductScreen
 import com.agrodiary.ui.reports.ReportsScreen
 import com.agrodiary.ui.settings.SettingsScreen
-
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -48,7 +46,6 @@ fun NavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        // Auth screens
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -61,7 +58,6 @@ fun NavGraph(
                 }
             )
         }
-
         composable(Screen.Register.route) {
             RegisterScreen(
                 onRegisterSuccess = {
@@ -74,8 +70,6 @@ fun NavGraph(
                 }
             )
         }
-
-        // Main tabs
         composable(Screen.Home.route) {
             HomeScreen(
                 onNavigateToAnimals = { navController.navigate(Screen.Animals.route) },
@@ -87,8 +81,6 @@ fun NavGraph(
                 onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
             )
         }
-
-        // Animals module
         composable(Screen.Animals.route) {
             AnimalsListScreen(
                 onAnimalClick = { animalId ->
@@ -99,7 +91,6 @@ fun NavGraph(
                 }
             )
         }
-
         composable(
             route = Screen.AnimalDetail.route,
             arguments = listOf(navArgument("animalId") { type = NavType.LongType })
@@ -114,7 +105,6 @@ fun NavGraph(
                 onDeleteSuccess = { navController.navigateUp() }
             )
         }
-
         composable(Screen.AddAnimal.route) {
             AddEditAnimalScreen(
                 animalId = null,
@@ -122,7 +112,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.EditAnimal.route,
             arguments = listOf(navArgument("animalId") { type = NavType.LongType })
@@ -134,7 +123,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
         composable(Screen.Journal.route) {
             JournalListScreen(
                 onEntryClick = { entryId ->
@@ -148,7 +136,6 @@ fun NavGraph(
                 onNavigateToActivityLog = { navController.navigate(Screen.ActivityLog.route) }
             )
         }
-        
         composable(
             route = Screen.JournalDetail.route,
             arguments = listOf(navArgument("entryId") { type = NavType.LongType })
@@ -162,7 +149,6 @@ fun NavGraph(
                 }
             )
         }
-        
         composable(Screen.AddJournalEntry.route) {
             AddEditJournalEntryScreen(
                 entryId = null,
@@ -170,13 +156,11 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
         composable(Screen.ActivityLog.route) {
             ActivityLogScreen(
                 onNavigateBack = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.EditJournalEntry.route,
             arguments = listOf(navArgument("entryId") { type = NavType.LongType })
@@ -188,8 +172,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
-        // Staff module
         composable(Screen.Staff.route) {
             StaffListScreen(
                 onStaffClick = { staffId ->
@@ -201,7 +183,6 @@ fun NavGraph(
                 onNavigateBack = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.StaffDetail.route,
             arguments = listOf(navArgument("staffId") { type = NavType.LongType })
@@ -216,7 +197,6 @@ fun NavGraph(
                 onDeleteSuccess = { navController.navigateUp() }
             )
         }
-
         composable(Screen.AddStaff.route) {
             AddEditStaffScreen(
                 staffId = null,
@@ -224,7 +204,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.EditStaff.route,
             arguments = listOf(navArgument("staffId") { type = NavType.LongType })
@@ -236,8 +215,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
-        // Tasks module
         composable(Screen.Tasks.route) {
             TasksListScreen(
                 onTaskClick = { taskId ->
@@ -249,7 +226,6 @@ fun NavGraph(
                 onNavigateBack = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.TaskDetail.route,
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
@@ -263,7 +239,6 @@ fun NavGraph(
                 }
             )
         }
-
         composable(Screen.AddTask.route) {
             AddEditTaskScreen(
                 taskId = null,
@@ -271,7 +246,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-        
         composable(
             route = Screen.EditTask.route,
             arguments = listOf(navArgument("taskId") { type = NavType.LongType })
@@ -283,8 +257,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
-        // Feed module
         composable(Screen.FeedStock.route) {
             FeedStockListScreen(
                 onFeedClick = { feedId ->
@@ -296,7 +268,6 @@ fun NavGraph(
                 onNavigateBack = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.FeedDetail.route,
             arguments = listOf(navArgument("feedId") { type = NavType.LongType })
@@ -310,7 +281,6 @@ fun NavGraph(
                 }
             )
         }
-
         composable(Screen.AddFeed.route) {
             AddEditFeedScreen(
                 feedId = null,
@@ -318,7 +288,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-        
         composable(
             route = Screen.EditFeed.route,
             arguments = listOf(navArgument("feedId") { type = NavType.LongType })
@@ -330,8 +299,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
-        // Products module
         composable(Screen.Products.route) {
             ProductsListScreen(
                 onProductClick = { productId ->
@@ -343,7 +310,6 @@ fun NavGraph(
                 onNavigateBack = { navController.navigateUp() }
             )
         }
-
         composable(
             route = Screen.ProductDetail.route,
             arguments = listOf(navArgument("productId") { type = NavType.LongType })
@@ -357,7 +323,6 @@ fun NavGraph(
                 }
             )
         }
-
         composable(Screen.AddProduct.route) {
             AddEditProductScreen(
                 productId = null,
@@ -365,7 +330,6 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-        
         composable(
             route = Screen.EditProduct.route,
             arguments = listOf(navArgument("productId") { type = NavType.LongType })
@@ -377,13 +341,9 @@ fun NavGraph(
                 onSaveSuccess = { navController.navigateUp() }
             )
         }
-
-        // Reports
         composable(Screen.Reports.route) {
             ReportsScreen()
         }
-
-        // Settings
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onNavigateBack = { navController.navigateUp() },
@@ -396,7 +356,6 @@ fun NavGraph(
         }
     }
 }
-
 @Composable
 private fun PlaceholderScreen(title: String) {
     Box(

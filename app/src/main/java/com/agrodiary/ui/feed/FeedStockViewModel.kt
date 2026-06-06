@@ -1,11 +1,11 @@
 package com.agrodiary.ui.feed
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.agrodiary.data.local.entity.FeedCategory
 import com.agrodiary.data.local.entity.FeedStockEntity
 import com.agrodiary.data.repository.FeedStockRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,18 +16,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
 class FeedStockViewModel @Inject constructor(
     private val repository: FeedStockRepository
 ) : ViewModel() {
-
     private val _selectedCategory = MutableStateFlow<FeedCategory?>(null)
     val selectedCategory = _selectedCategory.asStateFlow()
-
     private val _uiState = MutableStateFlow(FeedStockUiState())
     val uiState = _uiState.asStateFlow()
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     val feedStocks = _selectedCategory.flatMapLatest { category ->
         if (category != null) {
             repository.getFeedStocksByCategory(category)
@@ -41,20 +38,16 @@ class FeedStockViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
-
-    // Separate flow for low stock warnings
-    val lowStockWarnings = repository.getLowStockFeed()
+    val lowStockWarnings = repository.getLowStockFeeds()
         .catch { e -> _uiState.update { it.copy(error = e.message) } }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
-
     fun setSelectedCategory(category: FeedCategory?) {
         _selectedCategory.value = category
     }
-
     fun addFeedStock(feedStock: FeedStockEntity, onSuccess: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -68,7 +61,6 @@ class FeedStockViewModel @Inject constructor(
             }
         }
     }
-
     fun updateFeedStock(feedStock: FeedStockEntity, onSuccess: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -82,7 +74,6 @@ class FeedStockViewModel @Inject constructor(
             }
         }
     }
-
     fun deleteFeedStock(feedStock: FeedStockEntity) {
         viewModelScope.launch {
             try {
@@ -92,12 +83,10 @@ class FeedStockViewModel @Inject constructor(
             }
         }
     }
-    
     suspend fun getFeedStockById(id: Long): FeedStockEntity? {
         return repository.getFeedStockById(id)
     }
 }
-
 data class FeedStockUiState(
     val isLoading: Boolean = false,
     val error: String? = null

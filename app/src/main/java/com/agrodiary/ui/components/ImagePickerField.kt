@@ -1,5 +1,4 @@
 package com.agrodiary.ui.components
-
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.agrodiary.common.PermissionUtils
-
 @Composable
 fun ImagePickerField(
     selectedImageUri: Uri?,
@@ -39,7 +37,6 @@ fun ImagePickerField(
     ) { uri: Uri? ->
         onImageSelected(uri)
     }
-
     Column(modifier = modifier) {
         Text(
             text = label,
@@ -47,7 +44,6 @@ fun ImagePickerField(
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-
         Box(
             modifier = Modifier
                 .size(if (isCircle) 120.dp else 160.dp)
@@ -69,8 +65,6 @@ fun ImagePickerField(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                
-                // Overlay edit icon
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

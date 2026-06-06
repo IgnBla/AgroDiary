@@ -1,5 +1,4 @@
 package com.agrodiary.ui.auth
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,14 +46,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.agrodiary.ui.components.AgroDiaryButton
 import com.agrodiary.ui.components.AgroDiaryTextField
 import com.agrodiary.ui.theme.AgroDiaryTheme
-
-/**
- * Login screen for user authentication.
- *
- * @param onLoginSuccess Callback when login is successful
- * @param onNavigateToRegister Callback to navigate to registration
- * @param viewModel AuthViewModel instance
- */
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
@@ -65,13 +56,9 @@ fun LoginScreen(
     val username by viewModel.loginUsername.collectAsState()
     val password by viewModel.loginPassword.collectAsState()
     val authState by viewModel.authState.collectAsState()
-
     val snackbarHostState = remember { SnackbarHostState() }
     val focusManager = LocalFocusManager.current
-
     var passwordVisible by remember { mutableStateOf(false) }
-
-    // Handle auth state changes
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Success -> {
@@ -85,7 +72,6 @@ fun LoginScreen(
             else -> {}
         }
     }
-
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = modifier
@@ -104,49 +90,36 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Spacer(modifier = Modifier.weight(1f))
-
-                // Logo
                 Icon(
                     imageVector = Icons.Default.Agriculture,
                     contentDescription = null,
                     modifier = Modifier.size(80.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Title
                 Text(
                     text = "AgroDiary",
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
-
                 Text(
                     text = "Журнал фермы",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
                 Spacer(modifier = Modifier.height(48.dp))
-
-                // Welcome text
                 Text(
                     text = "Добро пожаловать!",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
                 Text(
                     text = "Войдите в свой аккаунт",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Username field
                 AgroDiaryTextField(
                     value = username,
                     onValueChange = { viewModel.setLoginUsername(it) },
@@ -159,10 +132,7 @@ fun LoginScreen(
                     ),
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                // Password field
                 AgroDiaryTextField(
                     value = password,
                     onValueChange = { viewModel.setLoginPassword(it) },
@@ -201,17 +171,13 @@ fun LoginScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Login button
                 AgroDiaryButton(
                     text = "Войти",
                     onClick = { viewModel.login() },
                     enabled = authState !is AuthState.Loading,
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 if (authState is AuthState.Loading) {
                     Spacer(modifier = Modifier.height(16.dp))
                     CircularProgressIndicator(
@@ -219,23 +185,18 @@ fun LoginScreen(
                         strokeWidth = 2.dp
                     )
                 }
-
                 Spacer(modifier = Modifier.weight(1f))
-
-                // Register link
                 TextButton(onClick = onNavigateToRegister) {
                     Text(
                         text = "Нет аккаунта? Зарегистрироваться",
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun LoginScreenPreview() {
@@ -251,7 +212,6 @@ private fun LoginScreenPreview() {
         )
     }
 }
-
 @Composable
 private fun LoginScreenContent(
     username: String,
@@ -263,7 +223,6 @@ private fun LoginScreenContent(
     onNavigateToRegister: () -> Unit
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
-
     Scaffold { padding ->
         Column(
             modifier = Modifier
@@ -275,38 +234,30 @@ private fun LoginScreenContent(
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.weight(1f))
-
             Icon(
                 imageVector = Icons.Default.Agriculture,
                 contentDescription = null,
                 modifier = Modifier.size(80.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "AgroDiary",
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.primary
             )
-
             Text(
                 text = "Журнал фермы",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
             Spacer(modifier = Modifier.height(48.dp))
-
             Text(
                 text = "Добро пожаловать!",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
-
             Spacer(modifier = Modifier.height(32.dp))
-
             AgroDiaryTextField(
                 value = username,
                 onValueChange = onUsernameChange,
@@ -314,9 +265,7 @@ private fun LoginScreenContent(
                 placeholder = "Введите имя пользователя",
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             AgroDiaryTextField(
                 value = password,
                 onValueChange = onPasswordChange,
@@ -337,18 +286,14 @@ private fun LoginScreenContent(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(32.dp))
-
             AgroDiaryButton(
                 text = "Войти",
                 onClick = onLoginClick,
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.weight(1f))
-
             TextButton(onClick = onNavigateToRegister) {
                 Text(
                     text = "Нет аккаунта? Зарегистрироваться",

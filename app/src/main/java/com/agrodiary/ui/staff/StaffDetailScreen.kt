@@ -1,5 +1,4 @@
 package com.agrodiary.ui.staff
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,10 +45,6 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-/**
- * Экран детальной информации о сотруднике.
- */
 @Composable
 fun StaffDetailScreen(
     staffId: Long,
@@ -61,23 +56,19 @@ fun StaffDetailScreen(
 ) {
     val staff by viewModel.getStaffByIdFlow(staffId).collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-
     val snackbarHostState = remember { SnackbarHostState() }
-
     LaunchedEffect(uiState.error) {
         uiState.error?.let { error ->
             snackbarHostState.showSnackbar(error)
             viewModel.clearError()
         }
     }
-
     LaunchedEffect(uiState.successMessage) {
         uiState.successMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             viewModel.clearSuccessMessage()
         }
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -135,9 +126,7 @@ fun StaffDetailScreen(
             }
         }
     }
-
 }
-
 @Composable
 private fun StaffDetailContent(
     staff: StaffEntity,
@@ -151,7 +140,6 @@ private fun StaffDetailContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         StaffPhotoHeader(photoUri = staff.photoUri)
-
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -168,7 +156,6 @@ private fun StaffDetailContent(
                 InfoRow(label = "Статус", value = staff.status.displayName)
             }
         }
-
         if (staff.hireDate != null || staff.salary != null) {
             AgroDiaryCard {
                 Column(
@@ -192,7 +179,6 @@ private fun StaffDetailContent(
                 }
             }
         }
-
         AgroDiaryCard {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -211,7 +197,6 @@ private fun StaffDetailContent(
         }
     }
 }
-
 @Composable
 private fun StaffPhotoHeader(photoUri: String?) {
     Surface(
@@ -248,7 +233,6 @@ private fun StaffPhotoHeader(photoUri: String?) {
         }
     }
 }
-
 @Composable
 private fun InfoRow(label: String, value: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -265,25 +249,21 @@ private fun InfoRow(label: String, value: String, modifier: Modifier = Modifier)
         )
     }
 }
-
 private fun yearWord(years: Int): String = when {
     years % 10 == 1 && years % 100 != 11 -> "год"
     years % 10 in 2..4 && years % 100 !in 12..14 -> "года"
     else -> "лет"
 }
-
 private fun monthWord(months: Int): String = when {
     months % 10 == 1 && months % 100 != 11 -> "месяц"
     months % 10 in 2..4 && months % 100 !in 12..14 -> "месяца"
     else -> "месяцев"
 }
-
 private fun dayWord(days: Int): String = when {
     days % 10 == 1 && days % 100 != 11 -> "день"
     days % 10 in 2..4 && days % 100 !in 12..14 -> "дня"
     else -> "дней"
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun StaffDetailScreenPreview() {

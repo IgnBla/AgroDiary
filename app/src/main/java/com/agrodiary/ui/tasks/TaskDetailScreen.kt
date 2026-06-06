@@ -1,5 +1,4 @@
 package com.agrodiary.ui.tasks
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +30,6 @@ import com.agrodiary.ui.tasks.components.TaskStatusChip
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 @Composable
 fun TaskDetailScreen(
     taskId: Long,
@@ -42,12 +40,10 @@ fun TaskDetailScreen(
     var task by remember { mutableStateOf<TaskEntity?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-
     LaunchedEffect(taskId) {
         task = viewModel.getTaskById(taskId)
         isLoading = false
     }
-
     if (showDeleteDialog && task != null) {
         ConfirmDialog(
             title = "Удалить задачу?",
@@ -60,7 +56,6 @@ fun TaskDetailScreen(
             onDismiss = { showDeleteDialog = false }
         )
     }
-
     Scaffold(
         topBar = {
             AgroDiaryTopBar(
@@ -96,13 +91,10 @@ fun TaskDetailScreen(
                         style = MaterialTheme.typography.headlineMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    
                     TaskStatusChip(status = t.status)
                     Spacer(modifier = Modifier.height(8.dp))
                     TaskPriorityChip(priority = t.priority)
-                    
                     Spacer(modifier = Modifier.height(16.dp))
-                    
                     if (!t.description.isNullOrBlank()) {
                         Text(
                             text = "Описание",
@@ -114,7 +106,6 @@ fun TaskDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
-                    
                     if (t.dueDate != null) {
                         Text(
                             text = "Срок выполнения",
@@ -127,7 +118,6 @@ fun TaskDetailScreen(
                     }
                 }
             } ?: run {
-                // Task not found
                 Text("Задача не найдена", modifier = Modifier.padding(padding))
             }
         }
