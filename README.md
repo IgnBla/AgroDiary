@@ -204,3 +204,4 @@ app/src/main/java/com/agrodiary/
 ## Лицензия
 
 MIT
+
